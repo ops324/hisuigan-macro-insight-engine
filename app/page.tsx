@@ -414,7 +414,7 @@ function Section({ id, title, subtitle, t, children }: {
   id: string;
   title: string;
   subtitle: string;
-  t: typeof theme["dark"];
+  t: typeof theme["dark"] | typeof theme["light"];
   children: React.ReactNode;
 }) {
   return (
