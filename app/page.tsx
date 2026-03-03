@@ -67,6 +67,18 @@ interface TreasuryItem {
 export default function Home() {
   const [mode, setMode] = useState<ThemeMode>("dark");
 
+  // localStorage からテーマを復元
+  useEffect(() => {
+    const saved = localStorage.getItem("theme") as ThemeMode | null;
+    if (saved === "light" || saved === "dark") setMode(saved);
+  }, []);
+
+  const toggleTheme = () => {
+    const next: ThemeMode = mode === "dark" ? "light" : "dark";
+    setMode(next);
+    localStorage.setItem("theme", next);
+  };
+
   const [forex, setForex] = useState<ForexItem[] | null>(null);
   const [forexLoading, setForexLoading] = useState(true);
   const [forexError, setForexError] = useState<string | null>(null);
@@ -217,10 +229,10 @@ export default function Home() {
               レポート
             </Link>
             <button
-              onClick={() => setMode(mode === "dark" ? "light" : "dark")}
+              onClick={toggleTheme}
               style={{ marginLeft: 16, padding: "5px 12px", fontSize: 11, backgroundColor: "transparent", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", letterSpacing: "0.05em" }}
             >
-              {mode === "dark" ? "LIGHT" : "DARK"}
+              {mode === "dark" ? "☀️ LIGHT" : "🌙 DARK"}
             </button>
           </nav>
         </div>
