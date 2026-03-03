@@ -59,7 +59,7 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
               <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.06em" }}>RISK-OFF</span>
             </div>
             <div style={{ marginTop: 16, fontSize: 10, color: t.textMuted, lineHeight: 1.6 }}>
-              AIによる参考値。<br />投資助言ではありません。
+              AI（翡翠眼）による参考値。<br />投資助言ではありません。
             </div>
           </div>
         )}
