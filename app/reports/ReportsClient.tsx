@@ -47,7 +47,8 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         {/* スタンス */}
         {stance != null && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 14 }}>STANCE</div>
+            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 4 }}>STANCE</div>
+            <div style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.06em", marginBottom: 10 }}>中長期目線</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: t.text, marginBottom: 16 }}>{stanceLabel ?? "—"}</div>
             <div style={{ position: "relative", height: 4, background: t.borderStrong, marginBottom: 8 }}>
               <div style={{ position: "absolute", left: 0, width: `${stance}%`, height: "100%", background: `linear-gradient(to right, ${JADE}, #e05252)` }} />

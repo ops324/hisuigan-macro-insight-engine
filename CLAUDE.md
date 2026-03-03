@@ -142,6 +142,7 @@ scenarios:
 - レポート一覧ページ（/reports）の最上部に表示
 - 最新の週次レポート（weekly[0]）のフロントマターを使用
 - 表示要素：スタンスゲージ、KEY THEMES、シナリオ確率バー
+- スタンスゲージには「中長期目線」の注記を表示
 - stance/themes/scenarios が frontmatter にない場合は非表示
 
 ### ページ構成

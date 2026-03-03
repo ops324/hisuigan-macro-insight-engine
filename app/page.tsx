@@ -232,7 +232,7 @@ export default function Home() {
               onClick={toggleTheme}
               style={{ marginLeft: 16, padding: "5px 12px", fontSize: 11, backgroundColor: "transparent", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", letterSpacing: "0.05em" }}
             >
-              {mode === "dark" ? "☀️ LIGHT" : "🌙 DARK"}
+              {mode === "dark" ? "LIGHT" : "DARK"}
             </button>
           </nav>
         </div>
