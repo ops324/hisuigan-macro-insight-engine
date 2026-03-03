@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getReportBySlug, getAllSlugs, ReportType } from "@/lib/reports";
@@ -24,6 +25,39 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
 }
 
+function slugify(text: string): string {
+  return text.trim().replace(/\s+/g, "-");
+}
+
+function nodeToText(node: React.ReactNode): string {
+  if (typeof node === "string") return node;
+  if (typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(nodeToText).join("");
+  if (React.isValidElement(node)) {
+    return nodeToText((node.props as { children?: React.ReactNode }).children);
+  }
+  return "";
+}
+
+interface Heading {
+  level: number;
+  text: string;
+  id: string;
+}
+
+function extractHeadings(content: string): Heading[] {
+  return content
+    .split("\n")
+    .map((line) => {
+      const match = line.match(/^(#{1,2})\s+(.+)$/);
+      if (!match) return null;
+      const level = match[1].length;
+      const text = match[2].trim();
+      return { level, text, id: slugify(text) };
+    })
+    .filter((h): h is Heading => h !== null);
+}
+
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
@@ -32,6 +66,8 @@ export default async function ReportPage({ params }: { params: Promise<{ slug: s
   const { slug } = await params;
   const report = getReportBySlug(slug);
   if (!report) notFound();
+
+  const headings = extractHeadings(report.content);
 
   return (
     <div style={{ minHeight: "100vh", background: "#111", color: "#e5e5e5", fontFamily: "var(--font-geist-sans)" }}>
@@ -52,7 +88,6 @@ export default async function ReportPage({ params }: { params: Promise<{ slug: s
       {/* 記事ヘッダー */}
       <div style={{ borderBottom: `1px solid #222`, background: "#141414", padding: "32px 0" }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px" }}>
-          {/* バッジ */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
             <span style={{
               display: "inline-block",
@@ -70,7 +105,6 @@ export default async function ReportPage({ params }: { params: Promise<{ slug: s
               {TYPE_SUBTITLES[report.type]}
             </span>
           </div>
-
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 10px", color: "#e5e5e5", lineHeight: 1.4, letterSpacing: "0.02em" }}>
             {report.title}
           </h1>
@@ -82,20 +116,64 @@ export default async function ReportPage({ params }: { params: Promise<{ slug: s
 
       {/* 本文 */}
       <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 80px" }}>
-        <div style={{
-          lineHeight: 1.9,
-          fontSize: 15,
-          color: "#ccc",
-        }}>
+
+        {/* 目次 */}
+        {headings.length > 0 && (
+          <div style={{
+            border: "1px solid #222",
+            background: "#141414",
+            padding: "20px 24px",
+            marginBottom: 48,
+          }}>
+            <div style={{ fontSize: 11, color: JADE, letterSpacing: "0.12em", fontWeight: 600, marginBottom: 14 }}>
+              目次
+            </div>
+            <ol style={{ margin: 0, padding: 0, listStyle: "none" }}>
+              {headings.map((h, i) => (
+                <li key={i} style={{
+                  marginBottom: 8,
+                  paddingLeft: h.level === 2 ? 16 : 0,
+                  borderLeft: h.level === 2 ? "1px solid #2a2a2a" : "none",
+                }}>
+                  <a
+                    href={`#${h.id}`}
+                    style={{
+                      fontSize: h.level === 1 ? 14 : 13,
+                      color: h.level === 1 ? "#bbb" : "#777",
+                      textDecoration: "none",
+                      letterSpacing: "0.02em",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {/* Markdown本文 */}
+        <div style={{ lineHeight: 1.9, fontSize: 15, color: "#ccc" }}>
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              h1: ({ children }) => (
-                <h1 style={{ fontSize: 22, fontWeight: 700, color: "#e5e5e5", margin: "40px 0 16px", borderBottom: "1px solid #222", paddingBottom: 10 }}>{children}</h1>
-              ),
-              h2: ({ children }) => (
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: "#e5e5e5", margin: "36px 0 14px", borderBottom: "1px solid #1e1e1e", paddingBottom: 8 }}>{children}</h2>
-              ),
+              h1: ({ children }) => {
+                const id = slugify(nodeToText(children));
+                return (
+                  <h1 id={id} style={{ fontSize: 22, fontWeight: 700, color: "#e5e5e5", margin: "40px 0 16px", borderBottom: "1px solid #222", paddingBottom: 10 }}>
+                    {children}
+                  </h1>
+                );
+              },
+              h2: ({ children }) => {
+                const id = slugify(nodeToText(children));
+                return (
+                  <h2 id={id} style={{ fontSize: 18, fontWeight: 700, color: "#e5e5e5", margin: "36px 0 14px", borderBottom: "1px solid #1e1e1e", paddingBottom: 8 }}>
+                    {children}
+                  </h2>
+                );
+              },
               h3: ({ children }) => (
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: "#ddd", margin: "28px 0 10px" }}>{children}</h3>
               ),
