@@ -51,7 +51,7 @@ function extractHeadings(content: string): Heading[] {
   return content
     .split("\n")
     .map((line) => {
-      const match = line.match(/^(#{1,2})\s+(.+)$/);
+      const match = line.match(/^(#{1,3})\s+(.+)$/);
       if (!match) return null;
       const level = match[1].length;
       const text = match[2].trim();
@@ -148,13 +148,13 @@ export default function ReportClient({ report }: { report: Report }) {
               {headings.map((h, i) => (
                 <li key={i} style={{
                   marginBottom: 8,
-                  paddingLeft: h.level === 2 ? 16 : 0,
-                  borderLeft: h.level === 2 ? `1px solid ${t.borderStrong}` : "none",
+                  paddingLeft: h.level === 2 ? 16 : h.level === 3 ? 32 : 0,
+                  borderLeft: h.level >= 2 ? `1px solid ${t.borderStrong}` : "none",
                 }}>
                   <a
                     href={`#${h.id}`}
                     style={{
-                      fontSize: h.level === 1 ? 14 : 13,
+                      fontSize: h.level === 1 ? 14 : h.level === 2 ? 13 : 12,
                       color: h.level === 1 ? t.textSub : t.textMuted,
                       textDecoration: "none",
                       letterSpacing: "0.02em",
