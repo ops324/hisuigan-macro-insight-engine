@@ -95,7 +95,7 @@ export default function ReportClient({ report }: { report: Report }) {
               onClick={toggleTheme}
               style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 12, letterSpacing: "0.04em" }}
             >
-              {mode === "dark" ? "☀️ LIGHT" : "🌙 DARK"}
+              {mode === "dark" ? "LIGHT" : "DARK"}
             </button>
           </div>
         </div>
