@@ -243,8 +243,35 @@ export default async function ReportPage({ params }: { params: Promise<{ slug: s
           </ReactMarkdown>
         </div>
 
+        {/* 免責事項 */}
+        <div style={{
+          marginTop: 60,
+          padding: "20px 24px",
+          border: "1px solid #2a2a2a",
+          background: "#141414",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <span style={{ fontSize: 13 }}>⚠️</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#888", letterSpacing: "0.1em" }}>本レポートについて</span>
+          </div>
+          <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+            {[
+              "本レポートはAI（Hisuigan）によるマクロ経済・市場環境の情報提供を目的としています。",
+              "投資助言・売買推奨ではありません。",
+              "投資判断・売買の最終決定はご自身の責任で行ってください。",
+              "過去の市場動向は将来の結果を保証しません。",
+              "投資判断の際は、必ずご自身で最新の一次情報および公式データをご確認ください。",
+            ].map((text, i) => (
+              <li key={i} style={{ fontSize: 12, color: "#555", lineHeight: 1.8, paddingLeft: 12, position: "relative" }}>
+                <span style={{ position: "absolute", left: 0, color: "#444" }}>–</span>
+                {text}
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {/* フッター戻りリンク */}
-        <div style={{ marginTop: 60, paddingTop: 24, borderTop: "1px solid #222" }}>
+        <div style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid #222" }}>
           <Link href="/reports" style={{ fontSize: 13, color: JADE, textDecoration: "none", letterSpacing: "0.04em" }}>
             ← REPORTS 一覧に戻る
           </Link>
