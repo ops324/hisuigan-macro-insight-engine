@@ -32,18 +32,20 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
 
   return (
     <div style={{ marginBottom: 48 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+      <div className="hg-cv-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 11, color: JADE, fontWeight: 700, letterSpacing: "0.12em" }}>CURRENT VIEW</span>
-          <span style={{ fontSize: 11, color: t.textMuted }}>·</span>
-          <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em" }}>{report.title}</span>
+          <span style={{ fontSize: 11, color: JADE, fontWeight: 700, letterSpacing: "0.12em", whiteSpace: "nowrap" }}>カレントビュー</span>
+          <span className="hg-cv-header-sub" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 11, color: t.textMuted }}>·</span>
+            <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em" }}>{report.title}</span>
+          </span>
         </div>
-        <Link href={`/reports/${report.slug}`} style={{ fontSize: 11, color: JADE, textDecoration: "none", letterSpacing: "0.06em" }}>
+        <Link href={`/reports/${report.slug}`} style={{ fontSize: 11, color: JADE, textDecoration: "none", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>
           詳細レポートを読む →
         </Link>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "200px 1fr 260px", gap: 1, background: t.border, border: `1px solid ${t.border}` }}>
+      <div className="hg-cv-grid" style={{ display: "grid", gridTemplateColumns: "200px 1fr 260px", gap: 1, background: t.border, border: `1px solid ${t.border}` }}>
         {/* スタンス */}
         {stance != null && (
           <div style={{ background: t.surface, padding: "20px" }}>
@@ -144,7 +146,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
             翡翠眼
           </Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
-          <span style={{ fontSize: 14, color: t.textSub, letterSpacing: "0.05em" }}>REPORTS</span>
+          <span style={{ fontSize: 14, color: t.textSub, letterSpacing: "0.05em" }}>レポート</span>
           <div style={{ marginLeft: "auto" }}>
             <button
               onClick={toggleTheme}
@@ -160,7 +162,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
       <div style={{ borderBottom: `1px solid ${JADE}33`, background: t.surface, padding: "32px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
           <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "0.06em", margin: 0, color: t.text }}>
-            REPORTS
+            レポート
           </h1>
           <p style={{ fontSize: 13, color: t.textMuted, marginTop: 8, letterSpacing: "0.04em" }}>
             月次・週次・日次のマクロ市場分析レポート

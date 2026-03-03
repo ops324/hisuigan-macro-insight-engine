@@ -219,12 +219,14 @@ export default function Home() {
             <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text }}>翡翠眼</span>
           </div>
           <nav style={{ display: "flex", alignItems: "center", gap: 0 }}>
-            {["株式", "為替", "米国債", "日本国債", "コモディティ"].map((label, i) => (
-              <a key={i} href={`#${label}`} style={{ fontSize: 12, color: t.textSub, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: i === 0 ? `1px solid ${t.border}` : "none", borderRight: `1px solid ${t.border}` }}>
-                {label}
-              </a>
-            ))}
-            <Link href="/reports" style={{ fontSize: 12, color: JADE.light, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderRight: `1px solid ${t.border}` }}>
+            <div className="hg-nav-sections" style={{ display: "flex" }}>
+              {["株式", "為替", "米国債", "日本国債", "コモディティ"].map((label, i) => (
+                <a key={i} href={`#${label}`} style={{ fontSize: 12, color: t.textSub, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: i === 0 ? `1px solid ${t.border}` : "none", borderRight: `1px solid ${t.border}` }}>
+                  {label}
+                </a>
+              ))}
+            </div>
+            <Link href="/reports" style={{ fontSize: 12, color: JADE.light, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}` }}>
               レポート
             </Link>
             <button
@@ -240,7 +242,7 @@ export default function Home() {
       {/* Status Bar */}
       <div style={{ backgroundColor: JADE.dim, borderBottom: `1px solid ${JADE.main}` }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "6px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: 11, color: "#a8d5c4", letterSpacing: "0.06em" }}>LIVE DATA — 15〜20分遅延 | 投資判断の根拠とする場合は一次情報をご確認ください</span>
+          <span className="hg-status-text" style={{ fontSize: 11, color: "#a8d5c4", letterSpacing: "0.06em" }}>LIVE DATA — 15〜20分遅延 | 投資判断の根拠とする場合は一次情報をご確認ください</span>
           <span style={{ fontSize: 11, color: "#a8d5c4", fontFamily: "monospace" }}>最終更新：{lastUpdated}</span>
         </div>
       </div>
@@ -257,7 +259,7 @@ export default function Home() {
               <span style={{ fontSize: 13, color: t.negative }}>エラー: {stocksError}</span>
             </div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
+            <div className="hg-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
               {(stocks ?? []).map((s, i) => (
                 <div key={i} style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
                   <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 8 }}>{s.symbol}</div>
@@ -284,7 +286,7 @@ export default function Home() {
               <span style={{ fontSize: 13, color: t.negative }}>エラー: {forexError}</span>
             </div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
+            <div className="hg-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
               {(forex ?? []).map((f, i) => (
                 <div key={i} style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
                   <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 12 }}>{f.pair}</div>
@@ -292,7 +294,7 @@ export default function Home() {
                     {f.value ?? "---"}
                   </div>
                   <div>
-                    <span style={{ fontSize: 11, color: t.textMuted }}>前日比データなし（無料版）</span>
+                    <span className="hg-data-note" style={{ fontSize: 11, color: t.textMuted }}>前日比データなし（無料版）</span>
                   </div>
                 </div>
               ))}
@@ -301,7 +303,7 @@ export default function Home() {
         </Section>
 
         {/* Section: 債券 2列 */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        <div className="hg-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
           {/* 米国債 */}
           <Section id="米国債" title="米国債利回り" subtitle="US TREASURY YIELDS" t={t}>
             {ustreasuryLoading ? (
@@ -374,7 +376,7 @@ export default function Home() {
               <span style={{ fontSize: 13, color: t.negative }}>エラー: {commoditiesError}</span>
             </div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
+            <div className="hg-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
               {(commodities ?? []).map((c: any, i: number) => (
                 <div key={i} style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
                   <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 4 }}>{c.unit}</div>
@@ -394,7 +396,7 @@ export default function Home() {
       {/* Footer */}
       <footer style={{ borderTop: `1px solid ${t.borderStrong}`, backgroundColor: t.surface, marginTop: 48 }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "24px 24px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div className="hg-footer-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                 <div style={{ width: 2, height: 14, backgroundColor: JADE.main }} />

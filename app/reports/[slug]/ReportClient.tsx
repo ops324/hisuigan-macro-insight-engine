@@ -88,7 +88,7 @@ export default function ReportClient({ report }: { report: Report }) {
           </Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
           <Link href="/reports" style={{ fontSize: 14, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>
-            REPORTS
+            レポート
           </Link>
           <div style={{ marginLeft: "auto" }}>
             <button
@@ -165,13 +165,14 @@ export default function ReportClient({ report }: { report: Report }) {
             </div>
             <ol style={{ margin: 0, padding: 0, listStyle: "none" }}>
               {headings.map((h, i) => (
-                <li key={i} style={{
+                <li key={i} className={h.level === 2 ? "hg-toc-h2" : h.level === 3 ? "hg-toc-h3" : ""} style={{
                   marginBottom: 8,
                   paddingLeft: h.level === 2 ? 16 : h.level === 3 ? 32 : 0,
                   borderLeft: h.level >= 2 ? `1px solid ${t.borderStrong}` : "none",
                 }}>
                   <a
                     href={`#${h.id}`}
+                    className="hg-toc-link"
                     style={{
                       fontSize: h.level === 1 ? 14 : h.level === 2 ? 13 : 12,
                       color: h.level === 1 ? t.textSub : t.textMuted,
@@ -308,7 +309,7 @@ export default function ReportClient({ report }: { report: Report }) {
         {/* フッター戻りリンク */}
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: `1px solid ${t.border}` }}>
           <Link href="/reports" style={{ fontSize: 13, color: JADE, textDecoration: "none", letterSpacing: "0.04em" }}>
-            ← REPORTS 一覧に戻る
+            ← レポート一覧に戻る
           </Link>
         </div>
       </main>

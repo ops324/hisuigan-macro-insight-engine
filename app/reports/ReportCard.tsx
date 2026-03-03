@@ -28,7 +28,7 @@ export function ReportCard({ report, t }: { report: ReportMeta; t: Theme }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 16 }}>
+      <div className="hg-card-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 16 }}>
         <span style={{ fontSize: 15, fontWeight: 600, color: t.text }}>{report.title}</span>
         <span style={{ fontSize: 12, color: t.textMuted, flexShrink: 0, fontFamily: "var(--font-geist-mono)" }}>
           {formatDate(report.date)}

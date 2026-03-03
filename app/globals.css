@@ -24,3 +24,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ===== モバイル対応 ===== */
+@media (max-width: 768px) {
+  /* メインページのセクションナビタブを非表示 */
+  .hg-nav-sections { display: none !important; }
+  /* ステータスバーの長文テキストを非表示 */
+  .hg-status-text { display: none !important; }
+  /* 4カラムグリッド → 2カラム */
+  .hg-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .hg-grid-4 > div { padding: 14px 16px !important; }
+  /* 2カラムレイアウト → 1カラム */
+  .hg-grid-2 { grid-template-columns: 1fr !important; }
+  /* CURRENT VIEW 3カラム → 縦積み */
+  .hg-cv-grid { grid-template-columns: 1fr !important; }
+  /* フッター横並び → 縦積み */
+  .hg-footer-row { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; }
+  /* レポートカードのタイトル/日付行 → 縦積み */
+  .hg-card-row { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
+  /* カレントビューヘッダー → 縦積み・タイトル非表示 */
+  .hg-cv-header { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
+  .hg-cv-header-sub { display: none !important; }
+  /* 目次インデントを縮小・長いリンクを省略 */
+  .hg-toc-h2 { padding-left: 8px !important; }
+  .hg-toc-h3 { padding-left: 16px !important; }
+  .hg-toc-link { display: block !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  /* 為替・コモディティ注記テキストを省略表示 */
+  .hg-data-note { display: block !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+}
