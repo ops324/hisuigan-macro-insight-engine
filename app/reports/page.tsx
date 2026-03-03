@@ -36,7 +36,8 @@ export default function ReportsPage() {
       {/* ページタイトル */}
       <div style={{ borderBottom: `1px solid ${JADE}33`, background: "#141414", padding: "32px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-          <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "0.06em", margin: 0, color: "#e5e5e5" }}>
+          <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "0.06em", margin: 0, color: "#e5e5e5", display: "flex", alignItems: "baseline", gap: 16 }}>
+            <span style={{ fontSize: 28, color: JADE, letterSpacing: "0.08em" }}>翡翠眼</span>
             REPORTS
           </h1>
           <p style={{ fontSize: 13, color: "#666", marginTop: 8, letterSpacing: "0.04em" }}>
