@@ -78,6 +78,10 @@ export function getReportBySlug(slug: string): Report | null {
       date: data.date ?? "",
       type: (data.type as ReportType) ?? type,
       description: data.description,
+      stance: data.stance,
+      stanceLabel: data.stanceLabel,
+      themes: data.themes,
+      scenarios: data.scenarios,
       content,
     };
   }
