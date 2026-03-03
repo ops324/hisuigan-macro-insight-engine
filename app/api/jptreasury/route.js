@@ -29,17 +29,17 @@ export async function GET() {
 
     // 令和（R）で始まるデータ行のみ抽出
     const dataLines = lines.filter((l) => l.trim().match(/^R\d/));
-    if (dataLines.length < 2) throw new Error("Insufficient data rows");
+    if (dataLines.length < 1) throw new Error("Insufficient data rows");
 
     const latestCols = dataLines[dataLines.length - 1].split(",");
-    const prevCols   = dataLines[dataLines.length - 2].split(",");
+    const prevCols   = dataLines.length >= 2 ? dataLines[dataLines.length - 2].split(",") : null;
 
     const jptreasury = TARGETS.map(({ label, col }) => {
       const idx = headers.indexOf(col);
       if (idx === -1) throw new Error(`Column "${col}" not found`);
 
       const current  = parseFloat(latestCols[idx]);
-      const previous = parseFloat(prevCols[idx]);
+      const previous = prevCols ? parseFloat(prevCols[idx]) : NaN;
 
       if (isNaN(current)) throw new Error(`Invalid value for ${col}`);
 
