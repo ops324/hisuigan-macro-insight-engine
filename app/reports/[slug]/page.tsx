@@ -40,7 +40,7 @@ export default async function ReportPage({ params }: { params: Promise<{ slug: s
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 16, height: 56 }}>
           <div style={{ width: 3, height: 20, background: JADE, flexShrink: 0 }} />
           <Link href="/" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: "#e5e5e5", textDecoration: "none" }}>
-            MACRO MARKETS
+            翡翠眼
           </Link>
           <span style={{ color: "#444", fontSize: 14 }}>/</span>
           <Link href="/reports" style={{ fontSize: 14, color: "#888", textDecoration: "none", letterSpacing: "0.05em" }}>

@@ -205,7 +205,7 @@ export default function Home() {
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{ width: 3, height: 20, backgroundColor: JADE.main }} />
-            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text }}>MACRO MARKETS</span>
+            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text }}>翡翠眼</span>
           </div>
           <nav style={{ display: "flex", alignItems: "center", gap: 0 }}>
             {["株式", "為替", "米国債", "日本国債", "コモディティ"].map((label, i) => (
@@ -387,7 +387,7 @@ export default function Home() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                 <div style={{ width: 2, height: 14, backgroundColor: JADE.main }} />
-                <span style={{ fontSize: 13, fontWeight: 700, color: t.text, letterSpacing: "0.08em" }}>MACRO MARKETS</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: t.text, letterSpacing: "0.08em" }}>翡翠眼</span>
               </div>
               <p style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.8, maxWidth: 480 }}>
                 本サイトに掲載されている情報は、投資判断の参考を目的としたものであり、投資を勧誘するものではありません。
@@ -402,7 +402,7 @@ export default function Home() {
             </div>
           </div>
           <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${t.border}`, fontSize: 11, color: t.textMuted }}>
-            © 2024 MACRO MARKETS — All data delayed 15–20 minutes.
+            © 2026 翡翠眼 — All data delayed 15–20 minutes.
           </div>
         </div>
       </footer>
