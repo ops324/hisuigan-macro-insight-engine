@@ -25,6 +25,7 @@ export interface ReportMeta {
   scenarios?: ScenarioItem[];
   quote?: string;
   quoteAuthor?: string;
+  marketOverview?: string;
 }
 
 export interface Report extends ReportMeta {
@@ -57,6 +58,7 @@ export function getAllReports(): ReportMeta[] {
         scenarios: data.scenarios,
         quote: data.quote,
         quoteAuthor: data.quoteAuthor,
+        marketOverview: data.marketOverview,
       });
     }
   }
@@ -88,6 +90,7 @@ export function getReportBySlug(slug: string): Report | null {
       scenarios: data.scenarios,
       quote: data.quote,
       quoteAuthor: data.quoteAuthor,
+      marketOverview: data.marketOverview,
       content,
     };
   }

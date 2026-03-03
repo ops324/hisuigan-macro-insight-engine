@@ -68,6 +68,11 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         {themes && themes.length > 0 && (
           <div style={{ background: t.surface, padding: "20px" }}>
             <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 14 }}>市況概要</div>
+            {report.marketOverview && (
+              <p style={{ fontSize: 12, color: t.textMuted, lineHeight: 1.8, margin: "0 0 14px", borderBottom: `1px solid ${t.borderStrong}`, paddingBottom: 12 }}>
+                {report.marketOverview}
+              </p>
+            )}
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {themes.map((theme, i) => (
                 <div key={i} style={{ fontSize: 13, color: t.textSub, lineHeight: 1.5 }}>{theme}</div>
