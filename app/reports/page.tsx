@@ -40,7 +40,7 @@ export default function ReportsPage() {
             REPORTS
           </h1>
           <p style={{ fontSize: 13, color: "#666", marginTop: 8, letterSpacing: "0.04em" }}>
-            月次 · 週次 · 日次の記録 — 知性の運用ログ
+            月次・週次・日次のマクロ市場分析レポート
           </p>
         </div>
       </div>
