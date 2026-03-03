@@ -47,7 +47,7 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         {/* スタンス */}
         {stance != null && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 4 }}>STANCE</div>
+            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 4 }}>スタンス</div>
             <div style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.06em", marginBottom: 10 }}>中長期目線</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: t.text, marginBottom: 16 }}>{stanceLabel ?? "—"}</div>
             <div style={{ position: "relative", height: 4, background: t.borderStrong, marginBottom: 8 }}>
@@ -67,7 +67,7 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         {/* テーマ */}
         {themes && themes.length > 0 && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 14 }}>KEY THEMES</div>
+            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 14 }}>市況概要</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {themes.map((theme, i) => (
                 <div key={i} style={{ fontSize: 13, color: t.textSub, lineHeight: 1.5 }}>{theme}</div>
@@ -79,7 +79,7 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         {/* シナリオ */}
         {scenarios && scenarios.length > 0 && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 14 }}>SCENARIOS（AI推定・参考値）</div>
+            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 14 }}>予測シナリオ（翡翠眼 AI推定・参考値）</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {(scenarios as ScenarioItem[]).map((s, i) => (
                 <div key={i}>
