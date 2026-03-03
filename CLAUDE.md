@@ -122,7 +122,10 @@ content/reports/daily/YYYY-MM-DD.md
 title: "タイトル"
 date: "YYYY-MM-DD"
 type: "monthly" | "weekly" | "daily"
-description: "要約（省略可）"
+description: "要約（省略可）。/reports の DAILY BRIEF セクションに表示される"
+# 格言（省略可）
+quote: "格言テキスト"
+quoteAuthor: "著者名・出典"
 # 週次レポートのCURRENT VIEW用（省略可）
 stance: 68              # 0=リスクオン〜100=リスクオフ
 stanceLabel: "守り重視"
@@ -137,6 +140,12 @@ scenarios:
     base: true          # ベースシナリオにのみ付与
 ---
 ```
+
+### DAILY BRIEF パネル
+- レポート一覧ページ（/reports）の CURRENT VIEW 直下に表示
+- 最新の日次レポート（daily[0]）の `description` を使用
+- 日付・本文・「詳細を読む →」リンクを表示
+- `description` がない場合は非表示
 
 ### CURRENT VIEW パネル
 - レポート一覧ページ（/reports）の最上部に表示
@@ -155,7 +164,10 @@ scenarios:
 | 共通 | `app/reports/ReportCard.tsx` | レポート一覧カード（t: Theme を受け取る） |
 
 ### 個別レポートページの機能
-- 目次（frontmatter 後の H1/H2 を自動抽出、クリックでジャンプ）
+- 格言エピグラフ（frontmatter の `quote`/`quoteAuthor` が存在する場合のみ表示）
+  - 目次の直前、翡翠グリーンの左ボーダー付きで上品に表示
+- 目次（frontmatter 後の H1/H2/H3 を自動抽出、クリックでジャンプ）
+  - H2は16pxインデント、H3は32pxインデントで階層表示
 - Markdown レンダリング（react-markdown + remark-gfm）
 - 免責事項ボックス（全レポート末尾に自動表示）
 - ← REPORTS 一覧に戻るリンク

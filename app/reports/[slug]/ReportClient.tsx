@@ -133,6 +133,25 @@ export default function ReportClient({ report }: { report: Report }) {
       {/* 本文 */}
       <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 80px" }}>
 
+        {/* 格言 */}
+        {report.quote && (
+          <div style={{
+            borderLeft: `2px solid ${JADE}66`,
+            paddingLeft: 20,
+            marginBottom: 48,
+            opacity: 0.75,
+          }}>
+            <p style={{ fontSize: 13, color: t.textSub, fontStyle: "italic", margin: "0 0 8px", lineHeight: 1.8 }}>
+              {report.quote}
+            </p>
+            {report.quoteAuthor && (
+              <p style={{ fontSize: 11, color: t.textMuted, margin: 0, letterSpacing: "0.06em" }}>
+                — {report.quoteAuthor}
+              </p>
+            )}
+          </div>
+        )}
+
         {/* 目次 */}
         {headings.length > 0 && (
           <div style={{

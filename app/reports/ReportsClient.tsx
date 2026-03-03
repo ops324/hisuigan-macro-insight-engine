@@ -108,10 +108,11 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
 
 interface Props {
   latestWeekly?: ReportMeta;
+  latestDaily?: ReportMeta;
   reportsByType: Record<ReportType, ReportMeta[]>;
 }
 
-export default function ReportsClient({ latestWeekly, reportsByType }: Props) {
+export default function ReportsClient({ latestWeekly, latestDaily, reportsByType }: Props) {
   const [mode, setMode] = useState<ThemeMode>("dark");
   const t = themeMap[mode];
 
@@ -165,6 +166,23 @@ export default function ReportsClient({ latestWeekly, reportsByType }: Props) {
       {/* コンテンツ */}
       <main style={{ maxWidth: 1280, margin: "0 auto", padding: "40px 24px" }}>
         {latestWeekly && <CurrentView report={latestWeekly} t={t} />}
+
+        {/* 現状解説（最新日次レポートより） */}
+        {latestDaily?.description && (
+          <div style={{ marginBottom: 48, borderLeft: `2px solid ${JADE}44`, paddingLeft: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.1em", fontWeight: 700 }}>DAILY BRIEF</span>
+              <span style={{ fontSize: 10, color: t.textMuted }}>·</span>
+              <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>{latestDaily.date}</span>
+            </div>
+            <p style={{ fontSize: 13, color: t.textMuted, margin: 0, lineHeight: 1.8 }}>
+              {latestDaily.description}
+            </p>
+            <Link href={`/reports/${latestDaily.slug}`} style={{ fontSize: 11, color: JADE, textDecoration: "none", letterSpacing: "0.04em", display: "inline-block", marginTop: 8 }}>
+              詳細を読む →
+            </Link>
+          </div>
+        )}
 
         {types.map((type) => {
           const reports = reportsByType[type] ?? [];

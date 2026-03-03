@@ -23,6 +23,8 @@ export interface ReportMeta {
   stanceLabel?: string;
   themes?: string[];
   scenarios?: ScenarioItem[];
+  quote?: string;
+  quoteAuthor?: string;
 }
 
 export interface Report extends ReportMeta {
@@ -53,6 +55,8 @@ export function getAllReports(): ReportMeta[] {
         stanceLabel: data.stanceLabel,
         themes: data.themes,
         scenarios: data.scenarios,
+        quote: data.quote,
+        quoteAuthor: data.quoteAuthor,
       });
     }
   }
@@ -82,6 +86,8 @@ export function getReportBySlug(slug: string): Report | null {
       stanceLabel: data.stanceLabel,
       themes: data.themes,
       scenarios: data.scenarios,
+      quote: data.quote,
+      quoteAuthor: data.quoteAuthor,
       content,
     };
   }
