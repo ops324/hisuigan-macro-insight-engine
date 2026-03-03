@@ -66,7 +66,6 @@ interface TreasuryItem {
 
 export default function Home() {
   const [mode, setMode] = useState<ThemeMode>("dark");
-
   // localStorage からテーマを復元
   useEffect(() => {
     const saved = localStorage.getItem("theme") as ThemeMode | null;

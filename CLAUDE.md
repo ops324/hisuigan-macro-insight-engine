@@ -129,6 +129,7 @@ quoteAuthor: "著者名・出典"
 # 週次レポートのCURRENT VIEW用（省略可）
 stance: 68              # 0=リスクオン〜100=リスクオフ
 stanceLabel: "守り重視"
+marketOverview: "市況の概要テキスト（省略可）。市況概要パネルのテーマ一覧上部に表示"
 themes:
   - "🔴 テーマ1"
   - "🟡 テーマ2"
@@ -140,6 +141,15 @@ scenarios:
     base: true          # ベースシナリオにのみ付与
 ---
 ```
+
+### 格言バナー（Quote Banner）
+- 表示ページ：レポート一覧ページ（`/reports`）のみ
+- **メインページ（`/`）・詳細レポートページ（`/reports/[slug]`）には表示しない**（詳細ページには別途エピグラフとして表示）
+- ソース：最新の週次レポート（weekly[0]）の `quote` / `quoteAuthor` frontmatter
+- 表示位置：レポート一覧（`/reports`）のページタイトルセクション直下、CURRENT VIEW の上
+- デザイン：翡翠グリーンの縦ボーダー、斜体テキスト、著者名付き
+- `quote` がない場合は非表示
+- `quoteAuthor` は省略可。AI（翡翠眼）が生成した格言の場合は `quoteAuthor: "翡翠眼"` とする
 
 ### DAILY BRIEF パネル
 - レポート一覧ページ（/reports）の CURRENT VIEW 直下に表示

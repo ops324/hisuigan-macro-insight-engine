@@ -168,6 +168,23 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
         </div>
       </div>
 
+      {/* Quote Banner */}
+      {latestWeekly?.quote && (
+        <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface }}>
+          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "14px 24px", display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ width: 2, height: 36, background: JADE, flexShrink: 0 }} />
+            <div>
+              <p style={{ fontSize: 13, color: t.textSub, fontStyle: "italic", margin: "0 0 4px", lineHeight: 1.6 }}>
+                &ldquo;{latestWeekly.quote}&rdquo;
+              </p>
+              {latestWeekly.quoteAuthor && (
+                <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em" }}>— {latestWeekly.quoteAuthor}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* コンテンツ */}
       <main style={{ maxWidth: 1280, margin: "0 auto", padding: "40px 24px" }}>
         {latestWeekly && <CurrentView report={latestWeekly} t={t} />}
