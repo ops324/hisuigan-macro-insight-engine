@@ -6,12 +6,23 @@ const REPORTS_DIR = path.join(process.cwd(), "content/reports");
 
 export type ReportType = "monthly" | "weekly" | "daily";
 
+export interface ScenarioItem {
+  label: string;
+  probability: number;
+  direction: "up" | "neutral" | "down";
+  base?: boolean;
+}
+
 export interface ReportMeta {
   slug: string;
   title: string;
   date: string;
   type: ReportType;
   description?: string;
+  stance?: number;
+  stanceLabel?: string;
+  themes?: string[];
+  scenarios?: ScenarioItem[];
 }
 
 export interface Report extends ReportMeta {
@@ -38,6 +49,10 @@ export function getAllReports(): ReportMeta[] {
         date: data.date ?? "",
         type: (data.type as ReportType) ?? type,
         description: data.description,
+        stance: data.stance,
+        stanceLabel: data.stanceLabel,
+        themes: data.themes,
+        scenarios: data.scenarios,
       });
     }
   }
