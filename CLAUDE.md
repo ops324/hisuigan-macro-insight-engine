@@ -120,6 +120,14 @@ content/reports/weekly/YYYY-WXX.md
 content/reports/daily/YYYY-MM-DD.md
 ```
 
+### レポート掲載ルール
+- **各タイプ（monthly / weekly / daily）のレポートは常に1件のみ掲載**
+- 新しいレポートを追加する際は、同タイプの旧ファイルを削除してから commit する
+- タイトル命名規則：
+  - 日次：`YYYY年M月D日 日次レポート`
+  - 週次：`YYYY年M月第N週 週次レポート`
+  - 月次：`YYYY年M月 月次レポート`
+
 ### フロントマター形式
 ```yaml
 ---
