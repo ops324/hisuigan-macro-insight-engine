@@ -61,7 +61,7 @@ function extractHeadings(content: string): Heading[] {
 }
 
 export default function ReportClient({ report }: { report: Report }) {
-  const [mode, setMode] = useState<ThemeMode>("dark");
+  const [mode, setMode] = useState<ThemeMode>("light");
   const t = themeMap[mode];
 
   useEffect(() => {

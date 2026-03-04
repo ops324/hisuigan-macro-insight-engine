@@ -5,6 +5,7 @@
 サイト名：翡翠眼（ひすいがん）
 
 ## 確定仕様
+- 初回訪問時のデフォルト表示：数値画面（`/`）。株式指数・為替・債券・コモディティの市場データを表示する
 - テーマ：ダーク/ライト切り替え（localStorage "theme" キーで全ページ共有・永続化）
 - テーマ切替ボタン表示：`LIGHT` / `DARK`（絵文字なし）
 - アクセント：翡翠グリーン #2d8c6e / #3aaf8a
@@ -91,7 +92,7 @@ export type Theme = typeof themeMap["dark"] | typeof themeMap["light"];
 ### テーマの持ち方
 - `localStorage.getItem("theme")` / `localStorage.setItem("theme", next)` でページ間共有
 - キー名：`"theme"`（全ページ統一）
-- デフォルト：`"dark"`
+- デフォルト：`"light"`
 
 ### メインページ（app/page.tsx）
 - 独自 theme オブジェクト（lib/theme.ts とは別、色値が微妙に異なる）

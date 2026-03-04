@@ -120,7 +120,7 @@ interface Props {
 }
 
 export default function ReportsClient({ latestWeekly, latestDaily, reportsByType }: Props) {
-  const [mode, setMode] = useState<ThemeMode>("dark");
+  const [mode, setMode] = useState<ThemeMode>("light");
   const t = themeMap[mode];
 
   useEffect(() => {
