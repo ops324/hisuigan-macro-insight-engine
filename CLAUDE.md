@@ -111,7 +111,8 @@ DB 不要、Vercel 自動デプロイで反映。
 1. Gemini でレポートを書く
 2. `content/reports/{type}/YYYY-MM-DD.md` として保存
 3. **Gemini引用番号（` 1`, ` 6` 等）を削除してから commit**（Python スクリプトで除去）
-4. `git push` → Vercel 自動デプロイ → ページ公開
+4. **`## 引用文献` セクションは掲載しない**（commit 前に削除する）
+5. `git push` → Vercel 自動デプロイ → ページ公開
 
 ### ファイル構成
 ```
