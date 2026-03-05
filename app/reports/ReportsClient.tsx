@@ -26,15 +26,54 @@ function directionLabel(d: string) {
   return d === "up" ? "↑" : d === "down" ? "↓" : "→";
 }
 
-const ALLOC_COLORS = ["#2d8c6e", "#5cb8a0", "#c9a227", "#5b8db8", "#8dafc8", "#9a9a9a"];
+const ALLOC_COLORS = ["#2d8c6e", "#74c4ad", "#c4963a", "#6b96b8", "#9bb5c8", "#b5b5b5"];
 
-function buildConicGradient(items: AllocationItem[]): string {
+function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
+  const rad = ((angleDeg - 90) * Math.PI) / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+
+function donutSegmentPath(cx: number, cy: number, outerR: number, innerR: number, startDeg: number, endDeg: number) {
+  const o1 = polarToCartesian(cx, cy, outerR, startDeg);
+  const o2 = polarToCartesian(cx, cy, outerR, endDeg);
+  const i2 = polarToCartesian(cx, cy, innerR, endDeg);
+  const i1 = polarToCartesian(cx, cy, innerR, startDeg);
+  const large = endDeg - startDeg > 180 ? 1 : 0;
+  return `M ${o1.x} ${o1.y} A ${outerR} ${outerR} 0 ${large} 1 ${o2.x} ${o2.y} L ${i2.x} ${i2.y} A ${innerR} ${innerR} 0 ${large} 0 ${i1.x} ${i1.y} Z`;
+}
+
+function AllocationDonut({ items, t }: { items: AllocationItem[]; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
+  const size = 132;
+  const cx = size / 2;
+  const cy = size / 2;
+  const outerR = size * 0.44;
+  const innerR = size * 0.27;
+  const gap = 2;
   let cum = 0;
-  return `conic-gradient(${items.map((item, i) => {
-    const start = cum;
+  const segments = items.map((item, i) => {
+    const start = (cum / 100) * 360 + gap / 2;
     cum += item.percent;
-    return `${ALLOC_COLORS[i % ALLOC_COLORS.length]} ${start}% ${cum}%`;
-  }).join(", ")})`;
+    const end = (cum / 100) * 360 - gap / 2;
+    return { item, start, end, color: ALLOC_COLORS[i % ALLOC_COLORS.length] };
+  });
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 28, flexWrap: "wrap" }}>
+      <svg width={size} height={size} style={{ flexShrink: 0 }}>
+        {segments.map((seg, i) => (
+          <path key={i} d={donutSegmentPath(cx, cy, outerR, innerR, seg.start, seg.end)} fill={seg.color} />
+        ))}
+      </svg>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, minWidth: 180 }}>
+        {items.map((item, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 8, height: 8, background: ALLOC_COLORS[i % ALLOC_COLORS.length], flexShrink: 0 }} />
+            <span style={{ fontSize: 12, color: t.textSub, flex: 1 }}>{item.label}</span>
+            <span style={{ fontSize: 12, color: t.textMuted, fontFamily: "monospace" }}>{item.percent}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
@@ -129,18 +168,7 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
             <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em" }}>参考資産配分モデル（翡翠眼 AI推定・参考値）</span>
             <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>投資助言ではありません</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
-            <div style={{ width: 120, height: 120, borderRadius: "50%", background: buildConicGradient(allocation as AllocationItem[]), flexShrink: 0 }} />
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: 1, minWidth: 180 }}>
-              {(allocation as AllocationItem[]).map((item, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 8, height: 8, background: ALLOC_COLORS[i % ALLOC_COLORS.length], flexShrink: 0 }} />
-                  <span style={{ fontSize: 12, color: t.textSub, flex: 1 }}>{item.label}</span>
-                  <span style={{ fontSize: 12, color: t.textMuted, fontFamily: "monospace" }}>{item.percent}%</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <AllocationDonut items={allocation as AllocationItem[]} t={t} />
         </div>
       )}
     </div>
