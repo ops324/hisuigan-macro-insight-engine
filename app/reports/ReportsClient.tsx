@@ -224,7 +224,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
                 <p style={{ fontSize: 13, color: t.textMuted, fontStyle: "italic" }}>レポートはまだありません。</p>
               ) : (
                 <div style={{ display: "grid", gap: 1, background: t.border, border: `1px solid ${t.border}` }}>
-                  {reports.map((r) => (
+                  {(type === "daily" ? reports.slice(0, 1) : reports).map((r) => (
                     <ReportCard key={r.slug} report={r} t={t} />
                   ))}
                 </div>
