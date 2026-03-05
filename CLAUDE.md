@@ -123,6 +123,7 @@ content/reports/daily/YYYY-MM-DD.md
 
 ### レポート掲載ルール
 - **各タイプ（monthly / weekly / daily）のレポートは常に1件のみ掲載**
+- **表示制限：レポート一覧ページ（/reports）では、月次・週次・日次それぞれ最新1件のみ表示する**（`reports.slice(0, 1)` による制限。ReportsClient.tsx）
 - 新しいレポートを追加する際は、同タイプの旧ファイルを削除してから commit する
 - タイトル命名規則：
   - 日次：`YYYY年M月D日 日次レポート`
