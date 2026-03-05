@@ -35,6 +35,7 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
       <div className="hg-cv-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ fontSize: 11, color: JADE, fontWeight: 700, letterSpacing: "0.12em", whiteSpace: "nowrap" }}>カレントビュー</span>
+          <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.06em", whiteSpace: "nowrap" }}>月次・週次・日次統合 · 中長期視点</span>
           <span className="hg-cv-header-sub" style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 11, color: t.textMuted }}>·</span>
             <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em" }}>{report.title}</span>
