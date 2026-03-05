@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ReportMeta, ReportType, ScenarioItem } from "@/lib/reports";
+import { ReportMeta, ReportType, ScenarioItem, AllocationItem } from "@/lib/reports";
 import { themeMap, ThemeMode } from "@/lib/theme";
 import { ReportCard } from "./ReportCard";
 
@@ -27,7 +27,7 @@ function directionLabel(d: string) {
 }
 
 function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
-  const { stance, stanceLabel, themes, scenarios } = report;
+  const { stance, stanceLabel, themes, scenarios, allocation } = report;
   if (stance == null && !themes && !scenarios) return null;
 
   return (
@@ -110,6 +110,27 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
           </div>
         )}
       </div>
+
+      {/* 参考資産配分モデル */}
+      {allocation && allocation.length > 0 && (
+        <div style={{ marginTop: 1, background: t.surface, border: `1px solid ${t.border}`, borderTop: "none", padding: "20px" }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14 }}>
+            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em" }}>参考資産配分モデル（翡翠眼 AI推定・参考値）</span>
+            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>投資助言ではありません</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {(allocation as AllocationItem[]).map((item, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontSize: 12, color: t.textSub, width: 180, flexShrink: 0 }}>{item.label}</span>
+                <div style={{ flex: 1, height: 3, background: t.borderStrong }}>
+                  <div style={{ height: "100%", width: `${item.percent}%`, background: JADE, opacity: 0.8 }} />
+                </div>
+                <span style={{ fontSize: 12, color: t.textMuted, fontFamily: "monospace", width: 36, textAlign: "right", flexShrink: 0 }}>{item.percent}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

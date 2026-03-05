@@ -13,6 +13,11 @@ export interface ScenarioItem {
   base?: boolean;
 }
 
+export interface AllocationItem {
+  label: string;
+  percent: number;
+}
+
 export interface ReportMeta {
   slug: string;
   title: string;
@@ -26,6 +31,7 @@ export interface ReportMeta {
   quote?: string;
   quoteAuthor?: string;
   marketOverview?: string;
+  allocation?: AllocationItem[];
 }
 
 export interface Report extends ReportMeta {
@@ -59,6 +65,7 @@ export function getAllReports(): ReportMeta[] {
         quote: data.quote,
         quoteAuthor: data.quoteAuthor,
         marketOverview: data.marketOverview,
+        allocation: data.allocation,
       });
     }
   }
@@ -91,6 +98,7 @@ export function getReportBySlug(slug: string): Report | null {
       quote: data.quote,
       quoteAuthor: data.quoteAuthor,
       marketOverview: data.marketOverview,
+      allocation: data.allocation,
       content,
     };
   }
