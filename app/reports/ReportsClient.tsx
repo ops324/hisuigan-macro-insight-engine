@@ -26,7 +26,8 @@ function directionLabel(d: string) {
   return d === "up" ? "↑" : d === "down" ? "↓" : "→";
 }
 
-const ALLOC_COLORS = ["#2d8c6e", "#74c4ad", "#c4963a", "#6b96b8", "#9bb5c8", "#b5b5b5"];
+// 翡翠・琥珀・鋼青・菫・浅翡翠・銀 — 上品で運気を高める配色
+const ALLOC_COLORS = ["#2d8c6e", "#c4963a", "#6b96b8", "#a87db5", "#74c4ad", "#a0a0a0"];
 
 function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
   const rad = ((angleDeg - 90) * Math.PI) / 180;
@@ -47,8 +48,8 @@ function AllocationDonut({ items, t }: { items: AllocationItem[]; t: typeof them
   const cx = size / 2;
   const cy = size / 2;
   const outerR = size * 0.44;
-  const innerR = size * 0.27;
-  const gap = 2;
+  const innerR = size * 0.34; // 細身リング（リング幅10%、ミニマルで上品）
+  const gap = 3;              // セグメント間の呼吸（3°）
   let cum = 0;
   const segments = items.map((item, i) => {
     const start = (cum / 100) * 360 + gap / 2;
@@ -58,17 +59,39 @@ function AllocationDonut({ items, t }: { items: AllocationItem[]; t: typeof them
   });
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 28, flexWrap: "wrap" }}>
-      <svg width={size} height={size} style={{ flexShrink: 0 }}>
+      <svg
+        width={size}
+        height={size}
+        style={{ flexShrink: 0, filter: "drop-shadow(0 2px 10px rgba(45,140,110,0.22))" }}
+      >
+        {/* ベースリング：薄いガイドライン */}
+        <circle
+          cx={cx} cy={cy}
+          r={(outerR + innerR) / 2}
+          fill="none"
+          stroke={t.border}
+          strokeWidth={outerR - innerR}
+        />
+        {/* セグメント */}
         {segments.map((seg, i) => (
           <path key={i} d={donutSegmentPath(cx, cy, outerR, innerR, seg.start, seg.end)} fill={seg.color} />
         ))}
+        {/* センター：翡翠の小点（運気の核） */}
+        <circle cx={cx} cy={cy} r={5} fill={JADE} opacity={0.14} />
+        <circle cx={cx} cy={cy} r={2} fill={JADE} opacity={0.42} />
       </svg>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, minWidth: 180 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1, minWidth: 180 }}>
         {items.map((item, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 8, height: 8, background: ALLOC_COLORS[i % ALLOC_COLORS.length], flexShrink: 0 }} />
-            <span style={{ fontSize: 12, color: t.textSub, flex: 1 }}>{item.label}</span>
-            <span style={{ fontSize: 12, color: t.textMuted, fontFamily: "monospace" }}>{item.percent}%</span>
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <div style={{
+              width: 7, height: 7,
+              borderRadius: "50%",
+              background: ALLOC_COLORS[i % ALLOC_COLORS.length],
+              flexShrink: 0,
+              boxShadow: `0 0 5px ${ALLOC_COLORS[i % ALLOC_COLORS.length]}99`,
+            }} />
+            <span style={{ fontSize: 12, color: t.textSub, flex: 1, letterSpacing: "0.02em" }}>{item.label}</span>
+            <span style={{ fontSize: 11, color: t.textMuted, fontFamily: "monospace" }}>{item.percent}%</span>
           </div>
         ))}
       </div>
@@ -164,10 +187,15 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
       {/* 参考資産配分モデル */}
       {allocation && allocation.length > 0 && (
         <div style={{ marginTop: 1, background: t.surface, border: `1px solid ${t.border}`, borderTop: "none", padding: "20px" }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
             <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em" }}>参考資産配分モデル（翡翠眼 AI推定・参考値）</span>
             <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>投資助言ではありません</span>
           </div>
+          {report.allocationNote && (
+            <p style={{ fontSize: 11, color: t.textMuted, margin: "0 0 16px", lineHeight: 1.8, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}44`, paddingLeft: 10 }}>
+              {report.allocationNote}
+            </p>
+          )}
           <AllocationDonut items={allocation as AllocationItem[]} t={t} />
         </div>
       )}

@@ -32,6 +32,7 @@ export interface ReportMeta {
   quoteAuthor?: string;
   marketOverview?: string;
   allocation?: AllocationItem[];
+  allocationNote?: string;
 }
 
 export interface Report extends ReportMeta {
@@ -66,6 +67,7 @@ export function getAllReports(): ReportMeta[] {
         quoteAuthor: data.quoteAuthor,
         marketOverview: data.marketOverview,
         allocation: data.allocation,
+        allocationNote: data.allocationNote,
       });
     }
   }
@@ -99,6 +101,7 @@ export function getReportBySlug(slug: string): Report | null {
       quoteAuthor: data.quoteAuthor,
       marketOverview: data.marketOverview,
       allocation: data.allocation,
+      allocationNote: data.allocationNote,
       content,
     };
   }
