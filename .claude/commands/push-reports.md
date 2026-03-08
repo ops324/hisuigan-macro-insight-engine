@@ -12,6 +12,17 @@ APIキー不要。Claude Code セッション内で完結する。
 2. `content/reports/weekly/` 内の最新ファイル
 3. `content/reports/daily/` 内の最新ファイル
 
+### Step 1.5: 旧レポートを削除する（1タイプ1件ルール）
+
+各タイプのディレクトリに複数ファイルが存在する場合、最新1件（ファイル名降順で先頭）を残し、それ以外を `git rm` で削除する。
+
+対象ディレクトリ：
+- `content/reports/monthly/`
+- `content/reports/weekly/`
+- `content/reports/daily/`
+
+削除が不要な場合（各ディレクトリに1件のみ）はスキップする。
+
 ### Step 2: カレントビュー frontmatter を統合生成する
 
 3本のレポートの内容・スタンス・テーマを総合的に分析し、
@@ -46,16 +57,24 @@ APIキー不要。Claude Code セッション内で完結する。
 
 ```
 git status で変更ファイルを確認
-git add content/reports/ （レポートファイルのみ）
+git add content/reports/   （レポートファイルのみ。.claude/ や scripts/ は含めない）
+```
+
+コミット前にユーザーに以下を報告し、確認を取ること：
+- 削除したファイル（あれば）
+- 更新した週次ファイル名
+- 生成した frontmatter フィールドの概要（stance・stanceLabel・quote・allocationNote 等）
+
+確認後：
+```
 git commit -m "レポート更新: [週次ファイル名] + カレントビュー生成"
 git push
 ```
 
-コミット前にユーザーに変更内容を簡潔に報告し、確認を取ること。
-
 ## 注意事項
 - allocation の合計が 100% になっていることを必ず確認する
 - scenarios の probability 合計が 100 になっていることを必ず確認する
+- quote は 30 文字以内。AI生成の場合は quoteAuthor を `"翡翠眼"` にする
 - 本文 Markdown は一切変更しない
 - Gemini 引用番号（ 1  6 等）が残っていたら削除する
 - `## 引用文献` セクションが残っていたら削除する

@@ -111,9 +111,10 @@ DB 不要、Vercel 自動デプロイで反映。
 1. Gemini でレポートを書く（月次・週次・日次）
 2. Claude Code にレポートを渡して編集・整形を依頼する（任意）
 3. **`/push-reports` を実行**（Claude Code カスタムスラッシュコマンド）
+   - 同タイプの旧レポートファイルを `git rm` で削除（1タイプ1件ルール）
    - 月次・週次・日次を統合してカレントビュー frontmatter を自動生成
    - Gemini 引用番号・引用文献セクションを自動削除
-   - `git add` → `git commit` → `git push` まで実行
+   - ユーザー確認後 `git add content/reports/` → `git commit` → `git push` まで実行
 4. Vercel 自動デプロイ → ページ公開
 
 ### `/push-reports` スラッシュコマンド（.claude/commands/push-reports.md）
@@ -144,12 +145,14 @@ Claude Code を使わず CLI 単体で `allocationNote` のみ生成したい場
 content/reports/monthly/YYYY-MM.md
 content/reports/weekly/YYYY-WXX.md
 content/reports/daily/YYYY-MM-DD.md
+.claude/commands/push-reports.md     # /push-reports スラッシュコマンド定義
+scripts/gen-allocation-note.mjs      # allocationNote 生成スクリプト（オプション・非推奨）
 ```
 
 ### レポート掲載ルール
 - **各タイプ（monthly / weekly / daily）のレポートは常に1件のみ掲載**
 - **表示制限：レポート一覧ページ（/reports）では、月次・週次・日次それぞれ最新1件のみ表示する**（`reports.slice(0, 1)` による制限。ReportsClient.tsx）
-- 新しいレポートを追加する際は、同タイプの旧ファイルを削除してから commit する
+- 新しいレポートを追加する際は、同タイプの旧ファイルを `git rm` で削除してから commit する（`/push-reports` が自動実行）
 - タイトル命名規則：
   - 日次：`YYYY年M月D日 日次レポート`
   - 週次：`YYYY年M月第N週 週次レポート`
@@ -162,9 +165,9 @@ title: "タイトル"
 date: "YYYY-MM-DD"
 type: "monthly" | "weekly" | "daily"
 description: "要約（省略可）。/reports の DAILY BRIEF セクションに表示される"
-# 格言（省略可）
-quote: "格言テキスト"
-quoteAuthor: "著者名・出典"
+# ⚠ 手動記述不要。/push-reports スラッシュコマンドが Claude Code セッション内で自動生成・上書きする
+# quote: "格言テキスト"
+# quoteAuthor: "著者名・出典"
 # 週次レポートのCURRENT VIEW用（省略可）
 stance: 68              # 0=リスクオン〜100=リスクオフ
 stanceLabel: "守り重視"
@@ -184,7 +187,7 @@ allocation:
     percent: 15
   - label: "海外株（先進国）"
     percent: 10
-# ⚠ 手動記述不要。npm run gen-note が自動生成・上書きする
+# ⚠ 手動記述不要。/push-reports スラッシュコマンドが Claude Code セッション内で自動生成・上書きする
 # allocationNote: "（自動生成）"
 ---
 ```
@@ -213,7 +216,8 @@ allocation:
 - スタンスゲージには「中長期目線」の注記と「AI（翡翠眼）による参考値。投資助言ではありません。」を表示
 - 予測シナリオのラベル：「予測シナリオ（翡翠眼 AI推定・参考値）」
 - 参考資産配分モデル：3カラムの直下に横幅フルで表示。ラベル「参考資産配分モデル（翡翠眼 AI推定・参考値）」「投資助言ではありません」を両端に表示。SVGドーナツグラフ（132px）＋凡例（カラースウォッチ・ラベル・%）の横並び構成
-- 解説文（allocationNote）：frontmatterの `allocationNote` フィールドから取得。**`npm run gen-note` スクリプトが月次・週次・日次レポートを統合して Claude API で自動生成し書き込む**（手動記述不要）。「なぜこの配分か」2〜3文。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー（`2px solid ${JADE}44`・paddingLeft 10px）付きで表示。フォントサイズ11px・`t.textMuted`色・行間1.8。`allocationNote` がない場合は非表示
+- 解説文（allocationNote）：frontmatterの `allocationNote` フィールドから取得。**`/push-reports` スラッシュコマンドが月次・週次・日次レポートを統合して Claude Code セッション内で自動生成し書き込む**（手動記述不要・APIキー不要）。「なぜこの配分か」2〜3文。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー（`2px solid ${JADE}44`・paddingLeft 10px）付きで表示。フォントサイズ11px・`t.textMuted`色・行間1.8。`allocationNote` がない場合は非表示
+- `quote`/`quoteAuthor` も **`/push-reports` が自動生成**（手動記述不要）。今週の市場環境に示唆を与える格言・名言（30文字以内）と著者名を生成。AI生成の場合は `quoteAuthor: "翡翠眼"` とする
 - ドーナツグラフ：セグメント間に3度のギャップを設け、上端（12時方向）スタート。外径44%・内径34%（リング幅10%、細身でミニマル）
 - ベースリング：セグメント背後に `t.border` 色の薄いガイドリングを描画
 - センター装飾：翡翠グリーンの二重極小ドット（r=5 opacity=0.14 + r=2 opacity=0.42）
@@ -240,6 +244,7 @@ allocation:
 - 格言エピグラフ（frontmatter の `quote`/`quoteAuthor` が存在する場合のみ表示）
   - 目次の直前、翡翠グリーンの左ボーダー付きで上品に表示
 - 目次（frontmatter 後の H1/H2/H3 を自動抽出、クリックでジャンプ）
+  - 各見出し（H1/H2/H3）に `id={slugify(text)}` を付与し、目次の `<a href="#id">` でアンカーリンク
   - H2は16pxインデント、H3は32pxインデントで階層表示
   - モバイル時：H2は8px、H3は16pxに縮小。長い見出しは省略表示（text-overflow: ellipsis）
 - Markdown レンダリング（react-markdown + remark-gfm）
@@ -293,9 +298,11 @@ lang: "ja"
 - APIキーは必ず.env.localに保存
 - .env.localは.gitignoreに含まれていることを確認
 - チャットにAPIキーを貼らない
-- Gemini レポートの引用番号（` 1`, ` 6` 等）は必ず commit 前に削除すること
-- カレントビュー frontmatter の生成は Claude Code セッション内で行う（APIキー不要）
-- `npm run gen-note`（`scripts/gen-allocation-note.mjs`）は Claude Code を使わない場合のオプション手段
+- Gemini レポートの引用番号（` 1`, ` 6` 等）は必ず commit 前に削除すること（`/push-reports` が自動削除）
+- カレントビュー frontmatter の生成は `/push-reports` スラッシュコマンドで行う（APIキー不要・Claude Code セッション内で完結）
+- `git add` の対象は `content/reports/` のみ（`.claude/` や `scripts/` は通常含めない）
+- コミットメッセージ形式：`レポート更新: [週次ファイル名] + カレントビュー生成`
+- `npm run gen-note`（`scripts/gen-allocation-note.mjs`）は Claude Code を使わない場合のオプション手段（非推奨）
 
 # currentDate
 Today's date is 2026-03-03.

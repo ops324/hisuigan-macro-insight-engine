@@ -210,9 +210,12 @@ export default function ReportClient({ report }: { report: Report }) {
                   </h2>
                 );
               },
-              h3: ({ children }) => (
-                <h3 style={{ fontSize: 15, fontWeight: 700, color: t.textSub, margin: "28px 0 10px" }}>{children}</h3>
-              ),
+              h3: ({ children }) => {
+                const id = slugify(nodeToText(children));
+                return (
+                  <h3 id={id} style={{ fontSize: 15, fontWeight: 700, color: t.textSub, margin: "28px 0 10px" }}>{children}</h3>
+                );
+              },
               p: ({ children }) => (
                 <p style={{ margin: "0 0 18px", color: t.textSub }}>{children}</p>
               ),
