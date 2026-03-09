@@ -18,6 +18,8 @@ export interface AllocationItem {
   percent: number;
 }
 
+export type SectorItem = AllocationItem;
+
 export interface ReportMeta {
   slug: string;
   title: string;
@@ -33,6 +35,8 @@ export interface ReportMeta {
   marketOverview?: string;
   allocation?: AllocationItem[];
   allocationNote?: string;
+  sectors?: SectorItem[];
+  sectorsNote?: string;
 }
 
 export interface Report extends ReportMeta {
@@ -68,6 +72,8 @@ export function getAllReports(): ReportMeta[] {
         marketOverview: data.marketOverview,
         allocation: data.allocation,
         allocationNote: data.allocationNote,
+        sectors: data.sectors,
+        sectorsNote: data.sectorsNote,
       });
     }
   }
@@ -102,6 +108,8 @@ export function getReportBySlug(slug: string): Report | null {
       marketOverview: data.marketOverview,
       allocation: data.allocation,
       allocationNote: data.allocationNote,
+      sectors: data.sectors,
+      sectorsNote: data.sectorsNote,
       content,
     };
   }

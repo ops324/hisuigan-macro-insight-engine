@@ -39,8 +39,15 @@ APIキー不要。Claude Code セッション内で完結する。
 | `scenarios` | 予測シナリオを 3 件（楽観・中立・悲観）。確率の合計は必ず 100%。base: true は 1 件のみ |
 | `allocation` | 資産配分を 6 クラス以内で。合計は必ず 100%。コモディティ・債券・株式・現金をバランスよく |
 | `allocationNote` | 「なぜこの配分か」を 2〜3 文で。月次の中長期観・週次のテーマ・日次の動向を統合した根拠 |
+| `sectors` | 注目セクターを 4〜6 件。注目度（percent）の合計は必ず 100%。セクター例：半導体、エネルギー、金融、ヘルスケア、テクノロジー、不動産、公益事業、素材、消費財、通信 等 |
+| `sectorsNote` | 「なぜこれらのセクターに注目するか」を 2〜3 文で。月次の構造変化・週次のテーマ・日次の動向を統合した根拠 |
 | `quote` | 今週の市場環境に示唆を与える格言・名言（30文字以内） |
 | `quoteAuthor` | 格言の著者名または出典。AI生成の場合は `"翡翠眼"` |
+
+#### sectorsNote の口調
+- 分析的・客観的（断定しすぎない）
+- 「〜を背景に」「〜リスクを踏まえ」「〜の観点から」などを使用
+- 免責事項は含めない（UI側に表示済み）
 
 #### allocationNote の口調
 - 分析的・客観的（断定しすぎない）
@@ -63,7 +70,7 @@ git add content/reports/   （レポートファイルのみ。.claude/ や scri
 コミット前にユーザーに以下を報告し、確認を取ること：
 - 削除したファイル（あれば）
 - 更新した週次ファイル名
-- 生成した frontmatter フィールドの概要（stance・stanceLabel・quote・allocationNote 等）
+- 生成した frontmatter フィールドの概要（stance・stanceLabel・quote・allocationNote・sectors・sectorsNote 等）
 
 確認後：
 ```
@@ -73,6 +80,7 @@ git push
 
 ## 注意事項
 - allocation の合計が 100% になっていることを必ず確認する
+- sectors の percent 合計が 100% になっていることを必ず確認する
 - scenarios の probability 合計が 100 になっていることを必ず確認する
 - quote は 30 文字以内。AI生成の場合は quoteAuthor を `"翡翠眼"` にする
 - 本文 Markdown は一切変更しない
