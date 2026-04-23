@@ -3,10 +3,10 @@ export const revalidate = 900; // 15分キャッシュ
 // Yahoo Finance は認証必須化のため Stooq を使用（無料・キー不要）
 // 変動はStooqから前日終値を取得できないため当日始値比（日中変動）で代用
 const SYMBOLS = [
-  { symbol: "cl.f", name: "WTI原油", unit: "USD/bbl" },
-  { symbol: "gc.f", name: "金",      unit: "USD/oz"  },
-  { symbol: "si.f", name: "銀",      unit: "USD/oz"  },
-  { symbol: "hg.f", name: "銅",      unit: "cents/lb" },
+  { symbol: "cl.f", name: "WTI原油", unit: "円/bbl",  isCents: false },
+  { symbol: "gc.f", name: "金",      unit: "円/oz",   isCents: false },
+  { symbol: "si.f", name: "銀",      unit: "円/oz",   isCents: false },
+  { symbol: "hg.f", name: "銅",      unit: "円/lb",   isCents: true  },
 ];
 
 async function fetchQuote(symbol) {
@@ -27,8 +27,15 @@ async function fetchQuote(symbol) {
   return { open, close };
 }
 
+async function fetchUsdJpy() {
+  const res = await fetch("https://open.er-api.com/v6/latest/USD");
+  if (!res.ok) throw new Error("Failed to fetch USD/JPY rate");
+  const data = await res.json();
+  return data.rates["JPY"];
+}
+
 function fmt(num, decimals) {
-  return num.toLocaleString("en-US", {
+  return num.toLocaleString("ja-JP", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
@@ -36,22 +43,26 @@ function fmt(num, decimals) {
 
 export async function GET() {
   try {
-    const results = await Promise.all(SYMBOLS.map(({ symbol }) => fetchQuote(symbol)));
+    const [results, usdJpy] = await Promise.all([
+      Promise.all(SYMBOLS.map(({ symbol }) => fetchQuote(symbol))),
+      fetchUsdJpy(),
+    ]);
 
-    const commodities = SYMBOLS.map(({ name, unit }, i) => {
+    const commodities = SYMBOLS.map(({ name, unit, isCents }, i) => {
       const { open, close } = results[i];
-      const change = close - open;
-      const pct    = (change / open) * 100;
-
-      // 銅はcents/lb のためそのまま表示（単位に明記）
-      const decimals = name === "銅" ? 2 : name === "銀" ? 2 : 2;
-      const sign = change >= 0 ? "+" : "";
+      // 銅はcents/lb → USD/lb に変換してからJPY換算
+      const rate = isCents ? usdJpy / 100 : usdJpy;
+      const closeJpy = close * rate;
+      const openJpy  = open  * rate;
+      const change   = closeJpy - openJpy;
+      const pct      = (change / openJpy) * 100;
+      const sign     = change >= 0 ? "+" : "";
 
       return {
         name,
         unit,
-        value:  fmt(close, decimals),
-        change: `${sign}${fmt(change, decimals)}`,
+        value:  `¥${fmt(closeJpy, 0)}`,
+        change: `${sign}¥${fmt(change, 0)}`,
         pct:    `${sign}${pct.toFixed(2)}%`,
       };
     });

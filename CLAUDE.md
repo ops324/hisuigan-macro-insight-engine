@@ -76,7 +76,9 @@
 - 更新：ISR 900秒（15分キャッシュ）
 - Route Handler：app/api/commodities/route.js
 - 変動：Stooqから前日終値を取得できないため当日始値比（日中変動）で代用
-- 単位：銅は cents/lb で表示（CME建値準拠）
+- 価格表示：日本円（JPY）換算。USD/JPY レートを ExchangeRate-API からリアルタイム取得して乗算
+- 単位：WTI原油=円/bbl、金・銀=円/oz、銅=円/lb（銅は cents/lb → USD/lb → JPY/lb 変換）
+- 表示形式：¥プレフィックス付き整数円（小数なし）
 
 ## テーマシステム
 
