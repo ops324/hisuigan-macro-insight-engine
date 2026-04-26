@@ -25,6 +25,28 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* ===== ホバー・トランジション ===== */
+.hg-data-card {
+  transition: box-shadow 0.14s ease;
+}
+.hg-data-card:hover {
+  box-shadow: inset 0 0 0 1px rgba(45, 140, 110, 0.22);
+}
+
+.hg-treasury-row {
+  transition: background-color 0.1s ease;
+}
+.hg-treasury-row:hover {
+  background-color: rgba(45, 140, 110, 0.04) !important;
+}
+
+.hg-nav-link {
+  transition: color 0.12s ease;
+}
+.hg-nav-link:hover {
+  color: rgba(45, 140, 110, 0.9) !important;
+}
+
 /* ===== モバイル対応 ===== */
 @media (max-width: 768px) {
   /* メインページのセクションナビタブを非表示 */

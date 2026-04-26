@@ -387,20 +387,22 @@ sectors:
 - データソース：最新の週次レポート（weekly[0]）のフロントマターを使用（月次・週次・日次を踏まえて執筆者が統合的に記述）
 - 表示要素：スタンス、市況概要、予測シナリオの3カラム ＋ 下部に参考資産配分モデル ＋ 注目セクター
 - スタンスゲージには「中長期目線」の注記と「AI（翡翠眼）による参考値。投資助言ではありません。」を表示
-- 予測シナリオのラベル：「予測シナリオ（翡翠眼 AI推定・参考値）」
-- 参考資産配分モデル：3カラムの直下に横幅フルで表示。ラベル「参考資産配分モデル（翡翠眼 AI推定・参考値）」「投資助言ではありません」を両端に表示。SVGドーナツグラフ（132px）＋凡例（カラースウォッチ・ラベル・%）の横並び構成
-- 解説文（allocationNote）：frontmatterの `allocationNote` フィールドから取得。**`/push-reports` スラッシュコマンドが月次・週次・日次レポートを統合して Claude Code セッション内で自動生成し書き込む**（手動記述不要・APIキー不要）。「なぜこの配分か」2〜3文。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー（`2px solid ${JADE}44`・paddingLeft 10px）付きで表示。フォントサイズ11px・`t.textMuted`色・行間1.8。`allocationNote` がない場合は非表示
+- 予測シナリオのラベル：「予測シナリオ（AI推定・参考値）」（翡翠眼を省略した短縮形）
+- 参考資産配分モデル：3カラムの直下に横幅フルで表示。ラベル「参考資産配分モデル（AI推定・参考値）」「投資助言ではありません」を両端に表示（`white-space: nowrap`）。SVGドーナツグラフ（168px）＋凡例（カラースウォッチ・ラベル・%）の横並び構成
+- 解説文（allocationNote）：frontmatterの `allocationNote` フィールドから取得。**`/push-reports` スラッシュコマンドが月次・週次・日次レポートを統合して Claude Code セッション内で自動生成し書き込む**（手動記述不要・APIキー不要）。「なぜこの配分か」2〜3文。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー（`2px solid ${JADE}66`・paddingLeft 12px）付きで表示。フォントサイズ12px・`t.textSub`色・行間1.85。`allocationNote` がない場合は非表示
 - `quote`/`quoteAuthor` も **`/push-reports` が自動生成**（手動記述不要）。今週の市場環境に示唆を与える格言・名言（30文字以内）と著者名を生成。AI生成の場合は `quoteAuthor: "翡翠眼"` とする
-- ドーナツグラフ：セグメント間に3度のギャップを設け、上端（12時方向）スタート。外径44%・内径34%（リング幅10%、細身でミニマル）
-- ベースリング：セグメント背後に `t.border` 色の薄いガイドリングを描画
-- センター装飾：翡翠グリーンの二重極小ドット（r=5 opacity=0.14 + r=2 opacity=0.42）
-- グロー：SVG全体に `drop-shadow(0 2px 10px rgba(45,140,110,0.22))` で翡翠色の光彩
+- ドーナツグラフ：セグメント間に2.5度のギャップを設け、上端（12時方向）スタート。外径46%・内径30%（リング幅16%、存在感のある太さ）
+- ベースリング：セグメント背後に `t.borderStrong` 色 opacity 0.45 のガイドリングを描画
+- インナーリム：innerR+0.5px に `stroke="white" strokeWidth=1.5 opacity=0.1` のハイライトリングで立体感を付与
+- センター装飾：翡翠グリーンの三重グロー円（r=12 opacity=0.07 + r=7 opacity=0.14 + r=3 opacity=0.45）
+- グロー：SVG全体に `drop-shadow(0 6px 22px rgba(45,140,110,0.34))` で翡翠色の深みある光彩
 - 配色：`ALLOC_COLORS = ["#2d8c6e", "#c4963a", "#6b96b8", "#a87db5", "#74c4ad", "#a0a0a0"]`（翡翠・琥珀/金・鋼青・菫/紫水晶・浅翡翠・銀）
-- 凡例マーカー：円形ドット（7px・`borderRadius: "50%"`）＋色に合わせた淡いグロー（`boxShadow`）
+- 凡例マーカー：円形ドット（9px）＋強めのグロー（`boxShadow: 0 0 8px colorCC`）
+- 凡例レイアウト：各行に `borderBottom: 1px solid t.border`・`padding: 9px 0` のセパレーター。ラベル13px `t.text` `fontWeight:500`・パーセント13px `t.textSub` `fontWeight:600` monospace
 - モバイル時：ドーナツと凡例が縦積みに変換（`flexWrap: "wrap"`）
 - stance/themes/scenarios が frontmatter にない場合は非表示
-- 注目セクター：資産配分モデルの直下に表示。ラベル「注目セクター（翡翠眼 AI推定・参考値）」「投資助言ではありません」を両端に表示。AllocationDonut コンポーネントを SECTOR_COLORS パレットで再利用（132px SVGドーナツグラフ＋凡例）
-- 解説文（sectorsNote）：frontmatter の `sectorsNote` フィールドから取得。`/push-reports` が自動生成。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー付きで表示
+- 注目セクター：資産配分モデルの直下に表示。ラベル「注目セクター（AI推定・参考値）」「投資助言ではありません」を両端に表示（`white-space: nowrap`）。AllocationDonut コンポーネントを SECTOR_COLORS パレットで再利用（168px SVGドーナツグラフ＋凡例）
+- 解説文（sectorsNote）：frontmatter の `sectorsNote` フィールドから取得。`/push-reports` が自動生成。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー付きで表示（allocationNote と同スタイル）
 - sectors がない場合は注目セクターのみ非表示
 - allocation がない場合は配分モデルのみ非表示
 - ラベル表示テキスト：`カレントビュー`（カタカナ。英語 "CURRENT VIEW" は使用しない）
@@ -457,6 +459,13 @@ sectors:
 | `.hg-toc-h3` | 目次H3アイテム | paddingLeft: 16px |
 | `.hg-toc-link` | 目次リンク | 省略表示（ellipsis） |
 | `.hg-data-note` | 為替「前日比データなし」テキスト | 省略表示（ellipsis） |
+
+### インタラクションクラス一覧（hover・transition）
+| クラス | 対象 | 効果 |
+|--------|------|------|
+| `.hg-data-card` | メインページ データグリッドセル | ホバーで翡翠色インナーボーダー（`inset box-shadow`） |
+| `.hg-treasury-row` | 債券テーブル行 | ホバーで薄い翡翠背景（`rgba(45,140,110,0.04)`） |
+| `.hg-nav-link` | ヘッダーナビリンク | ホバーで翡翠色に変化 |
 
 ## デザイン定数
 ```js

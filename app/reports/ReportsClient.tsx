@@ -46,12 +46,12 @@ function donutSegmentPath(cx: number, cy: number, outerR: number, innerR: number
 }
 
 function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: AllocationItem[]; t: typeof themeMap["dark"] | typeof themeMap["light"]; colors?: string[] }) {
-  const size = 132;
+  const size = 168;
   const cx = size / 2;
   const cy = size / 2;
-  const outerR = size * 0.44;
-  const innerR = size * 0.34; // 細身リング（リング幅10%、ミニマルで上品）
-  const gap = 3;              // セグメント間の呼吸（3°）
+  const outerR = size * 0.46;
+  const innerR = size * 0.30; // リング幅16%：より存在感のある太さ
+  const gap = 2.5;
   let cum = 0;
   const segments = items.map((item, i) => {
     const start = (cum / 100) * 360 + gap / 2;
@@ -60,40 +60,48 @@ function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Allocatio
     return { item, start, end, color: colors[i % colors.length] };
   });
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 28, flexWrap: "wrap" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 36, flexWrap: "wrap" }}>
       <svg
         width={size}
         height={size}
-        style={{ flexShrink: 0, filter: "drop-shadow(0 2px 10px rgba(45,140,110,0.22))" }}
+        style={{ flexShrink: 0, filter: "drop-shadow(0 6px 22px rgba(45,140,110,0.34))" }}
       >
-        {/* ベースリング：薄いガイドライン */}
+        {/* ベースリング（背景トラック） */}
         <circle
           cx={cx} cy={cy}
           r={(outerR + innerR) / 2}
           fill="none"
-          stroke={t.border}
+          stroke={t.borderStrong}
           strokeWidth={outerR - innerR}
+          opacity={0.45}
         />
         {/* セグメント */}
         {segments.map((seg, i) => (
           <path key={i} d={donutSegmentPath(cx, cy, outerR, innerR, seg.start, seg.end)} fill={seg.color} />
         ))}
-        {/* センター：翡翠の小点（運気の核） */}
-        <circle cx={cx} cy={cy} r={5} fill={JADE} opacity={0.14} />
-        <circle cx={cx} cy={cy} r={2} fill={JADE} opacity={0.42} />
+        {/* インナーリム：立体感のためのハイライト */}
+        <circle cx={cx} cy={cy} r={innerR + 0.5} fill="none" stroke="white" strokeWidth={1.5} opacity={0.1} />
+        {/* センター：翡翠の多重輝点 */}
+        <circle cx={cx} cy={cy} r={12} fill={JADE} opacity={0.07} />
+        <circle cx={cx} cy={cy} r={7}  fill={JADE} opacity={0.14} />
+        <circle cx={cx} cy={cy} r={3}  fill={JADE} opacity={0.45} />
       </svg>
-      <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1, minWidth: 180 }}>
+      <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 200 }}>
         {items.map((item, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+          <div key={i} style={{
+            display: "flex", alignItems: "center", gap: 10,
+            padding: "9px 0",
+            borderBottom: i < items.length - 1 ? `1px solid ${t.border}` : "none",
+          }}>
             <div style={{
-              width: 7, height: 7,
+              width: 9, height: 9,
               borderRadius: "50%",
               background: colors[i % colors.length],
               flexShrink: 0,
-              boxShadow: `0 0 5px ${colors[i % colors.length]}99`,
+              boxShadow: `0 0 8px ${colors[i % colors.length]}cc`,
             }} />
-            <span style={{ fontSize: 12, color: t.textSub, flex: 1, letterSpacing: "0.02em" }}>{item.label}</span>
-            <span style={{ fontSize: 11, color: t.textMuted, fontFamily: "monospace" }}>{item.percent}%</span>
+            <span style={{ fontSize: 13, color: t.text, flex: 1, letterSpacing: "0.02em", fontWeight: 500 }}>{item.label}</span>
+            <span style={{ fontSize: 13, color: t.textSub, fontFamily: "monospace", fontWeight: 600, letterSpacing: "0.04em" }}>{item.percent}%</span>
           </div>
         ))}
       </div>
@@ -110,7 +118,7 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
       <div className="hg-cv-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ fontSize: 11, color: JADE, fontWeight: 700, letterSpacing: "0.12em", whiteSpace: "nowrap" }}>カレントビュー</span>
-          <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.06em", whiteSpace: "nowrap" }}>月次・週次・日次統合 · 中長期視点</span>
+          <span style={{ fontSize: 10, color: t.textSub, letterSpacing: "0.06em", whiteSpace: "nowrap" }}>月次・週次・日次統合 · 中長期視点</span>
           <span className="hg-cv-header-sub" style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 11, color: t.textMuted }}>·</span>
             <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em" }}>{report.title}</span>
@@ -125,18 +133,18 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         {/* スタンス */}
         {stance != null && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 4 }}>スタンス</div>
-            <div style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.06em", marginBottom: 10 }}>中長期目線</div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: t.text, marginBottom: 16 }}>{stanceLabel ?? "—"}</div>
-            <div style={{ position: "relative", height: 4, background: t.borderStrong, marginBottom: 8 }}>
+            <div style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", marginBottom: 2, opacity: 0.85 }}>スタンス</div>
+            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.06em", marginBottom: 14 }}>中長期目線</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: t.text, marginBottom: 18, letterSpacing: "-0.01em" }}>{stanceLabel ?? "—"}</div>
+            <div style={{ position: "relative", height: 3, background: t.borderStrong, marginBottom: 8 }}>
               <div style={{ position: "absolute", left: 0, width: `${stance}%`, height: "100%", background: `linear-gradient(to right, ${JADE}, #e05252)` }} />
-              <div style={{ position: "absolute", left: `${stance}%`, top: "50%", transform: "translate(-50%, -50%)", width: 8, height: 8, background: t.text, borderRadius: "50%" }} />
+              <div style={{ position: "absolute", left: `${stance}%`, top: "50%", transform: "translate(-50%, -50%)", width: 7, height: 7, background: t.text, borderRadius: "50%" }} />
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.06em" }}>RISK-ON</span>
-              <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.06em" }}>RISK-OFF</span>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+              <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.08em" }}>RISK-ON</span>
+              <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.08em" }}>RISK-OFF</span>
             </div>
-            <div style={{ marginTop: 16, fontSize: 10, color: t.textMuted, lineHeight: 1.6 }}>
+            <div style={{ fontSize: 11, color: t.textSub, lineHeight: 1.7, borderTop: `1px solid ${t.border}`, paddingTop: 12 }}>
               AI（翡翠眼）による参考値。<br />投資助言ではありません。
             </div>
           </div>
@@ -145,15 +153,15 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         {/* テーマ */}
         {themes && themes.length > 0 && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 14 }}>市況概要</div>
+            <div style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", marginBottom: 14, opacity: 0.85 }}>市況概要</div>
             {report.marketOverview && (
-              <p style={{ fontSize: 12, color: t.textMuted, lineHeight: 1.8, margin: "0 0 14px", borderBottom: `1px solid ${t.borderStrong}`, paddingBottom: 12 }}>
+              <p style={{ fontSize: 13, color: t.textSub, lineHeight: 1.85, margin: "0 0 16px", borderBottom: `1px solid ${t.border}`, paddingBottom: 14 }}>
                 {report.marketOverview}
               </p>
             )}
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
               {themes.map((theme, i) => (
-                <div key={i} style={{ fontSize: 13, color: t.textSub, lineHeight: 1.5 }}>{theme}</div>
+                <div key={i} style={{ fontSize: 13, color: t.textSub, lineHeight: 1.6, paddingBottom: 9, borderBottom: i < themes.length - 1 ? `1px solid ${t.border}` : "none" }}>{theme}</div>
               ))}
             </div>
           </div>
@@ -162,22 +170,22 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         {/* シナリオ */}
         {scenarios && scenarios.length > 0 && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 14 }}>予測シナリオ（翡翠眼 AI推定・参考値）</div>
+            <div style={{ fontSize: 10, color: JADE, letterSpacing: "0.1em", marginBottom: 14, opacity: 0.85 }}>予測シナリオ（AI推定・参考値）</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {(scenarios as ScenarioItem[]).map((s, i) => (
-                <div key={i}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                <div key={i} style={{ paddingBottom: 12, borderBottom: i < (scenarios as ScenarioItem[]).length - 1 ? `1px solid ${t.border}` : "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 12, color: directionColor(s.direction), fontWeight: 700 }}>{directionLabel(s.direction)}</span>
-                      <span style={{ fontSize: 12, color: s.base ? t.text : t.textSub }}>
+                      <span style={{ fontSize: 13, color: directionColor(s.direction), fontWeight: 700 }}>{directionLabel(s.direction)}</span>
+                      <span style={{ fontSize: 12, color: s.base ? t.text : t.textSub, fontWeight: s.base ? 600 : 400 }}>
                         {s.label}
-                        {s.base && <span style={{ fontSize: 10, color: JADE, marginLeft: 4 }}>BASE</span>}
+                        {s.base && <span style={{ fontSize: 9, color: JADE, marginLeft: 5, letterSpacing: "0.1em", fontWeight: 700 }}>BASE</span>}
                       </span>
                     </div>
-                    <span style={{ fontSize: 12, color: t.textMuted, fontFamily: "monospace" }}>{s.probability}%</span>
+                    <span style={{ fontSize: 13, color: t.textSub, fontFamily: "monospace", fontWeight: 600 }}>{s.probability}%</span>
                   </div>
-                  <div style={{ height: 3, background: t.borderStrong }}>
-                    <div style={{ height: "100%", width: `${s.probability}%`, background: directionColor(s.direction), opacity: s.base ? 1 : 0.5 }} />
+                  <div style={{ height: 3, background: t.borderStrong, borderRadius: 2 }}>
+                    <div style={{ height: "100%", width: `${s.probability}%`, background: directionColor(s.direction), opacity: s.base ? 1 : 0.55, borderRadius: 2 }} />
                   </div>
                 </div>
               ))}
@@ -189,12 +197,12 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
       {/* 参考資産配分モデル */}
       {allocation && allocation.length > 0 && (
         <div style={{ marginTop: 1, background: t.surface, borderLeft: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}`, borderBottom: `1px solid ${t.border}`, padding: "20px" }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
-            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em" }}>参考資産配分モデル（翡翠眼 AI推定・参考値）</span>
-            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>投資助言ではありません</span>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
+            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.08em", whiteSpace: "nowrap" }}>参考資産配分モデル（AI推定・参考値）</span>
+            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap", flexShrink: 0 }}>投資助言ではありません</span>
           </div>
           {report.allocationNote && (
-            <p style={{ fontSize: 11, color: t.textMuted, margin: "0 0 16px", lineHeight: 1.8, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}44`, paddingLeft: 10 }}>
+            <p style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}66`, paddingLeft: 12 }}>
               {report.allocationNote}
             </p>
           )}
@@ -205,12 +213,12 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
       {/* 注目セクター */}
       {report.sectors && report.sectors.length > 0 && (
         <div style={{ marginTop: 1, background: t.surface, borderLeft: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}`, borderBottom: `1px solid ${t.border}`, borderTop: allocation && allocation.length > 0 ? "none" : `1px solid ${t.border}`, padding: "20px" }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
-            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em" }}>注目セクター（翡翠眼 AI推定・参考値）</span>
-            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>投資助言ではありません</span>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
+            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.08em", whiteSpace: "nowrap" }}>注目セクター（AI推定・参考値）</span>
+            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap", flexShrink: 0 }}>投資助言ではありません</span>
           </div>
           {report.sectorsNote && (
-            <p style={{ fontSize: 11, color: t.textMuted, margin: "0 0 16px", lineHeight: 1.8, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}44`, paddingLeft: 10 }}>
+            <p style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}66`, paddingLeft: 12 }}>
               {report.sectorsNote}
             </p>
           )}
@@ -247,9 +255,9 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
   return (
     <div style={{ minHeight: "100vh", background: t.bg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
       {/* ヘッダー */}
-      <header style={{ position: "sticky", top: 0, zIndex: 50, background: t.headerBg, borderBottom: `1px solid ${t.border}` }}>
+      <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 16, height: 56 }}>
-          <div style={{ width: 3, height: 20, background: JADE, flexShrink: 0 }} />
+          <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
           <Link href="/" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
             翡翠眼
           </Link>
@@ -258,7 +266,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
           <div style={{ marginLeft: "auto" }}>
             <button
               onClick={toggleTheme}
-              style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 12, letterSpacing: "0.04em" }}
+              style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2, transition: "border-color 0.15s, color 0.15s" }}
             >
               {mode === "dark" ? "LIGHT" : "DARK"}
             </button>
@@ -267,12 +275,15 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
       </header>
 
       {/* ページタイトル */}
-      <div style={{ borderBottom: `1px solid ${JADE}33`, background: t.surface, padding: "32px 0" }}>
+      <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "28px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-          <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "0.06em", margin: 0, color: t.text }}>
-            レポート
-          </h1>
-          <p style={{ fontSize: 13, color: t.textMuted, marginTop: 8, letterSpacing: "0.04em" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+            <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
+            <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.06em", margin: 0, color: t.text }}>
+              レポート
+            </h1>
+          </div>
+          <p style={{ fontSize: 12, color: t.textMuted, margin: 0, letterSpacing: "0.04em", paddingLeft: 12 }}>
             月次・週次・日次のマクロ市場分析レポート
           </p>
         </div>
@@ -307,7 +318,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
               <span style={{ fontSize: 10, color: t.textMuted }}>·</span>
               <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>{latestDaily.date}</span>
             </div>
-            <p style={{ fontSize: 13, color: t.textMuted, margin: 0, lineHeight: 1.8 }}>
+            <p style={{ fontSize: 13, color: t.textSub, margin: 0, lineHeight: 1.85 }}>
               {latestDaily.description}
             </p>
             <Link href={`/reports/${latestDaily.slug}`} style={{ fontSize: 11, color: JADE, textDecoration: "none", letterSpacing: "0.04em", display: "inline-block", marginTop: 8 }}>
@@ -320,11 +331,12 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
           const reports = reportsByType[type] ?? [];
           return (
             <section key={type} style={{ marginBottom: 56 }}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 20, paddingBottom: 12, borderBottom: `1px solid ${t.border}` }}>
-                <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: t.text, letterSpacing: "0.04em" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, paddingBottom: 10, borderBottom: `1px solid ${t.border}` }}>
+                <div style={{ width: 2, height: 14, background: JADE, flexShrink: 0 }} />
+                <h2 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: t.text, letterSpacing: "0.04em" }}>
                   {TYPE_LABELS[type]}
                 </h2>
-                <span style={{ fontSize: 11, color: JADE, letterSpacing: "0.1em" }}>
+                <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", opacity: 0.75 }}>
                   {TYPE_SUBTITLES[type]}
                 </span>
               </div>

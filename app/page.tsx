@@ -212,26 +212,26 @@ export default function Home() {
   return (
     <div style={{ backgroundColor: t.bg, color: t.text, minHeight: "100vh", fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif" }}>
       {/* Header */}
-      <header style={{ backgroundColor: t.headerBg, borderBottom: `1px solid ${t.borderStrong}`, position: "sticky", top: 0, zIndex: 50 }}>
+      <header style={{ backgroundColor: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}`, position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 3, height: 20, backgroundColor: JADE.main }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 2, height: 22, backgroundColor: JADE.main }} />
             <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text }}>翡翠眼</span>
           </div>
           <nav style={{ display: "flex", alignItems: "center", gap: 0 }}>
             <div className="hg-nav-sections" style={{ display: "flex" }}>
               {["株式", "為替", "米国債", "日本国債", "コモディティ"].map((label, i) => (
-                <a key={i} href={`#${label}`} style={{ fontSize: 12, color: t.textSub, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: i === 0 ? `1px solid ${t.border}` : "none", borderRight: `1px solid ${t.border}` }}>
+                <a key={i} href={`#${label}`} className="hg-nav-link" style={{ fontSize: 12, color: t.textSub, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: i === 0 ? `1px solid ${t.border}` : "none", borderRight: `1px solid ${t.border}` }}>
                   {label}
                 </a>
               ))}
             </div>
-            <Link href="/reports" style={{ fontSize: 12, color: JADE.light, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}` }}>
+            <Link href="/reports" className="hg-nav-link" style={{ fontSize: 12, color: JADE.light, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}` }}>
               レポート
             </Link>
             <button
               onClick={toggleTheme}
-              style={{ marginLeft: 16, padding: "5px 12px", fontSize: 11, backgroundColor: "transparent", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", letterSpacing: "0.05em" }}
+              style={{ marginLeft: 16, padding: "4px 11px", fontSize: 11, backgroundColor: "transparent", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", letterSpacing: "0.06em", borderRadius: 2, transition: "border-color 0.15s, color 0.15s" }}
             >
               {mode === "dark" ? "LIGHT" : "DARK"}
             </button>
@@ -240,10 +240,10 @@ export default function Home() {
       </header>
 
       {/* Status Bar */}
-      <div style={{ backgroundColor: JADE.dim, borderBottom: `1px solid ${JADE.main}` }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "6px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span className="hg-status-text" style={{ fontSize: 11, color: "#a8d5c4", letterSpacing: "0.06em" }}>LIVE DATA — 15〜20分遅延 | 投資判断の根拠とする場合は一次情報をご確認ください</span>
-          <span style={{ fontSize: 11, color: "#a8d5c4", fontFamily: "monospace" }}>最終更新：{lastUpdated}</span>
+      <div style={{ backgroundColor: mode === "dark" ? "#0c1210" : "#f2f8f5", borderBottom: `1px solid ${JADE.main}28` }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "5px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span className="hg-status-text" style={{ fontSize: 11, color: mode === "dark" ? `${JADE.light}66` : t.textMuted, letterSpacing: "0.06em" }}>LIVE DATA — 15〜20分遅延 | 投資判断の根拠とする場合は一次情報をご確認ください</span>
+          <span style={{ fontSize: 11, color: JADE.main, fontFamily: "monospace" }}>最終更新：{lastUpdated}</span>
         </div>
       </div>
 
@@ -261,7 +261,7 @@ export default function Home() {
           ) : (
             <div className="hg-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
               {(stocks ?? []).map((s, i) => (
-                <div key={i} style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
+                <div key={i} className="hg-data-card" style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
                   <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 8 }}>{s.symbol}</div>
                   <div style={{ fontSize: 13, color: t.textSub, marginBottom: 12 }}>{s.name}</div>
                   <div style={{ fontSize: 26, fontWeight: 700, fontFamily: "monospace", letterSpacing: "-0.02em", color: t.text, marginBottom: 8 }}>{s.value}</div>
@@ -288,7 +288,7 @@ export default function Home() {
           ) : (
             <div className="hg-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
               {(forex ?? []).map((f, i) => (
-                <div key={i} style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
+                <div key={i} className="hg-data-card" style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
                   <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 12 }}>{f.pair}</div>
                   <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "monospace", letterSpacing: "-0.02em", color: t.text, marginBottom: 8 }}>
                     {f.value ?? "---"}
@@ -322,7 +322,7 @@ export default function Home() {
                   <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", textAlign: "right" }}>前日比</span>
                 </div>
                 {(ustreasury ?? []).map((b, i) => (
-                  <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "14px 16px", borderBottom: i < (ustreasury?.length ?? 0) - 1 ? `1px solid ${t.border}` : "none" }}>
+                  <div key={i} className="hg-treasury-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "14px 16px", borderBottom: i < (ustreasury?.length ?? 0) - 1 ? `1px solid ${t.border}` : "none" }}>
                     <span style={{ fontSize: 13, color: t.textSub }}>{b.term}</span>
                     <span style={{ fontSize: 15, fontFamily: "monospace", fontWeight: 600, color: t.text, textAlign: "right" }}>{b.value}</span>
                     <span style={{ fontSize: 13, fontFamily: "monospace", color: changeColor(b.change ?? ""), textAlign: "right" }}>
@@ -352,7 +352,7 @@ export default function Home() {
                   <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", textAlign: "right" }}>前日比</span>
                 </div>
                 {(jptreasury ?? []).map((b, i) => (
-                  <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "14px 16px", borderBottom: i < (jptreasury?.length ?? 0) - 1 ? `1px solid ${t.border}` : "none" }}>
+                  <div key={i} className="hg-treasury-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "14px 16px", borderBottom: i < (jptreasury?.length ?? 0) - 1 ? `1px solid ${t.border}` : "none" }}>
                     <span style={{ fontSize: 13, color: t.textSub }}>{b.term}</span>
                     <span style={{ fontSize: 15, fontFamily: "monospace", fontWeight: 600, color: t.text, textAlign: "right" }}>{b.value}</span>
                     <span style={{ fontSize: 13, fontFamily: "monospace", color: changeColor(b.change ?? ""), textAlign: "right" }}>
@@ -378,7 +378,7 @@ export default function Home() {
           ) : (
             <div className="hg-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, backgroundColor: t.border }}>
               {(commodities ?? []).map((c: any, i: number) => (
-                <div key={i} style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
+                <div key={i} className="hg-data-card" style={{ backgroundColor: t.surface, padding: "20px 24px" }}>
                   <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.1em", marginBottom: 4 }}>{c.unit}</div>
                   <div style={{ fontSize: 14, color: t.textSub, marginBottom: 12 }}>{c.name}</div>
                   <div style={{ fontSize: 26, fontWeight: 700, fontFamily: "monospace", letterSpacing: "-0.02em", color: t.text, marginBottom: 8 }}>{c.value}</div>
@@ -432,9 +432,10 @@ function Section({ id, title, subtitle, t, children }: {
 }) {
   return (
     <section id={id} style={{ marginBottom: 32 }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 16, paddingBottom: 12, borderBottom: `1px solid ${t.border}` }}>
-        <h2 style={{ fontSize: 16, fontWeight: 700, color: t.text, margin: 0, letterSpacing: "0.03em" }}>{title}</h2>
-        <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.12em" }}>{subtitle}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, paddingBottom: 10, borderBottom: `1px solid ${t.border}` }}>
+        <div style={{ width: 2, height: 14, backgroundColor: "#2d8c6e", flexShrink: 0 }} />
+        <h2 style={{ fontSize: 15, fontWeight: 700, color: t.text, margin: 0, letterSpacing: "0.04em" }}>{title}</h2>
+        <span style={{ fontSize: 10, color: "#2d8c6e", letterSpacing: "0.14em", opacity: 0.7 }}>{subtitle}</span>
       </div>
       {children}
     </section>

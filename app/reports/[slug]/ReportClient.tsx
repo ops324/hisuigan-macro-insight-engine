@@ -80,20 +80,20 @@ export default function ReportClient({ report }: { report: Report }) {
   return (
     <div style={{ minHeight: "100vh", background: t.bg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
       {/* ヘッダー */}
-      <header style={{ position: "sticky", top: 0, zIndex: 50, background: t.headerBg, borderBottom: `1px solid ${t.border}` }}>
+      <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 16, height: 56 }}>
-          <div style={{ width: 3, height: 20, background: JADE, flexShrink: 0 }} />
+          <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
           <Link href="/" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
             翡翠眼
           </Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
-          <Link href="/reports" style={{ fontSize: 14, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>
+          <Link href="/reports" style={{ fontSize: 13, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>
             レポート
           </Link>
           <div style={{ marginLeft: "auto" }}>
             <button
               onClick={toggleTheme}
-              style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 12, letterSpacing: "0.04em" }}
+              style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2, transition: "border-color 0.15s, color 0.15s" }}
             >
               {mode === "dark" ? "LIGHT" : "DARK"}
             </button>
@@ -102,29 +102,29 @@ export default function ReportClient({ report }: { report: Report }) {
       </header>
 
       {/* 記事ヘッダー */}
-      <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "32px 0" }}>
+      <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "28px 0" }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
             <span style={{
               display: "inline-block",
               padding: "2px 10px",
-              background: `${JADE}22`,
-              border: `1px solid ${JADE}66`,
+              background: `${JADE}18`,
+              border: `1px solid ${JADE}44`,
               color: JADE,
-              fontSize: 11,
-              letterSpacing: "0.1em",
-              fontWeight: 600,
+              fontSize: 10,
+              letterSpacing: "0.12em",
+              fontWeight: 700,
             }}>
               {TYPE_LABELS[report.type]}
             </span>
-            <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.08em" }}>
+            <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", opacity: 0.8 }}>
               {TYPE_SUBTITLES[report.type]}
             </span>
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 10px", color: t.text, lineHeight: 1.4, letterSpacing: "0.02em" }}>
+          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 12px", color: t.text, lineHeight: 1.45, letterSpacing: "0.02em" }}>
             {report.title}
           </h1>
-          <p style={{ fontSize: 13, color: t.textMuted, margin: 0, fontFamily: "var(--font-geist-mono)" }}>
+          <p style={{ fontSize: 12, color: t.textMuted, margin: 0, fontFamily: "var(--font-geist-mono)", letterSpacing: "0.04em" }}>
             {formatDate(report.date)}
           </p>
         </div>
@@ -160,8 +160,9 @@ export default function ReportClient({ report }: { report: Report }) {
             padding: "20px 24px",
             marginBottom: 48,
           }}>
-            <div style={{ fontSize: 11, color: JADE, letterSpacing: "0.12em", fontWeight: 600, marginBottom: 14 }}>
-              目次
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+              <div style={{ width: 2, height: 12, background: JADE, flexShrink: 0 }} />
+              <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.85 }}>目次</span>
             </div>
             <ol style={{ margin: 0, padding: 0, listStyle: "none" }}>
               {headings.map((h, i) => (
@@ -175,10 +176,10 @@ export default function ReportClient({ report }: { report: Report }) {
                     className="hg-toc-link"
                     style={{
                       fontSize: h.level === 1 ? 14 : h.level === 2 ? 13 : 12,
-                      color: h.level === 1 ? t.textSub : t.textMuted,
+                      color: h.level === 1 ? t.text : h.level === 2 ? t.textSub : t.textMuted,
                       textDecoration: "none",
                       letterSpacing: "0.02em",
-                      lineHeight: 1.5,
+                      lineHeight: 1.6,
                     }}
                   >
                     {h.text}
@@ -301,8 +302,8 @@ export default function ReportClient({ report }: { report: Report }) {
               "過去の市場動向は将来の結果を保証しません。",
               "投資判断の際は、必ずご自身で最新の一次情報および公式データをご確認ください。",
             ].map((text, i) => (
-              <li key={i} style={{ fontSize: 12, color: t.textMuted, lineHeight: 1.8, paddingLeft: 12, position: "relative" }}>
-                <span style={{ position: "absolute", left: 0, color: t.textMuted }}>–</span>
+              <li key={i} style={{ fontSize: 12, color: t.textSub, lineHeight: 1.8, paddingLeft: 12, position: "relative" }}>
+                <span style={{ position: "absolute", left: 0, color: t.textSub }}>–</span>
                 {text}
               </li>
             ))}
