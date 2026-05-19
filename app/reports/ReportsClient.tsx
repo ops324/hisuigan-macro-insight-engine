@@ -154,8 +154,8 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
   return (
     <div style={{ marginBottom: 20 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
-        <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>主要指標</span>
-        <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap" }}>{asOf} 時点</span>
+        <span style={{ fontSize: 11, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>主要指標</span>
+        <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap" }}>{asOf} 時点</span>
       </div>
       <div
         className="hg-cv-metrics"
@@ -166,7 +166,7 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
           return (
             <div key={i} style={{ background: t.surface, padding: "13px 15px" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 4 }}>
-                <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.05em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.05em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {m.label}
                 </span>
                 {metricsHistory && metricsHistory[m.label] && (
@@ -187,8 +187,8 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
               {m.rangePosition != null && (
                 <div style={{ marginTop: 12 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ fontSize: 9, color: JADE, letterSpacing: "0.07em", opacity: 0.8 }}>年間レンジ（52W）</span>
-                    <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.04em" }}>
+                    <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.07em", opacity: 0.8 }}>年間レンジ（52W）</span>
+                    <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>
                       <span style={{ fontFamily: "monospace", color: t.textSub, fontWeight: 600 }}>{m.rangePosition}%</span>
                       {" "}{rangeZoneLabel(m.rangePosition)}
                     </span>
@@ -210,8 +210,8 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
                     }} />
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-                    <span style={{ fontSize: 9, color: t.textMuted, fontFamily: "monospace" }}>{m.low52}</span>
-                    <span style={{ fontSize: 9, color: t.textMuted, fontFamily: "monospace" }}>{m.high52}</span>
+                    <span style={{ fontSize: 10, color: t.textMuted, fontFamily: "monospace" }}>{m.low52}</span>
+                    <span style={{ fontSize: 10, color: t.textMuted, fontFamily: "monospace" }}>{m.high52}</span>
                   </div>
                 </div>
               )}
@@ -232,7 +232,7 @@ function RegimePanel({ regime, t }: { regime: RegimeInfo; t: typeof themeMap["da
   return (
     <div style={{ marginBottom: 20 }}>
       <div style={{ marginBottom: 8 }}>
-        <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>現在のレジーム</span>
+        <span style={{ fontSize: 11, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>現在のレジーム</span>
       </div>
       <div
         className="hg-cv-regime"
@@ -240,7 +240,7 @@ function RegimePanel({ regime, t }: { regime: RegimeInfo; t: typeof themeMap["da
       >
         {cells.map((c, i) => (
           <div key={i} style={{ background: t.surface, padding: "13px 16px" }}>
-            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.05em", marginBottom: 7 }}>{c.label}</div>
+            <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.05em", marginBottom: 7 }}>{c.label}</div>
             <div style={{ fontSize: 15, fontWeight: 700, color: t.text, letterSpacing: "0.01em", lineHeight: 1.35 }}>{c.value}</div>
           </div>
         ))}
@@ -442,7 +442,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
             翡翠眼
           </Link>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
-            <Link href="/market" style={{ fontSize: 13, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>
+            <Link href="/market" className="hg-nav-link" style={{ fontSize: 13, color: t.positive, textDecoration: "none", letterSpacing: "0.05em" }}>
               マーケット
             </Link>
             <button

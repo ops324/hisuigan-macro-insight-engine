@@ -48,7 +48,7 @@ export default function TrackRecordClient({ predictions }: Props) {
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
           <span style={{ fontSize: 14, color: t.textSub, letterSpacing: "0.05em" }}>予測ログ</span>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
-            <Link href="/market" style={{ fontSize: 13, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>マーケット</Link>
+            <Link href="/market" className="hg-nav-link" style={{ fontSize: 13, color: t.positive, textDecoration: "none", letterSpacing: "0.05em" }}>マーケット</Link>
             <button onClick={toggleTheme} style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2 }}>
               {mode === "dark" ? "LIGHT" : "DARK"}
             </button>

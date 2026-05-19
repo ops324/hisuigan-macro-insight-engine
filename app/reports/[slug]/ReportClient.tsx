@@ -91,7 +91,7 @@ export default function ReportClient({ report }: { report: Report }) {
             レポート
           </Link>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
-            <Link href="/market" style={{ fontSize: 13, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>
+            <Link href="/market" className="hg-nav-link" style={{ fontSize: 13, color: t.positive, textDecoration: "none", letterSpacing: "0.05em" }}>
               マーケット
             </Link>
             <button
