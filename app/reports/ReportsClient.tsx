@@ -110,6 +110,14 @@ function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Allocatio
   );
 }
 
+function rangeZoneLabel(pos: number): string {
+  if (pos >= 80) return "年間高値圏";
+  if (pos >= 60) return "上値圏";
+  if (pos >= 40) return "中間圏";
+  if (pos >= 20) return "下値圏";
+  return "年間安値圏";
+}
+
 function Sparkline({ points, color, width = 48, height = 20 }: {
   points: MetricPoint[];
   color: string;
@@ -177,18 +185,28 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
                 )}
               </div>
               {m.rangePosition != null && (
-                <div style={{ marginTop: 10 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
-                    <span style={{ fontSize: 9, color: JADE, letterSpacing: "0.08em", opacity: 0.75 }}>52W</span>
+                <div style={{ marginTop: 12 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <span style={{ fontSize: 9, color: JADE, letterSpacing: "0.07em", opacity: 0.8 }}>年間レンジ（52W）</span>
+                    <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.04em" }}>
+                      <span style={{ fontFamily: "monospace", color: t.textSub, fontWeight: 600 }}>{m.rangePosition}%</span>
+                      {" "}{rangeZoneLabel(m.rangePosition)}
+                    </span>
                   </div>
-                  <div style={{ position: "relative", height: 3, background: t.border }}>
-                    <div style={{ position: "absolute", left: 0, top: 0, width: `${m.rangePosition}%`, height: "100%", background: `${JADE}44` }} />
+                  <div style={{ position: "relative", height: 8, background: t.border }}>
                     <div style={{
-                      position: "absolute", left: `${m.rangePosition}%`, top: "50%",
-                      transform: "translate(-50%, -50%)",
-                      width: 7, height: 7, borderRadius: "50%",
+                      position: "absolute", left: 0, top: 0,
+                      width: `${m.rangePosition}%`, height: "100%",
+                      background: `linear-gradient(to right, ${JADE}22, ${JADE}99)`,
+                    }} />
+                    <div style={{
+                      position: "absolute",
+                      left: `${m.rangePosition}%`,
+                      top: -3, bottom: -3,
+                      width: 2,
                       background: JADE,
-                      boxShadow: `0 0 5px ${JADE}99`,
+                      transform: "translateX(-50%)",
+                      boxShadow: `0 0 6px ${JADE}cc`,
                     }} />
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
