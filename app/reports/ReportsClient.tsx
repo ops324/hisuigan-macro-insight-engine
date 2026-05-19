@@ -138,6 +138,27 @@ function KeyMetrics({ items, asOf, t }: { items: KeyMetricItem[]; asOf: string; 
                   </>
                 )}
               </div>
+              {m.rangePosition != null && (
+                <div style={{ marginTop: 10 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
+                    <span style={{ fontSize: 9, color: JADE, letterSpacing: "0.08em", opacity: 0.75 }}>52W</span>
+                  </div>
+                  <div style={{ position: "relative", height: 3, background: t.border }}>
+                    <div style={{ position: "absolute", left: 0, top: 0, width: `${m.rangePosition}%`, height: "100%", background: `${JADE}44` }} />
+                    <div style={{
+                      position: "absolute", left: `${m.rangePosition}%`, top: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: 7, height: 7, borderRadius: "50%",
+                      background: JADE,
+                      boxShadow: `0 0 5px ${JADE}99`,
+                    }} />
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
+                    <span style={{ fontSize: 9, color: t.textMuted, fontFamily: "monospace" }}>{m.low52}</span>
+                    <span style={{ fontSize: 9, color: t.textMuted, fontFamily: "monospace" }}>{m.high52}</span>
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
