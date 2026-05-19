@@ -83,14 +83,17 @@ export default function ReportClient({ report }: { report: Report }) {
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 16, height: 56 }}>
           <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
-          <Link href="/" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
+          <Link href="/reports" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
             翡翠眼
           </Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
           <Link href="/reports" style={{ fontSize: 13, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>
             レポート
           </Link>
-          <div style={{ marginLeft: "auto" }}>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+            <Link href="/market" style={{ fontSize: 13, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>
+              マーケット
+            </Link>
             <button
               onClick={toggleTheme}
               style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2, transition: "border-color 0.15s, color 0.15s" }}
