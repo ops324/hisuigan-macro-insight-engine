@@ -441,8 +441,6 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
           <Link href="/reports" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
             翡翠眼
           </Link>
-          <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
-          <span style={{ fontSize: 14, color: t.textSub, letterSpacing: "0.05em" }}>レポート</span>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
             <Link href="/market" style={{ fontSize: 13, color: t.textSub, textDecoration: "none", letterSpacing: "0.05em" }}>
               マーケット
