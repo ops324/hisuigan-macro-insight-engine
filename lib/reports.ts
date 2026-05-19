@@ -20,6 +20,13 @@ export interface AllocationItem {
 
 export type SectorItem = AllocationItem;
 
+export interface KeyMetricItem {
+  label: string;
+  value: string;
+  change?: string;
+  direction?: "up" | "down" | "flat";
+}
+
 export interface ReportMeta {
   slug: string;
   title: string;
@@ -27,12 +34,14 @@ export interface ReportMeta {
   type: ReportType;
   description?: string;
   stance?: number;
+  stancePrev?: number;
   stanceLabel?: string;
   themes?: string[];
   scenarios?: ScenarioItem[];
   quote?: string;
   quoteAuthor?: string;
   marketOverview?: string;
+  keyMetrics?: KeyMetricItem[];
   allocation?: AllocationItem[];
   allocationNote?: string;
   sectors?: SectorItem[];
@@ -64,12 +73,14 @@ export function getAllReports(): ReportMeta[] {
         type: (data.type as ReportType) ?? type,
         description: data.description,
         stance: data.stance,
+        stancePrev: data.stancePrev,
         stanceLabel: data.stanceLabel,
         themes: data.themes,
         scenarios: data.scenarios,
         quote: data.quote,
         quoteAuthor: data.quoteAuthor,
         marketOverview: data.marketOverview,
+        keyMetrics: data.keyMetrics,
         allocation: data.allocation,
         allocationNote: data.allocationNote,
         sectors: data.sectors,
@@ -100,12 +111,14 @@ export function getReportBySlug(slug: string): Report | null {
       type: (data.type as ReportType) ?? type,
       description: data.description,
       stance: data.stance,
+      stancePrev: data.stancePrev,
       stanceLabel: data.stanceLabel,
       themes: data.themes,
       scenarios: data.scenarios,
       quote: data.quote,
       quoteAuthor: data.quoteAuthor,
       marketOverview: data.marketOverview,
+      keyMetrics: data.keyMetrics,
       allocation: data.allocation,
       allocationNote: data.allocationNote,
       sectors: data.sectors,

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ReportMeta, ReportType, ScenarioItem, AllocationItem } from "@/lib/reports";
+import { ReportMeta, ReportType, ScenarioItem, AllocationItem, KeyMetricItem } from "@/lib/reports";
 import { themeMap, ThemeMode } from "@/lib/theme";
 import { ReportCard } from "./ReportCard";
 
@@ -109,9 +109,51 @@ function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Allocatio
   );
 }
 
+function KeyMetrics({ items, asOf, t }: { items: KeyMetricItem[]; asOf: string; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
+        <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>主要指標</span>
+        <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap" }}>{asOf} 時点</span>
+      </div>
+      <div
+        className="hg-cv-metrics"
+        style={{ display: "grid", gridTemplateColumns: `repeat(${items.length}, 1fr)`, gap: 1, background: t.border, border: `1px solid ${t.border}` }}
+      >
+        {items.map((m, i) => {
+          const dir = m.direction ?? "flat";
+          return (
+            <div key={i} style={{ background: t.surface, padding: "13px 15px" }}>
+              <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.05em", marginBottom: 8, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {m.label}
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: t.text, fontFamily: "monospace", letterSpacing: "-0.01em", lineHeight: 1 }}>
+                {m.value}
+              </div>
+              <div style={{ minHeight: 15, marginTop: 7, display: "flex", alignItems: "center", gap: 4 }}>
+                {m.change && (
+                  <>
+                    <span style={{ fontSize: 10, color: directionColor(dir), fontWeight: 700, lineHeight: 1 }}>{directionLabel(dir)}</span>
+                    <span style={{ fontSize: 11, color: directionColor(dir), fontFamily: "monospace", fontWeight: 600, letterSpacing: "0.02em" }}>{m.change}</span>
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
-  const { stance, stanceLabel, themes, scenarios, allocation } = report;
+  const { stance, stancePrev, stanceLabel, themes, scenarios, allocation, keyMetrics } = report;
   if (stance == null && !themes && !scenarios) return null;
+
+  const delta = stance != null && stancePrev != null ? stance - stancePrev : null;
+  const deltaColor = delta == null ? t.textMuted : delta > 0 ? "#bf8a3e" : delta < 0 ? JADE : t.textMuted;
+  const deltaArrow = delta == null ? "" : delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
+  const deltaText = delta == null ? "" : delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : "±0";
 
   return (
     <div style={{ marginBottom: 48 }}>
@@ -129,6 +171,10 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         </Link>
       </div>
 
+      {keyMetrics && keyMetrics.length > 0 && (
+        <KeyMetrics items={keyMetrics as KeyMetricItem[]} asOf={report.date} t={t} />
+      )}
+
       <div className="hg-cv-grid" style={{ display: "grid", gridTemplateColumns: "200px 1fr 260px", gap: 1, background: t.border, border: `1px solid ${t.border}` }}>
         {/* スタンス */}
         {stance != null && (
@@ -138,12 +184,22 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
             <div style={{ fontSize: 20, fontWeight: 700, color: t.text, marginBottom: 18, letterSpacing: "-0.01em" }}>{stanceLabel ?? "—"}</div>
             <div style={{ position: "relative", height: 3, background: t.borderStrong, marginBottom: 8 }}>
               <div style={{ position: "absolute", left: 0, width: `${stance}%`, height: "100%", background: `linear-gradient(to right, ${JADE}, #e05252)` }} />
+              {stancePrev != null && (
+                <div style={{ position: "absolute", left: `${stancePrev}%`, top: "50%", transform: "translate(-50%, -50%)", width: 7, height: 7, borderRadius: "50%", background: t.surface, border: `1.5px solid ${t.textMuted}`, boxSizing: "border-box" }} />
+              )}
               <div style={{ position: "absolute", left: `${stance}%`, top: "50%", transform: "translate(-50%, -50%)", width: 7, height: 7, background: t.text, borderRadius: "50%" }} />
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: delta != null ? 10 : 16 }}>
               <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.08em" }}>RISK-ON</span>
               <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.08em" }}>RISK-OFF</span>
             </div>
+            {delta != null && (
+              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 16 }}>
+                <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.1em" }}>前回比</span>
+                <span style={{ fontSize: 12, fontFamily: "monospace", fontWeight: 700, color: deltaColor, letterSpacing: "0.02em" }}>{deltaArrow} {deltaText}</span>
+                <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.04em", marginLeft: "auto", fontFamily: "monospace" }}>前回 {stancePrev}</span>
+              </div>
+            )}
             <div style={{ fontSize: 11, color: t.textSub, lineHeight: 1.7, borderTop: `1px solid ${t.border}`, paddingTop: 12 }}>
               AI（翡翠眼）による参考値。<br />投資助言ではありません。
             </div>

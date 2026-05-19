@@ -60,6 +60,8 @@ body {
   .hg-grid-2 { grid-template-columns: 1fr !important; }
   /* CURRENT VIEW 3カラム → 縦積み */
   .hg-cv-grid { grid-template-columns: 1fr !important; }
+  /* CURRENT VIEW 主要指標ストリップ → 2カラム */
+  .hg-cv-metrics { grid-template-columns: repeat(2, 1fr) !important; }
   /* フッター横並び → 縦積み */
   .hg-footer-row { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; }
   /* レポートカードのタイトル/日付行 → 縦積み */
