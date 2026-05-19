@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ReportMeta, ReportType, ScenarioItem, AllocationItem, KeyMetricItem } from "@/lib/reports";
+import { ReportMeta, ReportType, ScenarioItem, AllocationItem, KeyMetricItem, RegimeInfo } from "@/lib/reports";
 import { themeMap, ThemeMode } from "@/lib/theme";
 import { ReportCard } from "./ReportCard";
 
@@ -146,8 +146,39 @@ function KeyMetrics({ items, asOf, t }: { items: KeyMetricItem[]; asOf: string; 
   );
 }
 
+function RegimePanel({ regime, t }: { regime: RegimeInfo; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
+  const cells = [
+    { label: "景気局面", value: regime.cycle },
+    { label: "インフレ局面", value: regime.inflation },
+    { label: "金融政策局面", value: regime.policy },
+  ];
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 8 }}>
+        <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>現在のレジーム</span>
+      </div>
+      <div
+        className="hg-cv-regime"
+        style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, background: t.border, border: `1px solid ${t.border}` }}
+      >
+        {cells.map((c, i) => (
+          <div key={i} style={{ background: t.surface, padding: "13px 16px" }}>
+            <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.05em", marginBottom: 7 }}>{c.label}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: t.text, letterSpacing: "0.01em", lineHeight: 1.35 }}>{c.value}</div>
+          </div>
+        ))}
+      </div>
+      {regime.summary && (
+        <p style={{ fontSize: 12, color: t.textSub, margin: "10px 0 0", lineHeight: 1.8, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}66`, paddingLeft: 12 }}>
+          {regime.summary}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
-  const { stance, stancePrev, stanceLabel, themes, scenarios, allocation, keyMetrics } = report;
+  const { stance, stancePrev, stanceLabel, stanceRationale, themes, scenarios, allocation, keyMetrics, regime } = report;
   if (stance == null && !themes && !scenarios) return null;
 
   const delta = stance != null && stancePrev != null ? stance - stancePrev : null;
@@ -175,6 +206,8 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
         <KeyMetrics items={keyMetrics as KeyMetricItem[]} asOf={report.date} t={t} />
       )}
 
+      {regime && <RegimePanel regime={regime} t={t} />}
+
       <div className="hg-cv-grid" style={{ display: "grid", gridTemplateColumns: "200px 1fr 260px", gap: 1, background: t.border, border: `1px solid ${t.border}` }}>
         {/* スタンス */}
         {stance != null && (
@@ -198,6 +231,14 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
                 <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.1em" }}>前回比</span>
                 <span style={{ fontSize: 12, fontFamily: "monospace", fontWeight: 700, color: deltaColor, letterSpacing: "0.02em" }}>{deltaArrow} {deltaText}</span>
                 <span style={{ fontSize: 9, color: t.textMuted, letterSpacing: "0.04em", marginLeft: "auto", fontFamily: "monospace" }}>前回 {stancePrev}</span>
+              </div>
+            )}
+            {stanceRationale && (
+              <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 12, marginBottom: 14 }}>
+                <div style={{ fontSize: 9, color: JADE, letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7, opacity: 0.85 }}>判断根拠</div>
+                <p style={{ fontSize: 11, color: t.textSub, lineHeight: 1.8, margin: 0, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}66`, paddingLeft: 10 }}>
+                  {stanceRationale}
+                </p>
               </div>
             )}
             <div style={{ fontSize: 11, color: t.textSub, lineHeight: 1.7, borderTop: `1px solid ${t.border}`, paddingTop: 12 }}>
@@ -243,6 +284,11 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
                   <div style={{ height: 3, background: t.borderStrong, borderRadius: 2 }}>
                     <div style={{ height: "100%", width: `${s.probability}%`, background: directionColor(s.direction), opacity: s.base ? 1 : 0.55, borderRadius: 2 }} />
                   </div>
+                  {s.rationale && (
+                    <p style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.75, margin: "8px 0 0", letterSpacing: "0.02em" }}>
+                      {s.rationale}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

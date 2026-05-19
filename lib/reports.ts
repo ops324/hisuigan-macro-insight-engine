@@ -11,6 +11,14 @@ export interface ScenarioItem {
   probability: number;
   direction: "up" | "neutral" | "down";
   base?: boolean;
+  rationale?: string;
+}
+
+export interface RegimeInfo {
+  cycle: string;
+  inflation: string;
+  policy: string;
+  summary?: string;
 }
 
 export interface AllocationItem {
@@ -36,11 +44,13 @@ export interface ReportMeta {
   stance?: number;
   stancePrev?: number;
   stanceLabel?: string;
+  stanceRationale?: string;
   themes?: string[];
   scenarios?: ScenarioItem[];
   quote?: string;
   quoteAuthor?: string;
   marketOverview?: string;
+  regime?: RegimeInfo;
   keyMetrics?: KeyMetricItem[];
   allocation?: AllocationItem[];
   allocationNote?: string;
@@ -75,11 +85,13 @@ export function getAllReports(): ReportMeta[] {
         stance: data.stance,
         stancePrev: data.stancePrev,
         stanceLabel: data.stanceLabel,
+        stanceRationale: data.stanceRationale,
         themes: data.themes,
         scenarios: data.scenarios,
         quote: data.quote,
         quoteAuthor: data.quoteAuthor,
         marketOverview: data.marketOverview,
+        regime: data.regime,
         keyMetrics: data.keyMetrics,
         allocation: data.allocation,
         allocationNote: data.allocationNote,
@@ -113,11 +125,13 @@ export function getReportBySlug(slug: string): Report | null {
       stance: data.stance,
       stancePrev: data.stancePrev,
       stanceLabel: data.stanceLabel,
+      stanceRationale: data.stanceRationale,
       themes: data.themes,
       scenarios: data.scenarios,
       quote: data.quote,
       quoteAuthor: data.quoteAuthor,
       marketOverview: data.marketOverview,
+      regime: data.regime,
       keyMetrics: data.keyMetrics,
       allocation: data.allocation,
       allocationNote: data.allocationNote,
