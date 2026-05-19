@@ -116,6 +116,7 @@ export type Theme = typeof themeMap["dark"] | typeof themeMap["light"];
 - `dark`: border `#333333` / borderStrong `#444444` / textMuted `#777777`
 - `light`: textSub `#555555` / textMuted `#767676`
 - localStorage 対応済み
+- フッター DATA SOURCES：`["Stooq", "ExchangeRate-API", "FRED API (Federal Reserve)", "財務省 (MOF)"]`（現行 API と一致させること。Yahoo Finance・日本銀行 API は廃止済み）
 
 ### レポートページ（app/reports/）
 - lib/theme.ts の themeMap を使用
@@ -447,6 +448,7 @@ sectors:
 - 凡例マーカー：円形ドット（9px）＋強めのグロー（`boxShadow: 0 0 8px colorCC`）
 - 凡例レイアウト：各行に `borderBottom: 1px solid t.border`・`padding: 9px 0` のセパレーター。ラベル13px `t.text` `fontWeight:500`・パーセント13px `t.textSub` `fontWeight:600` monospace
 - モバイル時：ドーナツと凡例が縦積みに変換（`flexWrap: "wrap"`）
+- **SSR Hydration 注意**：`AllocationDonut` の SVG パスは `Math.cos`/`Math.sin` を使った浮動小数点計算のため、Node.js とブラウザ V8 で結果が微妙に異なりミスマッチが起きる。`mounted` state（`useState(false)` + `useEffect`）でクライアントマウント後のみ SVG を描画し、SSR 時はプレースホルダー `<div>` を返す実装にしてあること
 - stance/themes/scenarios が frontmatter にない場合は非表示
 - 注目セクター：資産配分モデルの直下に表示。ラベル「注目セクター（AI推定・参考値）」「投資助言ではありません」を両端に表示（`white-space: nowrap`）。AllocationDonut コンポーネントを SECTOR_COLORS パレットで再利用（168px SVGドーナツグラフ＋凡例）
 - 解説文（sectorsNote）：frontmatter の `sectorsNote` フィールドから取得。`/push-reports` が自動生成。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー付きで表示（allocationNote と同スタイル）

@@ -409,7 +409,7 @@ export default function Home() {
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{ fontSize: 11, color: t.textMuted, marginBottom: 6, letterSpacing: "0.05em" }}>DATA SOURCES</div>
-              {["Yahoo Finance", "ExchangeRate-API", "FRED API (Federal Reserve)", "日本銀行 API"].map((src, i) => (
+              {["Stooq", "ExchangeRate-API", "FRED API (Federal Reserve)", "財務省 (MOF)"].map((src, i) => (
                 <div key={i} style={{ fontSize: 11, color: t.textMuted, marginBottom: 3 }}>{src}</div>
               ))}
             </div>

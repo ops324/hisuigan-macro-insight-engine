@@ -47,6 +47,8 @@ function donutSegmentPath(cx: number, cy: number, outerR: number, innerR: number
 }
 
 function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: AllocationItem[]; t: typeof themeMap["dark"] | typeof themeMap["light"]; colors?: string[] }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const size = 168;
   const cx = size / 2;
   const cy = size / 2;
@@ -60,33 +62,34 @@ function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Allocatio
     const end = (cum / 100) * 360 - gap / 2;
     return { item, start, end, color: colors[i % colors.length] };
   });
+  const donutSvg = mounted ? (
+    <svg
+      width={size}
+      height={size}
+      style={{ flexShrink: 0, filter: "drop-shadow(0 6px 22px rgba(45,140,110,0.34))" }}
+    >
+      <circle
+        cx={cx} cy={cy}
+        r={(outerR + innerR) / 2}
+        fill="none"
+        stroke={t.borderStrong}
+        strokeWidth={outerR - innerR}
+        opacity={0.45}
+      />
+      {segments.map((seg, i) => (
+        <path key={i} d={donutSegmentPath(cx, cy, outerR, innerR, seg.start, seg.end)} fill={seg.color} />
+      ))}
+      <circle cx={cx} cy={cy} r={innerR + 0.5} fill="none" stroke="white" strokeWidth={1.5} opacity={0.1} />
+      <circle cx={cx} cy={cy} r={12} fill={JADE} opacity={0.07} />
+      <circle cx={cx} cy={cy} r={7}  fill={JADE} opacity={0.14} />
+      <circle cx={cx} cy={cy} r={3}  fill={JADE} opacity={0.45} />
+    </svg>
+  ) : (
+    <div style={{ width: size, height: size, flexShrink: 0 }} />
+  );
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 36, flexWrap: "wrap" }}>
-      <svg
-        width={size}
-        height={size}
-        style={{ flexShrink: 0, filter: "drop-shadow(0 6px 22px rgba(45,140,110,0.34))" }}
-      >
-        {/* ベースリング（背景トラック） */}
-        <circle
-          cx={cx} cy={cy}
-          r={(outerR + innerR) / 2}
-          fill="none"
-          stroke={t.borderStrong}
-          strokeWidth={outerR - innerR}
-          opacity={0.45}
-        />
-        {/* セグメント */}
-        {segments.map((seg, i) => (
-          <path key={i} d={donutSegmentPath(cx, cy, outerR, innerR, seg.start, seg.end)} fill={seg.color} />
-        ))}
-        {/* インナーリム：立体感のためのハイライト */}
-        <circle cx={cx} cy={cy} r={innerR + 0.5} fill="none" stroke="white" strokeWidth={1.5} opacity={0.1} />
-        {/* センター：翡翠の多重輝点 */}
-        <circle cx={cx} cy={cy} r={12} fill={JADE} opacity={0.07} />
-        <circle cx={cx} cy={cy} r={7}  fill={JADE} opacity={0.14} />
-        <circle cx={cx} cy={cy} r={3}  fill={JADE} opacity={0.45} />
-      </svg>
+      {donutSvg}
       <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 200 }}>
         {items.map((item, i) => (
           <div key={i} style={{
