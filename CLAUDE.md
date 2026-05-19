@@ -240,6 +240,8 @@ launchctl load ~/Library/LaunchAgents/com.hisuigan.daily-report.plist
 content/reports/monthly/YYYY-MM.md      # 発行月ベース（4月1日発行 → 2026-04.md）
 content/reports/weekly/YYYY-WXX.md
 content/reports/daily/YYYY-MM-DD.md
+content/history/predictions.json        # 予測精度ログ（永続蓄積・1-file-rule 対象外）
+content/history/metrics.json            # 指標時系列ログ（永続蓄積・1-file-rule 対象外）
 .claude/commands/push-reports.md     # /push-reports スラッシュコマンド定義
 scripts/gen-allocation-note.mjs      # allocationNote 生成スクリプト（オプション・非推奨）
 ```
@@ -444,6 +446,8 @@ sectors:
 | `/reports` | `app/reports/ReportsClient.tsx` | クライアントコンポーネント（テーマ・描画） |
 | `/reports/[slug]` | `app/reports/[slug]/page.tsx` | サーバーコンポーネント（データ取得のみ） |
 | `/reports/[slug]` | `app/reports/[slug]/ReportClient.tsx` | クライアントコンポーネント（テーマ・描画） |
+| `/reports/track-record` | `app/reports/track-record/page.tsx` | サーバーコンポーネント（predictions.json 読込） |
+| `/reports/track-record` | `app/reports/track-record/TrackRecordClient.tsx` | クライアントコンポーネント（予測ログ描画） |
 | 共通 | `app/reports/ReportCard.tsx` | レポート一覧カード（t: Theme を受け取る） |
 
 ### 個別レポートページの機能
@@ -465,6 +469,31 @@ sectors:
 - `getAllReports()` — 全レポートのメタデータ（日付降順）
 - `getReportsByType(type)` — タイプ別フィルタ
 - `getReportBySlug(slug)` — フルデータ（本文＋全 frontmatter フィールド）
+
+### ユーティリティ（lib/history.ts）
+- `getPredictions()` — `content/history/predictions.json` の全 PredictionRecord を取得
+- `getMetricsHistory()` — `content/history/metrics.json` の MetricsHistory を取得
+- `getSparklinePoints(label)` — 指定指標の直近12件の MetricPoint を取得（スパークライン用）
+
+### 予測精度ログ（/reports/track-record）
+- ベースシナリオ予測と実績を事実並置で表示
+- 評価方式：ベースシナリオの direction（up / down / neutral）と翌週S&P 500週次変動の方向が一致したか
+  - 変化率 ±0.5% 未満は neutral 扱い
+  - 「方向一致」タグ（JADE）/ 「方向不一致」タグ（赤）/ 「PENDING」タグ（評価前）
+- サマリーバー：評価済み件数・方向一致数・不一致数・一致率（resolved が1件以上の場合に表示）
+- 注記：確率や値幅の精度は評価対象外。AI参考記録である旨を明示
+
+### スパークライン（KeyMetrics コンポーネント内）
+- 各指標セルのラベル行右端にインライン SVG（幅48px・高さ20px）
+- `metrics.json` の当該指標データを直近12件読み込んで折れ線を描画
+- 2点以上ある場合のみ表示（1点以下は非表示）
+- 最新点にドットを描画。直近2点の比較で上昇=JADE・下落=赤でライン色分け
+- スパークライン用データは `/push-reports` の Step 3.5 で毎週自動蓄積
+
+### content/history/ 運用ルール
+- `predictions.json`・`metrics.json` は **1-file-rule 対象外**（削除せず永続蓄積）
+- `/push-reports` の Step 3.5 で自動更新（前週 outcome 記入 → 今週予測追記）
+- `git add content/history/` を `content/reports/` と同時に staging する
 
 ## モバイル対応
 - ブレークポイント：`max-width: 768px`
