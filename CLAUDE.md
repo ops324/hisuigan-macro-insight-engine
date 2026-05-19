@@ -14,7 +14,7 @@
 - 数値：monospaceフォント
 - データは15〜20分遅延表示
 - 市場数値ページ（`/market`）ナビの「レポート」タブ：カタカナ表記（`レポート`）
-- `/reports` ヘッダー：ブレッドクラムなし（ロゴ「翡翠眼」のみ。右側に「マーケット」リンクとテーマトグル）
+- `/reports` ヘッダー：ブレッドクラムなし（ロゴ「翡翠眼」のみ。右側に「マーケット」リンクとテーマトグル）。「マーケット」リンクは `color: t.positive`（翡翠グリーン・ダーク `#3aaf8a`・ライト `#1e6b53`）でリンクであることを視覚的に明示
 - `/reports/[slug]`・`/reports/track-record` のヘッダーブレッドクラム・`/reports` の h1 タイトル：カタカナ表記（`レポート`）
 - レポートページのタイトルセクション（格言バナーの直上）サブタイトル文言：「月次・週次・日次のマクロ市場分析レポート」のみ
 
@@ -88,7 +88,20 @@
 全ページ共通のダーク/ライトテーマ定数。レポートページで使用。
 
 ```ts
-export const themeMap = { dark: {...}, light: {...} }
+export const themeMap = {
+  dark: {
+    bg: "#0d0d0d", surface: "#141414", surfaceAlt: "#1e1e1e",
+    border: "#2e2e2e", borderStrong: "#383838",
+    text: "#e5e5e5", textSub: "#888888", textMuted: "#777777",
+    headerBg: "#0d0d0d", positive: "#3aaf8a", negative: "#e05252",
+  },
+  light: {
+    bg: "#f4f4f4", surface: "#ffffff", surfaceAlt: "#f0f0f0",
+    border: "#e0e0e0", borderStrong: "#c8c8c8",
+    text: "#111111", textSub: "#555555", textMuted: "#767676",
+    headerBg: "#ffffff", positive: "#1e6b53", negative: "#c0392b",
+  },
+}
 export type ThemeMode = keyof typeof themeMap;
 export type Theme = typeof themeMap["dark"] | typeof themeMap["light"];
 ```
@@ -99,7 +112,9 @@ export type Theme = typeof themeMap["dark"] | typeof themeMap["light"];
 - デフォルト：`"light"`
 
 ### 市場数値ページ（app/market/page.tsx・`/market`）
-- 独自 theme オブジェクト（lib/theme.ts とは別、色値が微妙に異なる）
+- 独自 theme オブジェクト（lib/theme.ts とは別）
+- `dark`: border `#333333` / borderStrong `#444444` / textMuted `#777777`
+- `light`: textSub `#555555` / textMuted `#767676`
 - localStorage 対応済み
 
 ### レポートページ（app/reports/）
