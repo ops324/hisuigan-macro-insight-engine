@@ -1,0 +1,40 @@
+[
+  {
+    "weekSlug": "2026-W20",
+    "date": "2026-05-18",
+    "stance": 72,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "GDP・インフレ不透明感＋NVIDIA・FOMC待ちで下方バイアスの膠着",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "GDP・インフレ不透明感＋NVIDIA・FOMC待ちで下方バイアスの膠着",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "NVIDIA好決算＋ホルムズ緊張緩和→AI主導のリスクオン復帰",
+        "probability": 15,
+        "direction": "up"
+      },
+      {
+        "label": "FOMC議事要旨タカ派＋日本スタグフレーション波及→調整深化",
+        "probability": 40,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,408", "numericValue": 7408 },
+      { "label": "日経225", "value": "61,409", "numericValue": 61409 },
+      { "label": "米10年債", "value": "4.63%", "numericValue": 4.63 },
+      { "label": "日本10年債", "value": "2.64%", "numericValue": 2.64 },
+      { "label": "WTI原油", "value": "$107", "numericValue": 107 },
+      { "label": "金", "value": "$4,483", "numericValue": 4483 }
+    ],
+    "outcome": null
+  }
+]

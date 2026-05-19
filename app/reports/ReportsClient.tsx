@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ReportMeta, ReportType, ScenarioItem, AllocationItem, KeyMetricItem, RegimeInfo } from "@/lib/reports";
+import { MetricsHistory, MetricPoint } from "@/lib/history";
 import { themeMap, ThemeMode } from "@/lib/theme";
 import { ReportCard } from "./ReportCard";
 
@@ -109,7 +110,39 @@ function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Allocatio
   );
 }
 
-function KeyMetrics({ items, asOf, t }: { items: KeyMetricItem[]; asOf: string; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
+function Sparkline({ points, color, width = 48, height = 20 }: {
+  points: MetricPoint[];
+  color: string;
+  width?: number;
+  height?: number;
+}) {
+  if (points.length < 2) return null;
+  const vals = points.map((p) => p.numericValue);
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  const range = max - min || 1;
+  const xStep = width / (points.length - 1);
+  const toX = (i: number) => Math.round(i * xStep * 10) / 10;
+  const toY = (v: number) => Math.round(((max - v) / range) * (height - 4) + 2) * 1;
+  const polyline = points.map((p, i) => `${toX(i)},${toY(p.numericValue)}`).join(" ");
+  const last = points[points.length - 1];
+  const lx = toX(points.length - 1);
+  const ly = toY(last.numericValue);
+  const trend = vals[vals.length - 1] >= vals[vals.length - 2] ? color : "#e05252";
+  return (
+    <svg width={width} height={height} style={{ display: "block", overflow: "visible" }}>
+      <polyline points={polyline} fill="none" stroke={`${trend}66`} strokeWidth={1.2} strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={lx} cy={ly} r={2.5} fill={trend} />
+    </svg>
+  );
+}
+
+function KeyMetrics({ items, asOf, metricsHistory, t }: {
+  items: KeyMetricItem[];
+  asOf: string;
+  metricsHistory?: MetricsHistory;
+  t: typeof themeMap["dark"] | typeof themeMap["light"];
+}) {
   return (
     <div style={{ marginBottom: 20 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
@@ -124,8 +157,13 @@ function KeyMetrics({ items, asOf, t }: { items: KeyMetricItem[]; asOf: string; 
           const dir = m.direction ?? "flat";
           return (
             <div key={i} style={{ background: t.surface, padding: "13px 15px" }}>
-              <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.05em", marginBottom: 8, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                {m.label}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 4 }}>
+                <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.05em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {m.label}
+                </span>
+                {metricsHistory && metricsHistory[m.label] && (
+                  <Sparkline points={(metricsHistory[m.label] ?? []).slice(-12)} color={JADE} />
+                )}
               </div>
               <div style={{ fontSize: 18, fontWeight: 700, color: t.text, fontFamily: "monospace", letterSpacing: "-0.01em", lineHeight: 1 }}>
                 {m.value}
@@ -198,7 +236,7 @@ function RegimePanel({ regime, t }: { regime: RegimeInfo; t: typeof themeMap["da
   );
 }
 
-function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
+function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metricsHistory?: MetricsHistory; t: typeof themeMap["dark"] | typeof themeMap["light"] }) {
   const { stance, stancePrev, stanceLabel, stanceRationale, themes, scenarios, allocation, keyMetrics, regime } = report;
   if (stance == null && !themes && !scenarios) return null;
 
@@ -224,7 +262,7 @@ function CurrentView({ report, t }: { report: ReportMeta; t: typeof themeMap["da
       </div>
 
       {keyMetrics && keyMetrics.length > 0 && (
-        <KeyMetrics items={keyMetrics as KeyMetricItem[]} asOf={report.date} t={t} />
+        <KeyMetrics items={keyMetrics as KeyMetricItem[]} asOf={report.date} metricsHistory={metricsHistory} t={t} />
       )}
 
       {regime && <RegimePanel regime={regime} t={t} />}
@@ -356,9 +394,10 @@ interface Props {
   latestWeekly?: ReportMeta;
   latestDaily?: ReportMeta;
   reportsByType: Record<ReportType, ReportMeta[]>;
+  metricsHistory?: MetricsHistory;
 }
 
-export default function ReportsClient({ latestWeekly, latestDaily, reportsByType }: Props) {
+export default function ReportsClient({ latestWeekly, latestDaily, reportsByType, metricsHistory }: Props) {
   const [mode, setMode] = useState<ThemeMode>("light");
   const t = themeMap[mode];
 
@@ -431,7 +470,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
 
       {/* コンテンツ */}
       <main style={{ maxWidth: 1280, margin: "0 auto", padding: "40px 24px" }}>
-        {latestWeekly && <CurrentView report={latestWeekly} t={t} />}
+        {latestWeekly && <CurrentView report={latestWeekly} metricsHistory={metricsHistory} t={t} />}
 
         {/* 現状解説（最新日次レポートより） */}
         {latestDaily?.description && (
@@ -449,6 +488,15 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
             </Link>
           </div>
         )}
+
+        {/* 予測ログリンク */}
+        <div style={{ marginBottom: 40, display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ flex: 1, height: 1, background: t.border }} />
+          <Link href="/reports/track-record" style={{ fontSize: 12, color: JADE, textDecoration: "none", letterSpacing: "0.06em", whiteSpace: "nowrap", border: `1px solid ${JADE}55`, padding: "6px 14px" }}>
+            予測ログ（ベースシナリオ vs 実績）→
+          </Link>
+          <div style={{ flex: 1, height: 1, background: t.border }} />
+        </div>
 
         {types.map((type) => {
           const reports = reportsByType[type] ?? [];

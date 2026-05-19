@@ -1,4 +1,5 @@
 import { getReportsByType, ReportType, ReportMeta } from "@/lib/reports";
+import { getMetricsHistory, MetricsHistory } from "@/lib/history";
 import ReportsClient from "./ReportsClient";
 
 export default function ReportsPage() {
@@ -12,5 +13,7 @@ export default function ReportsPage() {
     daily:   getReportsByType("daily"),
   };
 
-  return <ReportsClient latestWeekly={latestWeekly} latestDaily={latestDaily} reportsByType={reportsByType} />;
+  const metricsHistory: MetricsHistory = getMetricsHistory();
+
+  return <ReportsClient latestWeekly={latestWeekly} latestDaily={latestDaily} reportsByType={reportsByType} metricsHistory={metricsHistory} />;
 }

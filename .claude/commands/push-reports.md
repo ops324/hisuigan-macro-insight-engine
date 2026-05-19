@@ -64,21 +64,66 @@ APIキー不要。Claude Code セッション内で完結する。
 既存フィールドは上書き。存在しないフィールドは追加。
 本文（--- 以降のMarkdown）は変更しない。
 
+### Step 3.5: 予測履歴を更新する
+
+`content/history/predictions.json` と `content/history/metrics.json` を更新する。
+
+#### predictions.json の更新手順
+
+1. ファイルを読み込む
+2. 配列末尾のエントリ（前週分）の `outcome` が `null` の場合、今週の keyMetrics と前週の keyMetrics を比較して `outcome` を記入する：
+   - `assessedDate`: 今週の週次レポートの `date`
+   - `spxActualChange`: 今週のS&P 500の `change`（フィールドがあれば）
+   - `spxDirection`: 今週と前週のS&P 500 numericValue を比較して `"up"` / `"down"` / `"neutral"` を判定（変化率 ±0.5% 未満は `"neutral"`）
+   - `baseScenarioDirection`: 前週エントリの `baseScenario.direction`
+   - `match`: `spxDirection === baseScenarioDirection` の場合 `true`
+   - `note`: 実績の簡潔な説明（1〜2文。例：「S&P 500 -1.2%。調整が続きベースシナリオの下落方向と一致」）
+3. 今週の予測エントリを末尾に追加する：
+   - `weekSlug`: 今週の週次ファイル名（例：`"2026-W21"`）
+   - `date`: 今週の `date`
+   - `stance`: 新しい stance 値
+   - `stanceLabel`: 新しい stanceLabel
+   - `baseScenario`: base: true のシナリオの label・probability・direction
+   - `scenarios`: 全3シナリオ（label・probability・direction・base）
+   - `keyMetrics`: 今週の keyMetrics から label・value・numericValue（数値変換した値）を抽出
+   - `outcome`: `null`
+4. ファイルに書き戻す
+
+#### numericValue の算出方法
+
+| 指標 | 変換 |
+|------|------|
+| S&P 500, 日経225 等（カンマ区切り整数） | カンマを除去して数値変換 |
+| 米10年債, 日本10年債 等（`%` 付き） | `%` を除去して数値変換 |
+| WTI原油, 金 等（`$` 付き整数） | `$` とカンマを除去して数値変換 |
+
+#### metrics.json の更新手順
+
+1. ファイルを読み込む
+2. 各 keyMetric の `label` をキーとして、今週の値を末尾に追加する：
+   - `date`: 今週の `date`
+   - `weekSlug`: 今週の週次ファイル名
+   - `numericValue`: 上記変換式で算出
+   - `displayValue`: frontmatter の `value` をそのまま使用
+3. キーが存在しない場合は新規作成する
+4. ファイルに書き戻す
+
 ### Step 4: git 操作
 
 ```
 git status で変更ファイルを確認
-git add content/reports/   （レポートファイルのみ。.claude/ や scripts/ は含めない）
+git add content/reports/ content/history/   （レポート＋履歴ファイル。.claude/ や scripts/ は含めない）
 ```
 
 コミット前にユーザーに以下を報告し、確認を取ること：
 - 削除したファイル（あれば）
 - 更新した週次ファイル名
 - 生成した frontmatter フィールドの概要（stance・stanceLabel・quote・allocationNote・sectors・sectorsNote 等）
+- 前週 outcome の評価結果（方向一致/不一致・note）
 
 確認後：
 ```
-git commit -m "レポート更新: [週次ファイル名] + カレントビュー生成"
+git commit -m "レポート更新: [週次ファイル名] カレントビュー生成 + 日次レポート [日付]"
 git push
 ```
 

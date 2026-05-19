@@ -1,0 +1,20 @@
+{
+  "S&P 500": [
+    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 7408, "displayValue": "7,408" }
+  ],
+  "日経225": [
+    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 61409, "displayValue": "61,409" }
+  ],
+  "米10年債": [
+    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 4.63, "displayValue": "4.63%" }
+  ],
+  "日本10年債": [
+    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 2.64, "displayValue": "2.64%" }
+  ],
+  "WTI原油": [
+    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 107, "displayValue": "$107" }
+  ],
+  "金": [
+    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 4483, "displayValue": "$4,483" }
+  ]
+}
