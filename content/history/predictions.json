@@ -35,6 +35,51 @@
       { "label": "WTI原油", "value": "$107", "numericValue": 107 },
       { "label": "金", "value": "$4,483", "numericValue": 4483 }
     ],
+    "outcome": {
+      "assessedDate": "2026-05-20",
+      "spxActualChange": "-0.7%",
+      "spxDirection": "down",
+      "baseScenarioDirection": "neutral",
+      "match": false,
+      "note": "S&P 500は7,408→7,354（-0.73%）と3日続落。30年債5.19%（19年ぶり高水準）が株式を圧迫し、ベースシナリオの「中立」予想に対し実際は下落方向で不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W20",
+    "date": "2026-05-20",
+    "stance": 75,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "NVIDIA決算・FOMC議事要旨の消化待ち、長期金利上昇が重石で下方バイアス",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "NVIDIA決算・FOMC議事要旨の消化待ち、長期金利上昇が重石で下方バイアス",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "NVIDIA好決算＋FOMC議事要旨ハト派寄り→AI主導のリスクオン回復",
+        "probability": 15,
+        "direction": "up"
+      },
+      {
+        "label": "FOMC利上げ議論明確化＋30年債5.25%接近→本格調整局面入り",
+        "probability": 40,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,354", "numericValue": 7354 },
+      { "label": "日経225", "value": "60,119", "numericValue": 60119 },
+      { "label": "米10年債", "value": "4.68%", "numericValue": 4.68 },
+      { "label": "日本10年債", "value": "2.79%", "numericValue": 2.79 },
+      { "label": "WTI原油", "value": "$105", "numericValue": 105 },
+      { "label": "金", "value": "$4,534", "numericValue": 4534 }
+    ],
     "outcome": null
   }
 ]
