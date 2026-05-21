@@ -1,26 +1,32 @@
 {
   "S&P 500": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 7408, "displayValue": "7,408" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 7354, "displayValue": "7,354" }
+    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 7354, "displayValue": "7,354" },
+    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 7423, "displayValue": "7,423" }
   ],
   "日経225": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 61409, "displayValue": "61,409" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 60119, "displayValue": "60,119" }
+    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 60119, "displayValue": "60,119" },
+    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 59804, "displayValue": "59,804" }
   ],
   "米10年債": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 4.63, "displayValue": "4.63%" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 4.68, "displayValue": "4.68%" }
+    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 4.68, "displayValue": "4.68%" },
+    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 4.63, "displayValue": "4.63%" }
   ],
   "日本10年債": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 2.64, "displayValue": "2.64%" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 2.79, "displayValue": "2.79%" }
+    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 2.79, "displayValue": "2.79%" },
+    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 2.79, "displayValue": "2.79%" }
   ],
   "WTI原油": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 107, "displayValue": "$107" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 105, "displayValue": "$105" }
+    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 105, "displayValue": "$105" },
+    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 100, "displayValue": "$100" }
   ],
   "金": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 4483, "displayValue": "$4,483" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 4534, "displayValue": "$4,534" }
+    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 4534, "displayValue": "$4,534" },
+    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 4490, "displayValue": "$4,490" }
   ]
 }

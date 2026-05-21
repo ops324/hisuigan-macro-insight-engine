@@ -80,6 +80,51 @@
       { "label": "WTI原油", "value": "$105", "numericValue": 105 },
       { "label": "金", "value": "$4,534", "numericValue": 4534 }
     ],
+    "outcome": {
+      "assessedDate": "2026-05-21",
+      "spxActualChange": "+0.9%",
+      "spxDirection": "up",
+      "baseScenarioDirection": "neutral",
+      "match": false,
+      "note": "S&P 500は7,354→7,423（+0.94%）と4日ぶり反発。NVIDIA好決算＋ホルムズ通航再開で市場心理改善。ベースシナリオの「中立」予想に対し上昇方向で不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W20",
+    "date": "2026-05-21",
+    "stance": 70,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "NVIDIA好決算＋イラン合意接近で市場心理改善、ただし日本リスク継続で上値限定",
+      "probability": 50,
+      "direction": "up"
+    },
+    "scenarios": [
+      {
+        "label": "NVIDIA好決算＋イラン合意接近で市場心理改善、ただし日本リスク継続で上値限定",
+        "probability": 50,
+        "direction": "up",
+        "base": true
+      },
+      {
+        "label": "イラン合意成立＋原油$90台→インフレ後退期待で株式本格反発",
+        "probability": 25,
+        "direction": "up"
+      },
+      {
+        "label": "イラン合意破談＋原油再急騰→インフレ再加速でリスクオフ回帰",
+        "probability": 25,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,423", "numericValue": 7423 },
+      { "label": "日経225", "value": "59,804", "numericValue": 59804 },
+      { "label": "米10年債", "value": "4.63%", "numericValue": 4.63 },
+      { "label": "日本10年債", "value": "2.79%", "numericValue": 2.79 },
+      { "label": "WTI原油", "value": "$100", "numericValue": 100 },
+      { "label": "金", "value": "$4,490", "numericValue": 4490 }
+    ],
     "outcome": null
   }
 ]
