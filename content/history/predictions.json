@@ -125,6 +125,51 @@
       { "label": "WTI原油", "value": "$100", "numericValue": 100 },
       { "label": "金", "value": "$4,490", "numericValue": 4490 }
     ],
+    "outcome": {
+      "assessedDate": "2026-05-22",
+      "spxActualChange": "+0.3%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "up",
+      "match": false,
+      "note": "S&P 500は7,423→7,445（+0.30%）と小幅続伸だが変化率±0.5%未満でneutral判定。DOW 50,285で最高値更新も上昇幅は限定的。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W20",
+    "date": "2026-05-22",
+    "stance": 67,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "DOW最高値・日経反発の勢い継続、イラン交渉不透明感が上値を抑制",
+      "probability": 50,
+      "direction": "up"
+    },
+    "scenarios": [
+      {
+        "label": "DOW最高値・日経反発の勢い継続、イラン交渉不透明感が上値を抑制",
+        "probability": 50,
+        "direction": "up",
+        "base": true
+      },
+      {
+        "label": "イラン合意進展＋原油$90割れ→インフレ後退で本格リスクオン",
+        "probability": 20,
+        "direction": "up"
+      },
+      {
+        "label": "イラン合意破談＋軍事行動再開→原油急騰でリスクオフ回帰",
+        "probability": 30,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,445", "numericValue": 7445 },
+      { "label": "日経225", "value": "61,782", "numericValue": 61782 },
+      { "label": "米10年債", "value": "4.59%", "numericValue": 4.59 },
+      { "label": "日本10年債", "value": "2.79%", "numericValue": 2.79 },
+      { "label": "WTI原油", "value": "$97", "numericValue": 97 },
+      { "label": "金", "value": "$4,500", "numericValue": 4500 }
+    ],
     "outcome": null
   }
 ]
