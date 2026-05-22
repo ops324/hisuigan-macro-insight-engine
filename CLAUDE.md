@@ -299,7 +299,7 @@ regime:
 # 主要指標スナップショット（省略可）。⚠ 手動記述不要。/push-reports が自動生成
 keyMetrics:
   - label: "米10年債"
-    value: "4.63%"        # 単位込みの文字列
+    value: "4.63%"        # 単位込みの文字列。コモディティは円建て（例：WTI → "¥15,427"）
     change: "+0.05"       # 前回比（任意。確かな数値が取れる場合のみ）
     direction: "up"       # up | down | flat（任意）
 themes:
