@@ -156,7 +156,7 @@ DB 不要、Vercel 自動デプロイで反映。
 | `stanceRationale` | なぜこの stance 値か（数字の判断根拠 2〜3 文） |
 | `marketOverview` | 月次中長期観・週次テーマ・日次動向を統合した市況概要 |
 | `regime` | 現在のマクロ局面（景気 cycle・インフレ inflation・金融政策 policy・総括 summary） |
-| `keyMetrics` | 主要指標スナップショット 4〜6 件（label・value・change・direction・low52・high52・rangePosition） |
+| `keyMetrics` | 主要指標スナップショット 4〜6 件（label・value・change・direction） |
 | シナリオ `rationale` | 各予測シナリオの確率・判断の根拠（1〜2 文） |
 | `themes` | 注目テーマリスト（絵文字＋テキスト 3〜5件） |
 | `scenarios` | 予測シナリオ 3件（確率合計100%） |
@@ -302,9 +302,6 @@ keyMetrics:
     value: "4.63%"        # 単位込みの文字列
     change: "+0.05"       # 前回比（任意。確かな数値が取れる場合のみ）
     direction: "up"       # up | down | flat（任意）
-    low52: "3.85%"        # 52週安値（任意。単位込み文字列）
-    high52: "5.10%"       # 52週高値（任意。単位込み文字列）
-    rangePosition: 62     # 52週レンジ内の位置 0〜100（任意。low52・high52とセットで付与）
 themes:
   - "🔴 テーマ1"
   - "🟡 テーマ2"
@@ -429,7 +426,12 @@ sectors:
 - **市況概要・スタンス・シナリオ予測・資産配分はいずれも中長期視点での内容**
 - データソース：最新の週次レポート（weekly[0]）のフロントマターを使用（月次・週次・日次を踏まえて執筆者が統合的に記述）
 - 表示要素：ヘッダー直下に主要指標ストリップ ＋ 現在のレジームパネル ＋ スタンス、市況概要、予測シナリオの3カラム ＋ 下部に参考資産配分モデル ＋ 注目セクター
-- 主要指標ストリップ（keyMetrics）：ヘッダーと3カラムグリッドの間に表示。ラベル「主要指標」（JADE）と「YYYY-MM-DD 時点」（as-of日付）を両端に配置。各セルは指標名（11px・textMuted）＋スパークライン（右端・2点以上で表示）＋値（18px・monospace・bold）＋変化量（任意・矢印付き・方向で配色）の構成。変化量行は `minHeight` で高さ予約しセルを整列。`low52`・`high52`・`rangePosition` が揃っている場合は変化量行の下に年間レンジゲージを表示。ゲージ仕様：上段に「年間レンジ（52W）」ラベル（JADE・左・10px）と「XX% ゾーン名」（右・10px）、中段に高さ8pxグラデーションバー（`${JADE}22`→`${JADE}99`）＋現在位置の縦線マーカー（JADE・上下3px張り出し・グロー付き）、下段に low52（左・10px）と high52（右・10px）。ゾーン名は rangePosition に応じて「年間高値圏（80%〜）/ 上値圏（60〜80%）/ 中間圏（40〜60%）/ 下値圏（20〜40%）/ 年間安値圏（〜20%）」。本グリッドと同じ `gap:1`＋罫線手法で統一。`keyMetrics` がない場合は非表示
+- 主要指標ストリップ（keyMetrics）：ヘッダーと3カラムグリッドの間に表示。デザイン方向は「精密ティッカー」。ラベル「主要指標」（JADE）を左、右に**期間ラベル＋as-of日付**「前週比 · YYYY-MM-DD 時点」（textMuted）を配置。各セル（上から）＝① **資産クラスeyebrow**（9px・JADE・uppercase・`minHeight` で高さ予約。グループ先頭セルのみ表示）／② 指標名（11px・textMuted・`flex:1 minWidth:0` で ellipsis）＋スパークライン（右端・`flexShrink:0`・2点以上で表示）／③ 値（18px・monospace・bold）／④ **デルタ角チップ**（任意・`minHeight:21` で高さ予約）。チップは方向色の地（`${dc}1a`）＋方向色文字＋▲/▼/—、直角（角丸なし）。`keyMetrics` がない場合は非表示
+- 資産クラス推定（`metricGroup(label)`）：ラベルから 金利（債/金利/利回り/イールド）→ コモディティ（原油/WTI/ブレント/天然ガス/金/銀/銅/プラチナ）→ 為替（/・円・ドル等）→ 株式（S&P/NASDAQ/ダウ/日経/TOPIX/株/指数）→ その他 の順で判定（コモディティの「金」と金利を衝突させないため金利を先に判定）。連続する同一グループの先頭セルにのみ eyebrow を表示。グループ未保有データでも安全に動作（型変更不要・generator 非依存）
+- 変化単位整理（`changeDisplay(value, change)`）：値が `%` で終わる利回り系で change が裸の符号付き数値（%・$・pt・bp なし）のとき `pt` を補う（例：米10年債 `-0.04` → `-0.04pt`）。それ以外は change を verbatim 表示
+- セルホバー（`.hg-metric-cell` / globals.css）：翡翠インナーボーダー（`inset 0 0 0 1px rgba(45,140,110,0.5)`・z-index:5）＋ツールチップ（`.hg-metric-tip`）出現。ツールチップ＝セル下に絶対配置（右半分のセルは `right:0`、左半分は `left:0` でビューポート見切れ回避）。内容＝指標名＋最新精密値（`metrics.json` 最新点 `displayValue（date）`、無ければ `value（as-of 時点）`）＋直近N週レンジ「直近N週: lo 〜 hi」。テーマ連動色は inline・出現アニメは CSS クラスで制御。**Turbopack の CSS キャッシュ問題に注意**：globals.css にクラス追加後は `.next` 削除＋サーバー再起動でないと新ルールが読み込まれない場合あり
+- スパークライン（`Sparkline` コンポーネント）：各指標セル右上にインライン SVG（既定 58×24px）。`metrics.json` の当該指標を直近12件描画。2点未満は非表示。リッチ仕様＝① 折れ線下にグラデーション面塗り（縦方向 `<linearGradient>`：上 stopOpacity 0.3 → 下 0、id は呼び出し側 index 由来の `hg-spark-${idSeed}` で一意化＝ハイドレーション安全）／② 折れ線は trend 色の実線・strokeWidth 1.75・round cap・join／③ **最大・最小点に控えめな中空マーカー**（r1.7・fill none・stroke trend・opacity0.45。終点と重なる場合は省略＝レンジ文脈）／④ 終点に3重円（外周ハロー r4 opacity0.22 ＋ 本体 r2.4 ＋ 白ハイライト r1 opacity0.85）／⑤ 内側パディング `padX=2, padY=4` で上下端の見切れ防止。trend 色＝直近2点比較で上昇=JADE・下落=`#e05252`。座標は `Math.round` で決定的（SSR/CSR 一致）
+- スパークライン（`Sparkline` コンポーネント）：各指標セル右上にインライン SVG（既定 58×24px）。`metrics.json` の当該指標を直近12件描画。2点未満は非表示。リッチ仕様＝① 折れ線下にグラデーション面塗り（縦方向 `<linearGradient>`：上 stopOpacity 0.3 → 下 0、id は呼び出し側 index 由来の `hg-spark-${idSeed}` で一意化＝ハイドレーション安全）／② 折れ線は trend 色の実線・strokeWidth 1.75・round cap・join／③ 終点に3重円（外周ハロー r4 opacity0.22 ＋ 本体 r2.4 ＋ 白ハイライト r1 opacity0.85）／④ 内側パディング `padX=2, padY=4` で上下端の見切れ防止。trend 色＝直近2点比較で上昇=JADE・下落=`#e05252`。座標は `Math.round` で決定的（SSR/CSR 一致）
 - 現在のレジームパネル（regime）：主要指標ストリップと3カラムグリッドの間に表示。ラベル「現在のレジーム」（JADE）の下に景気局面・インフレ局面・金融政策局面の3セル（各セル＝局面ラベル11px＋局面名15px・bold）。直下に総括（summary）を翡翠グリーンの左ボーダー付きで表示。`regime` がない場合は非表示
 - スタンスゲージには「中長期目線」の注記と「AI（翡翠眼）による参考値。投資助言ではありません。」を表示
 - スタンス前回比（stancePrev）：ゲージトラック上に前回値位置を中空リング（ゴーストマーカー・`t.textMuted` ボーダー）で描画し、現在のドットとの距離で変化を可視化。RISK-ON/OFF行の下に「前回比 ↑+4 前回 68」を表示。デルタ配色は増加（リスクオフ寄り）=琥珀 `#bf8a3e`・減少=JADE・横ばい=textMuted。`stancePrev` がない場合は非表示
@@ -505,10 +507,12 @@ sectors:
 - 注記：確率や値幅の精度は評価対象外。AI参考記録である旨を明示
 
 ### スパークライン（KeyMetrics コンポーネント内）
-- 各指標セルのラベル行右端にインライン SVG（幅48px・高さ20px）
+- 各指標セルのラベル行右端にインライン SVG（既定 幅58px・高さ24px・`flexShrink:0`）
 - `metrics.json` の当該指標データを直近12件読み込んで折れ線を描画
 - 2点以上ある場合のみ表示（1点以下は非表示）
-- 最新点にドットを描画。直近2点の比較で上昇=JADE・下落=赤でライン色分け
+- リッチ仕様：折れ線下にグラデーション面塗り（縦 `<linearGradient>`：上 0.3 → 下 0、id は呼び出し側 index 由来 `hg-spark-${idSeed}` で一意化）＋ trend 色実線（strokeWidth 1.75・round）＋ 最大/最小の中空マーカー（r1.7・fill none・opacity0.45・終点重複時は省略＝レンジ文脈）＋ 終点3重円（外周ハロー r4 opacity0.22 ＋ 本体 r2.4 ＋ 白ハイライト r1 opacity0.85）。内側パディング `padX=2,padY=4`
+- 直近2点の比較で上昇=JADE・下落=赤（`#e05252`）でライン・面塗り・ドットを色分け。座標は `Math.round` で決定的（SSR/CSR 一致）
+- 方向ラベル（`directionLabel`）は ▲（up）/ ▼（down）/ —（flat）。デルタチップで使用
 - スパークライン用データは `/push-reports` の Step 3.5 で毎週自動蓄積
 
 ### content/history/ 運用ルール
@@ -546,6 +550,8 @@ sectors:
 | `.hg-data-card` | 市場数値ページ データグリッドセル | ホバーで翡翠色インナーボーダー（`inset box-shadow`） |
 | `.hg-treasury-row` | 債券テーブル行 | ホバーで薄い翡翠背景（`rgba(45,140,110,0.04)`） |
 | `.hg-nav-link` | ヘッダーナビリンク | ホバーで翡翠色に変化 |
+| `.hg-metric-cell` | カレントビュー主要指標セル | ホバーで翡翠インナーボーダー＋ツールチップ出現 |
+| `.hg-metric-tip` | 主要指標セルのツールチップ | 既定 opacity:0、親セル hover で出現（精密値・レンジ表示） |
 
 ## デザイン定数
 ```js

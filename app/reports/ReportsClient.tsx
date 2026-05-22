@@ -21,10 +21,27 @@ const TYPE_SUBTITLES: Record<ReportType, string> = {
 };
 
 function directionColor(d: string) {
-  return d === "up" ? "#3aaf8a" : d === "down" ? "#e05252" : "#888";
+  return d === "up" ? "#3aaf8a" : d === "down" ? "#e05252" : "#888888";
 }
 function directionLabel(d: string) {
-  return d === "up" ? "↑" : d === "down" ? "↓" : "→";
+  return d === "up" ? "▲" : d === "down" ? "▼" : "—";
+}
+
+// 変化テキストの単位を整える：利回り系（値が % で終わる）で change が裸の符号付き数値なら pt を補う
+function changeDisplay(value: string, change?: string): string | undefined {
+  if (!change) return undefined;
+  const isYield = /%\s*$/.test(value.trim());
+  const hasUnit = /[%$]|pt|bp/i.test(change);
+  return isYield && !hasUnit ? `${change}pt` : change;
+}
+
+// 指標ラベルから資産クラスを推定（金利を先に判定。コモディティの「金」と衝突させないため）
+function metricGroup(label: string): string {
+  if (/債|金利|利回り|イールド/.test(label)) return "金利";
+  if (/原油|WTI|ブレント|天然ガス|ガス|金|銀|銅|プラチナ|コモディティ/.test(label)) return "コモディティ";
+  if (/\/|円|ドル|ユーロ|ポンド|為替/.test(label)) return "為替";
+  if (/S&P|NASDAQ|ナスダック|ダウ|DOW|日経|TOPIX|株|指数/.test(label)) return "株式";
+  return "その他";
 }
 
 // 翡翠・琥珀・鋼青・菫・浅翡翠・銀 — 上品で運気を高める配色
@@ -113,17 +130,10 @@ function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Allocatio
   );
 }
 
-function rangeZoneLabel(pos: number): string {
-  if (pos >= 80) return "年間高値圏";
-  if (pos >= 60) return "上値圏";
-  if (pos >= 40) return "中間圏";
-  if (pos >= 20) return "下値圏";
-  return "年間安値圏";
-}
-
-function Sparkline({ points, color, width = 48, height = 20 }: {
+function Sparkline({ points, color, idSeed, width = 58, height = 24 }: {
   points: MetricPoint[];
   color: string;
+  idSeed: number | string;
   width?: number;
   height?: number;
 }) {
@@ -132,18 +142,40 @@ function Sparkline({ points, color, width = 48, height = 20 }: {
   const min = Math.min(...vals);
   const max = Math.max(...vals);
   const range = max - min || 1;
-  const xStep = width / (points.length - 1);
-  const toX = (i: number) => Math.round(i * xStep * 10) / 10;
-  const toY = (v: number) => Math.round(((max - v) / range) * (height - 4) + 2) * 1;
-  const polyline = points.map((p, i) => `${toX(i)},${toY(p.numericValue)}`).join(" ");
-  const last = points[points.length - 1];
-  const lx = toX(points.length - 1);
-  const ly = toY(last.numericValue);
-  const trend = vals[vals.length - 1] >= vals[vals.length - 2] ? color : "#e05252";
+  const padX = 2;
+  const padY = 4;
+  const innerW = width - padX * 2;
+  const innerH = height - padY * 2;
+  const xStep = innerW / (points.length - 1);
+  const toX = (i: number) => Math.round((padX + i * xStep) * 10) / 10;
+  const toY = (v: number) => Math.round((((max - v) / range) * innerH + padY) * 10) / 10;
+  const linePts = points.map((p, i) => `${toX(i)},${toY(p.numericValue)}`);
+  const lastIdx = points.length - 1;
+  const lx = toX(lastIdx);
+  const ly = toY(vals[lastIdx]);
+  const trend = vals[lastIdx] >= vals[vals.length - 2] ? color : "#e05252";
+  const gradId = `hg-spark-${idSeed}`;
+  const areaPath = `M ${linePts.join(" L ")} L ${lx},${height} L ${toX(0)},${height} Z`;
+  // レンジ文脈：最大・最小点に控えめな中空マーカー（終点と重なる場合は省く）
+  const minIdx = vals.indexOf(min);
+  const maxIdx = vals.indexOf(max);
+  const ghosts = [minIdx, maxIdx].filter((idx, k, arr) => idx !== lastIdx && arr.indexOf(idx) === k);
   return (
     <svg width={width} height={height} style={{ display: "block", overflow: "visible" }}>
-      <polyline points={polyline} fill="none" stroke={`${trend}66`} strokeWidth={1.2} strokeLinejoin="round" strokeLinecap="round" />
-      <circle cx={lx} cy={ly} r={2.5} fill={trend} />
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={trend} stopOpacity={0.3} />
+          <stop offset="100%" stopColor={trend} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill={`url(#${gradId})`} />
+      <polyline points={linePts.join(" ")} fill="none" stroke={trend} strokeWidth={1.75} strokeLinejoin="round" strokeLinecap="round" />
+      {ghosts.map((idx) => (
+        <circle key={idx} cx={toX(idx)} cy={toY(vals[idx])} r={1.7} fill="none" stroke={trend} strokeWidth={1} opacity={0.45} />
+      ))}
+      <circle cx={lx} cy={ly} r={4} fill={trend} opacity={0.22} />
+      <circle cx={lx} cy={ly} r={2.4} fill={trend} />
+      <circle cx={lx} cy={ly} r={1} fill="#fff" opacity={0.85} />
     </svg>
   );
 }
@@ -154,11 +186,12 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
   metricsHistory?: MetricsHistory;
   t: typeof themeMap["dark"] | typeof themeMap["light"];
 }) {
+  const groups = items.map((m) => metricGroup(m.label));
   return (
     <div style={{ marginBottom: 20 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
         <span style={{ fontSize: 11, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>主要指標</span>
-        <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap" }}>{asOf} 時点</span>
+        <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap" }}>前週比 · {asOf} 時点</span>
       </div>
       <div
         className="hg-cv-metrics"
@@ -166,58 +199,68 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
       >
         {items.map((m, i) => {
           const dir = m.direction ?? "flat";
+          const dc = directionColor(dir);
+          const cd = changeDisplay(m.value, m.change);
+          const isGroupStart = i === 0 || groups[i] !== groups[i - 1];
+          const hist = metricsHistory?.[m.label]?.slice(-12);
+          const tipRight = i >= items.length - 2;
+          let tipPrimary = `${m.value}（${asOf} 時点）`;
+          let tipRange = "";
+          if (hist && hist.length) {
+            const lastPt = hist[hist.length - 1];
+            tipPrimary = `${lastPt.displayValue}（${lastPt.date}）`;
+            if (hist.length >= 2) {
+              const hv = hist.map((p) => p.numericValue);
+              const lo = hist[hv.indexOf(Math.min(...hv))].displayValue;
+              const hi = hist[hv.indexOf(Math.max(...hv))].displayValue;
+              tipRange = `直近${hist.length}週: ${lo} 〜 ${hi}`;
+            }
+          }
           return (
-            <div key={i} style={{ background: t.surface, padding: "13px 15px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 4 }}>
-                <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.05em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            <div key={i} className="hg-metric-cell" style={{ position: "relative", background: t.surface, padding: "12px 15px" }}>
+              <div style={{ minHeight: 13, marginBottom: 6 }}>
+                {isGroupStart && (
+                  <span style={{ fontSize: 9, color: JADE, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.7, textTransform: "uppercase" }}>{groups[i]}</span>
+                )}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 7, gap: 6 }}>
+                <span style={{ flex: 1, minWidth: 0, fontSize: 11, color: t.textMuted, letterSpacing: "0.05em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {m.label}
                 </span>
-                {metricsHistory && metricsHistory[m.label] && (
-                  <Sparkline points={(metricsHistory[m.label] ?? []).slice(-12)} color={JADE} />
+                {hist && hist.length >= 2 && (
+                  <div style={{ flexShrink: 0 }}>
+                    <Sparkline points={hist} color={JADE} idSeed={i} />
+                  </div>
                 )}
               </div>
               <div style={{ fontSize: 18, fontWeight: 700, color: t.text, fontFamily: "monospace", letterSpacing: "-0.01em", lineHeight: 1 }}>
                 {m.value}
               </div>
-              <div style={{ minHeight: 15, marginTop: 7, display: "flex", alignItems: "center", gap: 4 }}>
-                {m.change && (
-                  <>
-                    <span style={{ fontSize: 10, color: directionColor(dir), fontWeight: 700, lineHeight: 1 }}>{directionLabel(dir)}</span>
-                    <span style={{ fontSize: 11, color: directionColor(dir), fontFamily: "monospace", fontWeight: 600, letterSpacing: "0.02em" }}>{m.change}</span>
-                  </>
+              <div style={{ minHeight: 21, marginTop: 8, display: "flex", alignItems: "center" }}>
+                {cd && (
+                  <span style={{
+                    display: "inline-flex", alignItems: "center", gap: 3,
+                    padding: "2px 6px", background: `${dc}1a`, color: dc,
+                    fontSize: 11, fontFamily: "monospace", fontWeight: 700, letterSpacing: "0.02em", lineHeight: 1.3,
+                  }}>
+                    <span style={{ fontSize: 8 }}>{directionLabel(dir)}</span>{cd}
+                  </span>
                 )}
               </div>
-              {m.rangePosition != null && (
-                <div style={{ marginTop: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.07em", opacity: 0.8 }}>年間レンジ（52W）</span>
-                    <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>
-                      <span style={{ fontFamily: "monospace", color: t.textSub, fontWeight: 600 }}>{m.rangePosition}%</span>
-                      {" "}{rangeZoneLabel(m.rangePosition)}
-                    </span>
-                  </div>
-                  <div style={{ position: "relative", height: 8, background: t.border }}>
-                    <div style={{
-                      position: "absolute", left: 0, top: 0,
-                      width: `${m.rangePosition}%`, height: "100%",
-                      background: `linear-gradient(to right, ${JADE}22, ${JADE}99)`,
-                    }} />
-                    <div style={{
-                      position: "absolute",
-                      left: `${m.rangePosition}%`,
-                      top: -3, bottom: -3,
-                      width: 2,
-                      background: JADE,
-                      transform: "translateX(-50%)",
-                      boxShadow: `0 0 6px ${JADE}cc`,
-                    }} />
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-                    <span style={{ fontSize: 10, color: t.textMuted, fontFamily: "monospace" }}>{m.low52}</span>
-                    <span style={{ fontSize: 10, color: t.textMuted, fontFamily: "monospace" }}>{m.high52}</span>
-                  </div>
-                </div>
-              )}
+              <div
+                className="hg-metric-tip"
+                style={{
+                  position: "absolute", top: "calc(100% + 6px)", zIndex: 30,
+                  ...(tipRight ? { right: 0 } : { left: 0 }),
+                  background: t.headerBg, border: `1px solid ${t.borderStrong}`,
+                  padding: "8px 10px", minWidth: 150, whiteSpace: "nowrap",
+                  boxShadow: "0 10px 28px rgba(0,0,0,0.28)",
+                }}
+              >
+                <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em", marginBottom: 3 }}>{m.label}</div>
+                <div style={{ fontSize: 13, color: t.text, fontFamily: "monospace", fontWeight: 700 }}>{tipPrimary}</div>
+                {tipRange && <div style={{ fontSize: 10, color: t.textMuted, fontFamily: "monospace", marginTop: 4 }}>{tipRange}</div>}
+              </div>
             </div>
           );
         })}

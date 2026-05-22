@@ -33,9 +33,6 @@ export interface KeyMetricItem {
   value: string;
   change?: string;
   direction?: "up" | "down" | "flat";
-  low52?: string;
-  high52?: string;
-  rangePosition?: number; // 0–100, current position within 52-week range
 }
 
 export interface ReportMeta {
