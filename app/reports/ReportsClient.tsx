@@ -130,11 +130,12 @@ function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Allocatio
   );
 }
 
-function Sparkline({ points, color, idSeed, width = 58, height = 24 }: {
+const SPARK_VW = 200; // SVG viewBox 論理幅（preserveAspectRatio="none" で実幅にストレッチ）
+
+function Sparkline({ points, color, idSeed, height = 52 }: {
   points: MetricPoint[];
   color: string;
   idSeed: number | string;
-  width?: number;
   height?: number;
 }) {
   if (points.length < 2) return null;
@@ -142,40 +143,71 @@ function Sparkline({ points, color, idSeed, width = 58, height = 24 }: {
   const min = Math.min(...vals);
   const max = Math.max(...vals);
   const range = max - min || 1;
-  const padX = 2;
-  const padY = 4;
-  const innerW = width - padX * 2;
+  const padX = 4, padY = 8;
+  const innerW = SPARK_VW - padX * 2;
   const innerH = height - padY * 2;
   const xStep = innerW / (points.length - 1);
   const toX = (i: number) => Math.round((padX + i * xStep) * 10) / 10;
   const toY = (v: number) => Math.round((((max - v) / range) * innerH + padY) * 10) / 10;
   const linePts = points.map((p, i) => `${toX(i)},${toY(p.numericValue)}`);
   const lastIdx = points.length - 1;
-  const lx = toX(lastIdx);
-  const ly = toY(vals[lastIdx]);
+  const lx = toX(lastIdx), ly = toY(vals[lastIdx]);
   const trend = vals[lastIdx] >= vals[vals.length - 2] ? color : "#e05252";
   const gradId = `hg-spark-${idSeed}`;
   const areaPath = `M ${linePts.join(" L ")} L ${lx},${height} L ${toX(0)},${height} Z`;
-  // レンジ文脈：最大・最小点に控えめな中空マーカー（終点と重なる場合は省く）
+  // 水平グリッドライン（25%・50%・75%）
+  const gridLevels = [0.25, 0.5, 0.75];
+  // 最大・最小点に中空マーカー（終点と重なる場合は省く）
   const minIdx = vals.indexOf(min);
   const maxIdx = vals.indexOf(max);
   const ghosts = [minIdx, maxIdx].filter((idx, k, arr) => idx !== lastIdx && arr.indexOf(idx) === k);
   return (
-    <svg width={width} height={height} style={{ display: "block", overflow: "visible" }}>
+    <svg
+      width="100%"
+      height={height}
+      viewBox={`0 0 ${SPARK_VW} ${height}`}
+      preserveAspectRatio="none"
+      style={{ display: "block" }}
+    >
       <defs>
         <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={trend} stopOpacity={0.3} />
+          <stop offset="0%" stopColor={trend} stopOpacity={0.38} />
+          <stop offset="70%" stopColor={trend} stopOpacity={0.08} />
           <stop offset="100%" stopColor={trend} stopOpacity={0} />
         </linearGradient>
       </defs>
+      {/* グリッドライン */}
+      {gridLevels.map((f) => {
+        const gy = toY(min + range * f);
+        return (
+          <line key={f}
+            x1={padX} y1={gy} x2={SPARK_VW - padX} y2={gy}
+            stroke={trend}
+            strokeOpacity={f === 0.5 ? 0.22 : 0.1}
+            strokeWidth={0.6}
+            strokeDasharray={f === 0.5 ? "4 4" : undefined}
+          />
+        );
+      })}
+      {/* エリア塗り */}
       <path d={areaPath} fill={`url(#${gradId})`} />
-      <polyline points={linePts.join(" ")} fill="none" stroke={trend} strokeWidth={1.75} strokeLinejoin="round" strokeLinecap="round" />
+      {/* 折れ線 */}
+      <polyline
+        points={linePts.join(" ")} fill="none"
+        stroke={trend} strokeWidth={1.7}
+        strokeLinejoin="round" strokeLinecap="round"
+      />
+      {/* 最高値・最安値マーカー */}
       {ghosts.map((idx) => (
-        <circle key={idx} cx={toX(idx)} cy={toY(vals[idx])} r={1.7} fill="none" stroke={trend} strokeWidth={1} opacity={0.45} />
+        <circle key={idx}
+          cx={toX(idx)} cy={toY(vals[idx])}
+          r={2.4} fill="none" stroke={trend} strokeWidth={1.2} opacity={0.55}
+        />
       ))}
-      <circle cx={lx} cy={ly} r={4} fill={trend} opacity={0.22} />
-      <circle cx={lx} cy={ly} r={2.4} fill={trend} />
-      <circle cx={lx} cy={ly} r={1} fill="#fff" opacity={0.85} />
+      {/* 終点：外周ハロー + 本体 + 白ハイライト */}
+      <circle cx={lx} cy={ly} r={5.5} fill={trend} opacity={0.18} />
+      <circle cx={lx} cy={ly} r={3} fill={trend} />
+      <circle cx={lx} cy={ly} r={1.3} fill="#fff" opacity={0.9} />
     </svg>
   );
 }
@@ -202,7 +234,7 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
           const dc = directionColor(dir);
           const cd = changeDisplay(m.value, m.change);
           const isGroupStart = i === 0 || groups[i] !== groups[i - 1];
-          const hist = metricsHistory?.[m.label]?.slice(-12);
+          const hist = metricsHistory?.[m.label]?.slice(-16);
           const tipRight = i >= items.length - 2;
           let tipPrimary = `${m.value}（${asOf} 時点）`;
           let tipRange = "";
@@ -216,37 +248,44 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
               tipRange = `直近${hist.length}週: ${lo} 〜 ${hi}`;
             }
           }
+          const hasChart = hist && hist.length >= 2;
           return (
-            <div key={i} className="hg-metric-cell" style={{ position: "relative", background: t.surface, padding: "12px 15px" }}>
-              <div style={{ minHeight: 13, marginBottom: 6 }}>
+            <div key={i} className="hg-metric-cell" style={{ position: "relative", background: t.surface, padding: hasChart ? "12px 15px 0 15px" : "12px 15px" }}>
+              {/* 資産クラス eyebrow */}
+              <div style={{ minHeight: 13, marginBottom: 5 }}>
                 {isGroupStart && (
                   <span style={{ fontSize: 9, color: JADE, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.7, textTransform: "uppercase" }}>{groups[i]}</span>
                 )}
               </div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 7, gap: 6 }}>
-                <span style={{ flex: 1, minWidth: 0, fontSize: 11, color: t.textMuted, letterSpacing: "0.05em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {/* 指標名（左）＋ 価格・変化（右） */}
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: hasChart ? 10 : 0 }}>
+                <span style={{ flex: 1, minWidth: 0, fontSize: 11, color: t.textMuted, letterSpacing: "0.05em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: 3 }}>
                   {m.label}
                 </span>
-                {hist && hist.length >= 2 && (
-                  <div style={{ flexShrink: 0 }}>
-                    <Sparkline points={hist} color={JADE} idSeed={i} />
+                <div style={{ flexShrink: 0, textAlign: "right" }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: t.text, fontFamily: "monospace", letterSpacing: "-0.01em", lineHeight: 1 }}>
+                    {m.value}
                   </div>
-                )}
+                  <div style={{ minHeight: 21, marginTop: 5, display: "flex", justifyContent: "flex-end" }}>
+                    {cd && (
+                      <span style={{
+                        display: "inline-flex", alignItems: "center", gap: 3,
+                        padding: "2px 6px", background: `${dc}1a`, color: dc,
+                        fontSize: 11, fontFamily: "monospace", fontWeight: 700, letterSpacing: "0.02em", lineHeight: 1.3,
+                      }}>
+                        <span style={{ fontSize: 8 }}>{directionLabel(dir)}</span>{cd}
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: t.text, fontFamily: "monospace", letterSpacing: "-0.01em", lineHeight: 1 }}>
-                {m.value}
-              </div>
-              <div style={{ minHeight: 21, marginTop: 8, display: "flex", alignItems: "center" }}>
-                {cd && (
-                  <span style={{
-                    display: "inline-flex", alignItems: "center", gap: 3,
-                    padding: "2px 6px", background: `${dc}1a`, color: dc,
-                    fontSize: 11, fontFamily: "monospace", fontWeight: 700, letterSpacing: "0.02em", lineHeight: 1.3,
-                  }}>
-                    <span style={{ fontSize: 8 }}>{directionLabel(dir)}</span>{cd}
-                  </span>
-                )}
-              </div>
+              {/* スパークライン — セル全幅・下部フラッシュ */}
+              {hasChart && (
+                <div style={{ marginLeft: -15, marginRight: -15 }}>
+                  <Sparkline points={hist!} color={JADE} idSeed={i} />
+                </div>
+              )}
+              {/* ホバーツールチップ */}
               <div
                 className="hg-metric-tip"
                 style={{
