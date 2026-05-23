@@ -210,13 +210,13 @@ export default function Home() {
   const changeColor = (val: string) => (isPositive(val) ? t.positive : t.negative);
 
   return (
-    <div style={{ backgroundColor: t.bg, color: t.text, minHeight: "100vh", fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif" }}>
+    <div style={{ backgroundColor: t.bg, backgroundImage: mode === "dark" ? "radial-gradient(125% 60% at 50% -8%, rgba(58,175,138,0.09), rgba(58,175,138,0.025) 32%, transparent 60%)" : "radial-gradient(125% 60% at 50% -10%, rgba(45,140,110,0.06), transparent 58%)", color: t.text, minHeight: "100vh", fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif" }}>
       {/* Header */}
       <header style={{ backgroundColor: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}`, position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 2, height: 22, backgroundColor: JADE.main }} />
-            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text }}>翡翠眼</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ width: 3, height: 22, background: `linear-gradient(${JADE.light}, ${JADE.main})`, boxShadow: `0 0 10px ${JADE.main}55`, flexShrink: 0 }} />
+            <span style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.14em", color: t.text }}>翡翠眼</span>
           </div>
           <nav style={{ display: "flex", alignItems: "center", gap: 0 }}>
             <div className="hg-nav-sections" style={{ display: "flex" }}>
@@ -399,8 +399,8 @@ export default function Home() {
           <div className="hg-footer-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <div style={{ width: 2, height: 14, backgroundColor: JADE.main }} />
-                <span style={{ fontSize: 13, fontWeight: 700, color: t.text, letterSpacing: "0.08em" }}>翡翠眼</span>
+                <div style={{ width: 3, height: 16, background: `linear-gradient(${JADE.light}, ${JADE.main})`, flexShrink: 0 }} />
+                <span style={{ fontFamily: "var(--font-serif-jp)", fontSize: 16, fontWeight: 700, color: t.text, letterSpacing: "0.12em" }}>翡翠眼</span>
               </div>
               <p style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.8, maxWidth: 480 }}>
                 本サイトに掲載されている情報は、投資判断の参考を目的としたものであり、投資を勧誘するものではありません。

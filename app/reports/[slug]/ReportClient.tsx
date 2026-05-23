@@ -77,13 +77,17 @@ export default function ReportClient({ report }: { report: Report }) {
 
   const headings = extractHeadings(report.content);
 
+  const pageBg = mode === "dark"
+    ? `radial-gradient(125% 60% at 50% -8%, rgba(58,175,138,0.09), rgba(58,175,138,0.025) 32%, transparent 60%)`
+    : `radial-gradient(125% 60% at 50% -10%, rgba(45,140,110,0.06), transparent 58%)`;
+
   return (
-    <div style={{ minHeight: "100vh", background: t.bg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: t.bg, backgroundImage: pageBg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
       {/* ヘッダー */}
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
-        <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 16, height: 56 }}>
-          <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
-          <Link href="/reports" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
+        <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 14, height: 56 }}>
+          <div style={{ width: 3, height: 22, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 10px ${JADE}55`, flexShrink: 0 }} />
+          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.14em", color: t.text, textDecoration: "none" }}>
             翡翠眼
           </Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
@@ -105,9 +109,9 @@ export default function ReportClient({ report }: { report: Report }) {
       </header>
 
       {/* 記事ヘッダー */}
-      <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "28px 0" }}>
-        <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+      <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "40px 0 32px" }}>
+        <div className="hg-reveal" style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
             <span style={{
               display: "inline-block",
               padding: "2px 10px",
@@ -124,7 +128,7 @@ export default function ReportClient({ report }: { report: Report }) {
               {TYPE_SUBTITLES[report.type]}
             </span>
           </div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 12px", color: t.text, lineHeight: 1.45, letterSpacing: "0.02em" }}>
+          <h1 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 30, fontWeight: 700, margin: "0 0 14px", color: t.text, lineHeight: 1.4, letterSpacing: "0.04em" }}>
             {report.title}
           </h1>
           <p style={{ fontSize: 12, color: t.textMuted, margin: 0, fontFamily: "var(--font-geist-mono)", letterSpacing: "0.04em" }}>
@@ -144,7 +148,7 @@ export default function ReportClient({ report }: { report: Report }) {
             marginBottom: 48,
             opacity: 0.75,
           }}>
-            <p style={{ fontSize: 13, color: t.textSub, fontStyle: "italic", margin: "0 0 8px", lineHeight: 1.8 }}>
+            <p style={{ fontFamily: "var(--font-serif-jp)", fontSize: 17, fontWeight: 600, color: t.text, margin: "0 0 8px", lineHeight: 1.85, letterSpacing: "0.03em" }}>
               {report.quote}
             </p>
             {report.quoteAuthor && (
@@ -201,7 +205,7 @@ export default function ReportClient({ report }: { report: Report }) {
               h1: ({ children }) => {
                 const id = slugify(nodeToText(children));
                 return (
-                  <h1 id={id} style={{ fontSize: 22, fontWeight: 700, color: t.text, margin: "40px 0 16px", borderBottom: `1px solid ${t.border}`, paddingBottom: 10 }}>
+                  <h1 id={id} style={{ fontFamily: "var(--font-serif-jp)", fontSize: 26, fontWeight: 700, letterSpacing: "0.03em", color: t.text, margin: "44px 0 18px", borderBottom: `1px solid ${t.border}`, paddingBottom: 12 }}>
                     {children}
                   </h1>
                 );
@@ -209,7 +213,7 @@ export default function ReportClient({ report }: { report: Report }) {
               h2: ({ children }) => {
                 const id = slugify(nodeToText(children));
                 return (
-                  <h2 id={id} style={{ fontSize: 18, fontWeight: 700, color: t.text, margin: "36px 0 14px", borderBottom: `1px solid ${t.borderStrong}`, paddingBottom: 8 }}>
+                  <h2 id={id} style={{ fontFamily: "var(--font-serif-jp)", fontSize: 21, fontWeight: 700, letterSpacing: "0.02em", color: t.text, margin: "38px 0 14px", borderBottom: `1px solid ${t.borderStrong}`, paddingBottom: 9 }}>
                     {children}
                   </h2>
                 );

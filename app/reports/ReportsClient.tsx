@@ -517,13 +517,21 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
 
   const types: ReportType[] = ["monthly", "weekly", "daily"];
 
+  // 翡翠グリーンの微細な光彩を重ねた背景（フラットな単色に深みを与える）
+  const pageBg = mode === "dark"
+    ? `radial-gradient(125% 70% at 50% -8%, rgba(58,175,138,0.10), rgba(58,175,138,0.03) 32%, transparent 60%), radial-gradient(90% 55% at 92% 2%, rgba(45,140,110,0.06), transparent 55%)`
+    : `radial-gradient(125% 70% at 50% -10%, rgba(45,140,110,0.07), transparent 58%), radial-gradient(90% 50% at 92% 0%, rgba(45,140,110,0.035), transparent 55%)`;
+  const mastheadBg = mode === "dark"
+    ? `radial-gradient(120% 220% at 0% 0%, rgba(58,175,138,0.09), transparent 46%), ${t.surface}`
+    : `radial-gradient(120% 220% at 0% 0%, rgba(45,140,110,0.05), transparent 46%), ${t.surface}`;
+
   return (
-    <div style={{ minHeight: "100vh", background: t.bg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: t.bg, backgroundImage: pageBg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
       {/* ヘッダー */}
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 16, height: 56 }}>
-          <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
-          <Link href="/reports" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 14, height: 56 }}>
+          <div style={{ width: 3, height: 22, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 10px ${JADE}55`, flexShrink: 0 }} />
+          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.14em", color: t.text, textDecoration: "none" }}>
             翡翠眼
           </Link>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
@@ -540,32 +548,32 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
         </div>
       </header>
 
-      {/* ページタイトル */}
-      <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "28px 0" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-            <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
-            <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.06em", margin: 0, color: t.text }}>
+      {/* ページタイトル（マストヘッド） */}
+      <div style={{ borderBottom: `1px solid ${t.border}`, background: mastheadBg, padding: "48px 0 40px" }}>
+        <div className="hg-reveal" style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12 }}>
+            <div style={{ width: 4, height: 46, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 18px ${JADE}55`, flexShrink: 0 }} />
+            <h1 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 44, fontWeight: 700, letterSpacing: "0.1em", margin: 0, color: t.text, lineHeight: 1 }}>
               レポート
             </h1>
           </div>
-          <p style={{ fontSize: 12, color: t.textMuted, margin: 0, letterSpacing: "0.04em", paddingLeft: 12 }}>
+          <p style={{ fontSize: 13, color: t.textSub, margin: 0, letterSpacing: "0.1em", paddingLeft: 20 }}>
             月次・週次・日次のマクロ市場分析レポート
           </p>
         </div>
       </div>
 
-      {/* Quote Banner */}
+      {/* Quote Banner — エディトリアルなプルクオート */}
       {latestWeekly?.quote && (
-        <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface }}>
-          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "14px 24px", display: "flex", alignItems: "center", gap: 16 }}>
-            <div style={{ width: 2, height: 36, background: JADE, flexShrink: 0 }} />
-            <div>
-              <p style={{ fontSize: 13, color: t.textSub, fontStyle: "italic", margin: "0 0 4px", lineHeight: 1.6 }}>
-                &ldquo;{latestWeekly.quote}&rdquo;
+        <div style={{ borderBottom: `1px solid ${t.border}`, background: t.bg }}>
+          <div className="hg-reveal" style={{ maxWidth: 1280, margin: "0 auto", padding: "26px 24px", display: "flex", alignItems: "flex-start", gap: 18, animationDelay: "0.08s" }}>
+            <span className="hg-quote-mark" aria-hidden style={{ fontSize: 56, color: JADE, opacity: 0.28, marginTop: -6, flexShrink: 0 }}>&ldquo;</span>
+            <div style={{ paddingTop: 4 }}>
+              <p style={{ fontFamily: "var(--font-serif-jp)", fontSize: 21, fontWeight: 600, color: t.text, margin: "0 0 8px", lineHeight: 1.65, letterSpacing: "0.04em" }}>
+                {latestWeekly.quote}
               </p>
               {latestWeekly.quoteAuthor && (
-                <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em" }}>— {latestWeekly.quoteAuthor}</span>
+                <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.12em", textTransform: "uppercase" }}>— {latestWeekly.quoteAuthor}</span>
               )}
             </div>
           </div>
@@ -574,7 +582,11 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
 
       {/* コンテンツ */}
       <main style={{ maxWidth: 1280, margin: "0 auto", padding: "40px 24px" }}>
-        {latestWeekly && <CurrentView report={latestWeekly} metricsHistory={metricsHistory} t={t} />}
+        {latestWeekly && (
+          <div className="hg-reveal" style={{ animationDelay: "0.16s" }}>
+            <CurrentView report={latestWeekly} metricsHistory={metricsHistory} t={t} />
+          </div>
+        )}
 
         {/* 現状解説（最新日次レポートより） */}
         {latestDaily?.description && (
@@ -607,8 +619,8 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
           return (
             <section key={type} style={{ marginBottom: 56 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, paddingBottom: 10, borderBottom: `1px solid ${t.border}` }}>
-                <div style={{ width: 2, height: 14, background: JADE, flexShrink: 0 }} />
-                <h2 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: t.text, letterSpacing: "0.04em" }}>
+                <div style={{ width: 3, height: 18, background: `linear-gradient(${t.positive}, ${JADE})`, flexShrink: 0 }} />
+                <h2 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 19, fontWeight: 700, margin: 0, color: t.text, letterSpacing: "0.08em" }}>
                   {TYPE_LABELS[type]}
                 </h2>
                 <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", opacity: 0.75 }}>

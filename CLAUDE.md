@@ -501,10 +501,11 @@ sectors:
 ### 予測精度ログ（/reports/track-record）
 - ベースシナリオ予測と実績を事実並置で表示
 - 評価方式：ベースシナリオの direction（up / down / neutral）と翌週S&P 500週次変動の方向が一致したか
-  - 変化率 ±0.5% 未満は neutral 扱い
+  - 変化率 ±1.0% 未満は neutral 扱い（日次〜数日規模の値動きにおける「実質フラット」の定義。±0.5%では狭すぎて neutral 予想がほぼ的中にならない構造的問題があったため 2026-05-24 に拡大）
   - 「方向一致」タグ（JADE）/ 「方向不一致」タグ（赤）/ 「PENDING」タグ（評価前）
 - サマリーバー：評価済み件数・方向一致数・不一致数・一致率（resolved が1件以上の場合に表示）
 - 注記：確率や値幅の精度は評価対象外。AI参考記録である旨を明示
+- フィードバックループ：予測ログは `/push-reports`（Step 1.7）で次回のスタンス・シナリオ生成にレビューされ、**系統的バイアスのみ**を補正する（直近1〜2件の結果への過剰反応＝リーセンシーバイアスは明示的に回避。評価済み5件未満では大きな補正をしない）
 
 ### スパークライン（KeyMetrics コンポーネント内）
 - 各指標セルのラベル行右端にインライン SVG（既定 幅58px・高さ24px・`flexShrink:0`）
@@ -561,6 +562,24 @@ const ALLOC_COLORS = ["#2d8c6e", "#c4963a", "#6b96b8", "#a87db5", "#74c4ad", "#a
 const SECTOR_COLORS = ["#3a7bd5", "#d4a843", "#5ba88c", "#c75b5b", "#8b6baf", "#a0a0a0"]
 // 群青・黄金・翠・朱・藤紫・銀
 ```
+
+## タイポグラフィ体系（3書体）
+コンセプト：「エディトリアル・マクロ・ターミナル × 日本的精度」。役割で書体を分ける。
+| 役割 | 書体 | 用途 |
+|------|------|------|
+| 編集の声（明朝） | `var(--font-serif-jp)` = Shippori Mincho（OSフォールバック付き） | ロゴ「翡翠眼」・各ページのマストヘッド/タイトル・格言（プルクオート/エピグラフ）・レポート本文の h1/h2・一覧の月次/週次/日次見出し |
+| UI（サンセリフ） | `var(--font-geist-sans)` | ナビ・ラベル・補助テキスト |
+| データ（等幅） | `monospace` | 数値（株価・利回り・%・指標値）。既存どおり変更しない |
+
+- Shippori Mincho は `app/layout.tsx` の `<head>` で Google Fonts `<link>` 読込（和文グリフは unicode-range で必要分のみ取得）。`--font-serif-jp` は `globals.css` で定義
+- **明朝は「編集的な見出し・引用」専用**。小さなUIラベルやデータには使わない（明朝の細部が潰れ可読性が落ちるため）
+- 格言は斜体ではなく明朝アップライト＋装飾引用符（`.hg-quote-mark`）。和文に合成斜体は不自然なため
+- アクセントバーは単色から翡翠グラデーション（`linear-gradient(positive, JADE)`）＋微グロー（`box-shadow`）に統一
+
+## 背景の空気感・モーション
+- 各ページのルートに翡翠グリーンの微細な放射グラデーション（`backgroundImage`）を重ねて奥行きを付与。**`backgroundColor` と `backgroundImage` を分けて指定**すること（`background` ショートハンドと `backgroundAttachment` 等を混在させると React の再レンダリング警告が出る）
+- ダーク：上部中央＋右上の翡翠グロー（opacity 0.10/0.06）。ライト：より淡く（0.07/0.035）
+- ページロード演出：`globals.css` の `@keyframes hg-fade-up` / `.hg-reveal`（段階表示は inline `animationDelay` でずらす）。`@media (prefers-reduced-motion: reduce)` で無効化
 
 ## メタデータ（app/layout.tsx）
 ```ts

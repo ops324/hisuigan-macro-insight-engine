@@ -36,13 +36,17 @@ export default function TrackRecordClient({ predictions }: Props) {
   const resolved = sorted.filter((p) => p.outcome !== null);
   const hitCount = resolved.filter((p) => p.outcome!.match).length;
 
+  const pageBg = mode === "dark"
+    ? `radial-gradient(125% 60% at 50% -8%, rgba(58,175,138,0.09), rgba(58,175,138,0.025) 32%, transparent 60%)`
+    : `radial-gradient(125% 60% at 50% -10%, rgba(45,140,110,0.06), transparent 58%)`;
+
   return (
-    <div style={{ minHeight: "100vh", background: t.bg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: t.bg, backgroundImage: pageBg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
       {/* ヘッダー */}
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 16, height: 56 }}>
-          <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
-          <Link href="/reports" style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>翡翠眼</Link>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 14, height: 56 }}>
+          <div style={{ width: 3, height: 22, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 10px ${JADE}55`, flexShrink: 0 }} />
+          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.14em", color: t.text, textDecoration: "none" }}>翡翠眼</Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
           <Link href="/reports" style={{ fontSize: 14, color: t.textSub, letterSpacing: "0.05em", textDecoration: "none" }}>レポート</Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
@@ -59,9 +63,9 @@ export default function TrackRecordClient({ predictions }: Props) {
       {/* ページタイトル */}
       <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "28px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-            <div style={{ width: 2, height: 22, background: JADE, flexShrink: 0 }} />
-            <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.06em", margin: 0, color: t.text }}>予測ログ</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 8 }}>
+            <div style={{ width: 4, height: 34, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 14px ${JADE}55`, flexShrink: 0 }} />
+            <h1 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 32, fontWeight: 700, letterSpacing: "0.1em", margin: 0, color: t.text, lineHeight: 1 }}>予測ログ</h1>
           </div>
           <p style={{ fontSize: 12, color: t.textMuted, margin: 0, letterSpacing: "0.04em", paddingLeft: 12 }}>
             週次レポートのベースシナリオ予測と実績の事実並置
@@ -106,7 +110,7 @@ export default function TrackRecordClient({ predictions }: Props) {
             {sorted.map((p, idx) => {
               const oc = p.outcome;
               return (
-                <div key={p.weekSlug} style={{ display: "grid", gridTemplateColumns: "120px 1fr 1fr 160px", gap: 1, background: t.border }}>
+                <div key={`${p.weekSlug}-${p.date}`} style={{ display: "grid", gridTemplateColumns: "120px 1fr 1fr 160px", gap: 1, background: t.border }}>
                   {/* 週 */}
                   <div style={{ background: t.surface, padding: "16px 16px" }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: t.text, fontFamily: "monospace", marginBottom: 4 }}>{p.weekSlug}</div>
@@ -197,7 +201,7 @@ export default function TrackRecordClient({ predictions }: Props) {
 
         {/* 注記 */}
         <p style={{ fontSize: 11, color: t.textMuted, marginTop: 24, lineHeight: 1.7, borderLeft: `2px solid ${t.border}`, paddingLeft: 12 }}>
-          「方向一致」はベースシナリオの方向性（↑上昇 / → 横ばい / ↓下落）とS&amp;P 500週次変動の方向が一致した場合。
+          「方向一致」はベースシナリオの方向性（↑上昇 / → 横ばい / ↓下落）とS&amp;P 500変動の方向が一致した場合（変化率 ±1.0% 未満は横ばい扱い）。
           確率・幅の精度は評価対象外。AI（翡翠眼）の参考記録であり、将来の運用成果を保証するものではありません。
         </p>
 
