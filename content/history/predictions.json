@@ -182,17 +182,17 @@
   {
     "weekSlug": "2026-W21",
     "date": "2026-05-25",
-    "stance": 63,
+    "stance": 65,
     "stanceLabel": "やや守り",
     "baseScenario": {
-      "label": "AIラリー・イラン合意期待で上昇基調継続、ただしPCE・金利リスクが上値を抑制",
-      "probability": 50,
+      "label": "AIラリー・イラン合意期待で上昇継続、ただしPCE・消費者心理悪化が上値を制約",
+      "probability": 45,
       "direction": "up"
     },
     "scenarios": [
       {
-        "label": "AIラリー・イラン合意期待で上昇基調継続、ただしPCE・金利リスクが上値を抑制",
-        "probability": 50,
+        "label": "AIラリー・イラン合意期待で上昇継続、ただしPCE・消費者心理悪化が上値を制約",
+        "probability": 45,
         "direction": "up",
         "base": true
       },
@@ -202,8 +202,8 @@
         "direction": "up"
       },
       {
-        "label": "PCEインフレ加速＋イラン合意破談→原油反発・利上げ確定的でリスクオフ",
-        "probability": 35,
+        "label": "PCEインフレ加速＋ミシガン大悪化波及→消費減速懸念でリスクオフ",
+        "probability": 40,
         "direction": "down"
       }
     ],
