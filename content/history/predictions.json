@@ -131,7 +131,7 @@
       "spxDirection": "neutral",
       "baseScenarioDirection": "up",
       "match": false,
-      "note": "S&P 500は7,423→7,445（+0.30%）と小幅続伸だが変化率±0.5%未満でneutral判定。DOW 50,285で最高値更新も上昇幅は限定的。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+      "note": "S&P 500は7,423→7,445（+0.30%）と小幅続伸だが変化率±1.0%未満でneutral判定。DOW 50,285で最高値更新も上昇幅は限定的。ベースシナリオの「上昇」予想に対しneutralで不一致。"
     }
   },
   {
@@ -169,6 +169,51 @@
       { "label": "日本10年債", "value": "2.79%", "numericValue": 2.79 },
       { "label": "WTI原油", "value": "$97", "numericValue": 97 },
       { "label": "金", "value": "$4,500", "numericValue": 4500 }
+    ],
+    "outcome": {
+      "assessedDate": "2026-05-25",
+      "spxActualChange": "+0.4%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "up",
+      "match": false,
+      "note": "S&P 500は7,445→7,473（+0.38%）と続伸だが変化率±1.0%未満でneutral判定。DOW 50,580で史上最高値更新、NVIDIA好決算がAIラリーを牽引。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W21",
+    "date": "2026-05-25",
+    "stance": 63,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "AIラリー・イラン合意期待で上昇基調継続、ただしPCE・金利リスクが上値を抑制",
+      "probability": 50,
+      "direction": "up"
+    },
+    "scenarios": [
+      {
+        "label": "AIラリー・イラン合意期待で上昇基調継続、ただしPCE・金利リスクが上値を抑制",
+        "probability": 50,
+        "direction": "up",
+        "base": true
+      },
+      {
+        "label": "イランMOU正式合意＋PCE予想下振れ→インフレ後退で本格リスクオン",
+        "probability": 15,
+        "direction": "up"
+      },
+      {
+        "label": "PCEインフレ加速＋イラン合意破談→原油反発・利上げ確定的でリスクオフ",
+        "probability": 35,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,473", "numericValue": 7473 },
+      { "label": "日経225", "value": "63,339", "numericValue": 63339 },
+      { "label": "米10年債", "value": "4.57%", "numericValue": 4.57 },
+      { "label": "日本10年債", "value": "2.77%", "numericValue": 2.77 },
+      { "label": "WTI原油", "value": "15,370", "numericValue": 15370 },
+      { "label": "金", "value": "715,995", "numericValue": 715995 }
     ],
     "outcome": null
   }
