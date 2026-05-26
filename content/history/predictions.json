@@ -215,7 +215,14 @@
       { "label": "WTI原油", "value": "15,370", "numericValue": 15370 },
       { "label": "金", "value": "715,995", "numericValue": 715995 }
     ],
-    "outcome": null
+    "outcome": {
+      "assessedDate": "2026-05-27",
+      "spxActualChange": "+0.6%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "up",
+      "match": false,
+      "note": "S&P 500は7,473→7,519（+0.615%）と続伸し史上最高値を更新。Micron $1兆突破がAIラリーを牽引。ただし変化率±1.0%未満のためneutral扱い。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+    }
   },
   {
     "weekSlug": "2026-W21",
@@ -252,6 +259,44 @@
       { "label": "日本10年債", "value": "2.78%", "numericValue": 2.78 },
       { "label": "WTI原油", "value": "14,458", "numericValue": 14458 },
       { "label": "金", "value": "715,500", "numericValue": 715500 }
+    ],
+    "outcome": null
+  },
+  {
+    "weekSlug": "2026-W21",
+    "date": "2026-05-27",
+    "stance": 61,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "S&P最高値・Micron $1兆のAIモメンタム継続、PCE前日で上値は限定的",
+      "probability": 50,
+      "direction": "up"
+    },
+    "scenarios": [
+      {
+        "label": "S&P最高値・Micron $1兆のAIモメンタム継続、PCE前日で上値は限定的",
+        "probability": 50,
+        "direction": "up",
+        "base": true
+      },
+      {
+        "label": "Marvell・Salesforce好決算＋PCE下振れ→AIラリー加速でS&P 7,580方向",
+        "probability": 15,
+        "direction": "up"
+      },
+      {
+        "label": "PCEインフレ加速＋イラン合意破談→利上げ確定・原油反発でリスクオフ",
+        "probability": 35,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,519", "numericValue": 7519 },
+      { "label": "日経225", "value": "65,200", "numericValue": 65200 },
+      { "label": "米10年債", "value": "4.51%", "numericValue": 4.51 },
+      { "label": "日本10年債", "value": "2.71%", "numericValue": 2.71 },
+      { "label": "WTI原油", "value": "14,719", "numericValue": 14719 },
+      { "label": "金", "value": "722,940", "numericValue": 722940 }
     ],
     "outcome": null
   }
