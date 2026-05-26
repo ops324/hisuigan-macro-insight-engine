@@ -216,5 +216,43 @@
       { "label": "金", "value": "715,995", "numericValue": 715995 }
     ],
     "outcome": null
+  },
+  {
+    "weekSlug": "2026-W21",
+    "date": "2026-05-26",
+    "stance": 63,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "原油急落・アジア高を受けたリスクオン継続、PCE待ちで上値は限定的",
+      "probability": 50,
+      "direction": "up"
+    },
+    "scenarios": [
+      {
+        "label": "原油急落・アジア高を受けたリスクオン継続、PCE待ちで上値は限定的",
+        "probability": 50,
+        "direction": "up",
+        "base": true
+      },
+      {
+        "label": "イランMOU正式合意＋PCE下振れ→原油$85・S&P 7,550方向の本格ラリー",
+        "probability": 15,
+        "direction": "up"
+      },
+      {
+        "label": "イラン交渉決裂＋PCEインフレ加速→原油反発・利上げ確定でリスクオフ",
+        "probability": 35,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,473", "numericValue": 7473 },
+      { "label": "日経225", "value": "65,158", "numericValue": 65158 },
+      { "label": "米10年債", "value": "4.57%", "numericValue": 4.57 },
+      { "label": "日本10年債", "value": "2.78%", "numericValue": 2.78 },
+      { "label": "WTI原油", "value": "14,458", "numericValue": 14458 },
+      { "label": "金", "value": "715,500", "numericValue": 715500 }
+    ],
+    "outcome": null
   }
 ]
