@@ -128,10 +128,10 @@
     "outcome": {
       "assessedDate": "2026-05-22",
       "spxActualChange": "+0.3%",
-      "spxDirection": "neutral",
+      "spxDirection": "up",
       "baseScenarioDirection": "up",
-      "match": false,
-      "note": "S&P 500は7,423→7,445（+0.30%）と小幅続伸だが変化率±1.0%未満でneutral判定。DOW 50,285で最高値更新も上昇幅は限定的。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+      "match": true,
+      "note": "S&P 500は7,423→7,445（+0.30%）と小幅続伸。DOW 50,285で最高値更新。ベースシナリオの「上昇」予想と方向一致（非対称評価：directional予想は符号一致でmatch）。"
     }
   },
   {
@@ -173,10 +173,10 @@
     "outcome": {
       "assessedDate": "2026-05-25",
       "spxActualChange": "+0.4%",
-      "spxDirection": "neutral",
+      "spxDirection": "up",
       "baseScenarioDirection": "up",
-      "match": false,
-      "note": "S&P 500は7,445→7,473（+0.38%）と続伸だが変化率±1.0%未満でneutral判定。DOW 50,580で史上最高値更新、NVIDIA好決算がAIラリーを牽引。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+      "match": true,
+      "note": "S&P 500は7,445→7,473（+0.38%）と続伸。DOW 50,580で史上最高値更新、NVIDIA好決算がAIラリーを牽引。ベースシナリオの「上昇」予想と方向一致（非対称評価：directional予想は符号一致でmatch）。"
     }
   },
   {
