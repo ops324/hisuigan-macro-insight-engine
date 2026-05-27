@@ -260,7 +260,14 @@
       { "label": "WTI原油", "value": "14,458", "numericValue": 14458 },
       { "label": "金", "value": "715,500", "numericValue": 715500 }
     ],
-    "outcome": null
+    "outcome": {
+      "assessedDate": "2026-05-28",
+      "spxActualChange": "+0.6%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "up",
+      "match": false,
+      "note": "S&P 500は7,473→7,520（+0.63%）と小幅続伸し3指数揃って史上最高値を更新。WTI原油-6%急落もPCE前の様子見で値幅は薄い。変化率±1.0%未満のためneutral扱い。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+    }
   },
   {
     "weekSlug": "2026-W21",
@@ -297,6 +304,44 @@
       { "label": "日本10年債", "value": "2.71%", "numericValue": 2.71 },
       { "label": "WTI原油", "value": "14,719", "numericValue": 14719 },
       { "label": "金", "value": "722,940", "numericValue": 722940 }
+    ],
+    "outcome": null
+  },
+  {
+    "weekSlug": "2026-W21",
+    "date": "2026-05-28",
+    "stance": 59,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "原油急落・AI好決算のリスクオン継続、PCE結果次第で方向感が決まる",
+      "probability": 45,
+      "direction": "up"
+    },
+    "scenarios": [
+      {
+        "label": "原油急落・AI好決算のリスクオン継続、PCE結果次第で方向感が決まる",
+        "probability": 45,
+        "direction": "up",
+        "base": true
+      },
+      {
+        "label": "PCE下振れ＋イラン合意進展→利上げ後退でS&P 7,580方向の本格ラリー",
+        "probability": 20,
+        "direction": "up"
+      },
+      {
+        "label": "PCEインフレ加速＋イラン合意否定→利上げ確定・原油反発でリスクオフ",
+        "probability": 35,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,520", "numericValue": 7520 },
+      { "label": "日経225", "value": "65,800", "numericValue": 65800 },
+      { "label": "米10年債", "value": "4.48%", "numericValue": 4.48 },
+      { "label": "日本10年債", "value": "2.70%", "numericValue": 2.70 },
+      { "label": "WTI原油", "value": "14,123", "numericValue": 14123 },
+      { "label": "金", "value": "700,920", "numericValue": 700920 }
     ],
     "outcome": null
   }
