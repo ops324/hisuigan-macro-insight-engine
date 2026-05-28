@@ -305,7 +305,14 @@
       { "label": "WTI原油", "value": "14,719", "numericValue": 14719 },
       { "label": "金", "value": "722,940", "numericValue": 722940 }
     ],
-    "outcome": null
+    "outcome": {
+      "assessedDate": "2026-05-28",
+      "spxActualChange": "+0.6%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "up",
+      "match": false,
+      "note": "S&P 500は7,519→7,563（+0.58%）とテック主導で続伸し新高値更新。PCE 3.8%（3年ぶり高水準）も月次ベース減速で市場は楽観的に消化。変化率±1.0%未満のためneutral扱い。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+    }
   },
   {
     "weekSlug": "2026-W21",
@@ -342,6 +349,44 @@
       { "label": "日本10年債", "value": "2.70%", "numericValue": 2.70 },
       { "label": "WTI原油", "value": "14,123", "numericValue": 14123 },
       { "label": "金", "value": "700,920", "numericValue": 700920 }
+    ],
+    "outcome": null
+  },
+  {
+    "weekSlug": "2026-W21",
+    "date": "2026-05-29",
+    "stance": 62,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "PCE月次減速の楽観とDell時間外安・スタグフレ懸念の綱引き、週末前で方向感限定",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "PCE月次減速の楽観とDell時間外安・スタグフレ懸念の綱引き、週末前で方向感限定",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "Dell売り一巡＋PCE月次減速の楽観持続→S&P 7,600方向",
+        "probability": 20,
+        "direction": "up"
+      },
+      {
+        "label": "Dell売り波及＋GDP下方修正のスタグフレ懸念＋米イラン緊張→S&P 7,480方向",
+        "probability": 35,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,563", "numericValue": 7563 },
+      { "label": "日経225", "value": "64,693", "numericValue": 64693 },
+      { "label": "米10年債", "value": "4.50%", "numericValue": 4.50 },
+      { "label": "日本10年債", "value": "2.70%", "numericValue": 2.70 },
+      { "label": "WTI原油", "value": "14,395", "numericValue": 14395 },
+      { "label": "金", "value": "708,090", "numericValue": 708090 }
     ],
     "outcome": null
   }
