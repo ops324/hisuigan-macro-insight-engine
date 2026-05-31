@@ -91,6 +91,7 @@ Step 2 でスタンス・シナリオを生成する**前に**、過去の予測
    - `assessedDate`: 今週の週次レポートの `date`
    - `spxActualChange`: 今週のS&P 500の `change`（フィールドがあれば）
    - `spxDirection`: 今週と前週のS&P 500 numericValue を比較して `"up"` / `"down"` / `"neutral"` を判定（**変化率 ±1.0% 未満は `"neutral"`**。±1.0% 以上の上昇は `"up"`、±1.0% 以上の下落は `"down"`）
+     - **判定基準 ±1.0% は 2026-05-24 に確定。以後は遡及変更しない**（過去の評価済みエントリを後から再採点しない）。万一基準を見直す場合は、全履歴を新基準で再採点し、変更履歴を track-record ページ等で開示すること
    - `baseScenarioDirection`: 前週エントリの `baseScenario.direction`
    - `match`: `spxDirection === baseScenarioDirection` の場合 `true`
    - `note`: 実績の簡潔な説明（1〜2文。例：「S&P 500 -1.2%。調整が続きベースシナリオの下落方向と一致」）

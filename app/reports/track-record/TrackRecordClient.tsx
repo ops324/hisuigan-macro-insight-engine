@@ -1,8 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PredictionRecord } from "@/lib/history";
-import { themeMap, ThemeMode } from "@/lib/theme";
+import { useTheme } from "@/lib/useTheme";
 
 const JADE = "#2d8c6e";
 
@@ -18,19 +17,7 @@ interface Props {
 }
 
 export default function TrackRecordClient({ predictions }: Props) {
-  const [mode, setMode] = useState<ThemeMode>("light");
-  const t = themeMap[mode];
-
-  useEffect(() => {
-    const saved = localStorage.getItem("theme") as ThemeMode | null;
-    if (saved === "light" || saved === "dark") setMode(saved);
-  }, []);
-
-  const toggleTheme = () => {
-    const next: ThemeMode = mode === "dark" ? "light" : "dark";
-    setMode(next);
-    localStorage.setItem("theme", next);
-  };
+  const { mode, t, toggleTheme } = useTheme();
 
   const sorted = [...predictions].sort((a, b) => b.date.localeCompare(a.date));
   const resolved = sorted.filter((p) => p.outcome !== null);
@@ -53,7 +40,7 @@ export default function TrackRecordClient({ predictions }: Props) {
           <span style={{ fontSize: 14, color: t.textSub, letterSpacing: "0.05em" }}>予測ログ</span>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
             <Link href="/market" className="hg-nav-link" style={{ fontSize: 13, color: t.positive, textDecoration: "none", letterSpacing: "0.05em" }}>マーケット</Link>
-            <button onClick={toggleTheme} style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2 }}>
+            <button onClick={toggleTheme} aria-label={`テーマ切替（現在: ${mode === "dark" ? "ダーク" : "ライト"}）`} style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2 }}>
               {mode === "dark" ? "LIGHT" : "DARK"}
             </button>
           </div>
@@ -107,7 +94,7 @@ export default function TrackRecordClient({ predictions }: Props) {
               ))}
             </div>
 
-            {sorted.map((p, idx) => {
+            {sorted.map((p) => {
               const oc = p.outcome;
               return (
                 <div key={`${p.weekSlug}-${p.date}`} style={{ display: "grid", gridTemplateColumns: "120px 1fr 1fr 160px", gap: 1, background: t.border }}>
@@ -202,6 +189,7 @@ export default function TrackRecordClient({ predictions }: Props) {
         {/* 注記 */}
         <p style={{ fontSize: 11, color: t.textMuted, marginTop: 24, lineHeight: 1.7, borderLeft: `2px solid ${t.border}`, paddingLeft: 12 }}>
           「方向一致」はベースシナリオの方向性（↑上昇 / → 横ばい / ↓下落）とS&amp;P 500変動の方向が一致した場合（変化率 ±1.0% 未満は横ばい扱い）。
+          判定基準は ±1.0% で確定（2026-05-24 以降固定・遡及変更なし）。
           確率・幅の精度は評価対象外。AI（翡翠眼）の参考記録であり、将来の運用成果を保証するものではありません。
         </p>
 

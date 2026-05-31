@@ -1,11 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Report, ReportType } from "@/lib/reports";
-import { themeMap, ThemeMode } from "@/lib/theme";
+import { useTheme } from "@/lib/useTheme";
 
 const JADE = "#2d8c6e";
 
@@ -61,19 +60,7 @@ function extractHeadings(content: string): Heading[] {
 }
 
 export default function ReportClient({ report }: { report: Report }) {
-  const [mode, setMode] = useState<ThemeMode>("light");
-  const t = themeMap[mode];
-
-  useEffect(() => {
-    const saved = localStorage.getItem("theme") as ThemeMode | null;
-    if (saved === "light" || saved === "dark") setMode(saved);
-  }, []);
-
-  const toggleTheme = () => {
-    const next: ThemeMode = mode === "dark" ? "light" : "dark";
-    setMode(next);
-    localStorage.setItem("theme", next);
-  };
+  const { mode, t, toggleTheme } = useTheme();
 
   const headings = extractHeadings(report.content);
 

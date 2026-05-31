@@ -1,9 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ReportMeta, ReportType, ScenarioItem, AllocationItem, KeyMetricItem, RegimeInfo } from "@/lib/reports";
 import { MetricsHistory, MetricPoint } from "@/lib/history";
-import { themeMap, ThemeMode } from "@/lib/theme";
+import { themeMap } from "@/lib/theme";
+import { useTheme } from "@/lib/useTheme";
+import { directionColor, directionLabel, changeDisplay, metricGroup } from "@/lib/metrics";
 import { ReportCard } from "./ReportCard";
 
 const JADE = "#2d8c6e";
@@ -19,30 +21,6 @@ const TYPE_SUBTITLES: Record<ReportType, string> = {
   weekly:  "ENVIRONMENT LOG",
   daily:   "CONSCIOUSNESS LOG",
 };
-
-function directionColor(d: string) {
-  return d === "up" ? "#3aaf8a" : d === "down" ? "#e05252" : "#888888";
-}
-function directionLabel(d: string) {
-  return d === "up" ? "▲" : d === "down" ? "▼" : "—";
-}
-
-// 変化テキストの単位を整える：利回り系（値が % で終わる）で change が裸の符号付き数値なら pt を補う
-function changeDisplay(value: string, change?: string): string | undefined {
-  if (!change) return undefined;
-  const isYield = /%\s*$/.test(value.trim());
-  const hasUnit = /[%$]|pt|bp/i.test(change);
-  return isYield && !hasUnit ? `${change}pt` : change;
-}
-
-// 指標ラベルから資産クラスを推定（金利を先に判定。コモディティの「金」と衝突させないため）
-function metricGroup(label: string): string {
-  if (/債|金利|利回り|イールド/.test(label)) return "金利";
-  if (/原油|WTI|ブレント|天然ガス|ガス|金|銀|銅|プラチナ|コモディティ/.test(label)) return "コモディティ";
-  if (/\/|円|ドル|ユーロ|ポンド|為替/.test(label)) return "為替";
-  if (/S&P|NASDAQ|ナスダック|ダウ|DOW|日経|TOPIX|株|指数/.test(label)) return "株式";
-  return "その他";
-}
 
 // 翡翠・琥珀・鋼青・菫・浅翡翠・銀 — 上品で運気を高める配色
 const ALLOC_COLORS = ["#2d8c6e", "#c4963a", "#6b96b8", "#a87db5", "#74c4ad", "#a0a0a0"];
@@ -64,25 +42,29 @@ function donutSegmentPath(cx: number, cy: number, outerR: number, innerR: number
 }
 
 function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: AllocationItem[]; t: typeof themeMap["dark"] | typeof themeMap["light"]; colors?: string[] }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  // SSR/ハイドレーション時は false、クライアントマウント後に true（Math.cos/sin 由来の浮動小数ミスマッチ回避）
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
   const size = 168;
   const cx = size / 2;
   const cy = size / 2;
   const outerR = size * 0.46;
   const innerR = size * 0.30; // リング幅16%：より存在感のある太さ
   const gap = 2.5;
-  let cum = 0;
+  const offsets = items.reduce<number[]>((acc, item) => {
+    acc.push((acc[acc.length - 1] ?? 0) + item.percent);
+    return acc;
+  }, []);
   const segments = items.map((item, i) => {
-    const start = (cum / 100) * 360 + gap / 2;
-    cum += item.percent;
-    const end = (cum / 100) * 360 - gap / 2;
+    const cumStart = offsets[i] - item.percent;
+    const start = (cumStart / 100) * 360 + gap / 2;
+    const end = (offsets[i] / 100) * 360 - gap / 2;
     return { item, start, end, color: colors[i % colors.length] };
   });
   const donutSvg = mounted ? (
     <svg
       width={size}
       height={size}
+      aria-hidden="true"
       style={{ flexShrink: 0, filter: "drop-shadow(0 6px 22px rgba(45,140,110,0.34))" }}
     >
       <circle
@@ -167,6 +149,8 @@ function Sparkline({ points, color, idSeed, height = 52 }: {
       height={height}
       viewBox={`0 0 ${SPARK_VW} ${height}`}
       preserveAspectRatio="none"
+      role="img"
+      aria-label={`直近${points.length}期間の推移（${vals[lastIdx] >= vals[vals.length - 2] ? "上昇" : "下落"}傾向）`}
       style={{ display: "block" }}
     >
       <defs>
@@ -501,19 +485,7 @@ interface Props {
 }
 
 export default function ReportsClient({ latestWeekly, latestDaily, reportsByType, metricsHistory }: Props) {
-  const [mode, setMode] = useState<ThemeMode>("light");
-  const t = themeMap[mode];
-
-  useEffect(() => {
-    const saved = localStorage.getItem("theme") as ThemeMode | null;
-    if (saved === "light" || saved === "dark") setMode(saved);
-  }, []);
-
-  const toggleTheme = () => {
-    const next: ThemeMode = mode === "dark" ? "light" : "dark";
-    setMode(next);
-    localStorage.setItem("theme", next);
-  };
+  const { mode, t, toggleTheme } = useTheme();
 
   const types: ReportType[] = ["monthly", "weekly", "daily"];
 
@@ -540,6 +512,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
             </Link>
             <button
               onClick={toggleTheme}
+              aria-label={`テーマ切替（現在: ${mode === "dark" ? "ダーク" : "ライト"}）`}
               style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2, transition: "border-color 0.15s, color 0.15s" }}
             >
               {mode === "dark" ? "LIGHT" : "DARK"}

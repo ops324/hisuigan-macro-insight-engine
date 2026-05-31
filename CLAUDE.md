@@ -27,6 +27,24 @@
 | 日本国債 | 財務省CSV | 完了 |
 | コモディティ | Stooq | 完了 |
 
+## データ取得アーキテクチャ（lib/market-data.ts）
+- **取得/パースの実体は `lib/market-data.ts` に集約**。各 Route Handler（`app/api/*/route.js`）と市場ページ Server Component（`app/market/page.tsx`）の両方がこの lib を呼ぶ薄いラッパ
+- 取得関数：`getStocks()` / `getForex()` / `getUsTreasury()` / `getJpTreasury()` / `getCommodities()`。各々**内部で `Promise.allSettled`** を使い、1銘柄が失敗しても取れた銘柄だけ返す（全滅を回避）。失敗銘柄は null 値で返り UI は「---」表示
+- キャッシュは `fetch(url, { next: { revalidate: N } })`（為替60・株式300・コモディティ900・米国債/日本国債3600秒）
+- 純粋関数（`lib/__tests__/market-data.test.ts` でテスト）：`parseStooqCsv` / `commodityJpyValues` / `pickLatestTwoValidFred` / `parseJgbCsv`
+- 表示加工の純粋関数は `lib/metrics.ts`（`changeDisplay` / `metricGroup` / `directionColor` / `directionLabel`。`lib/__tests__/metrics.test.ts` でテスト）
+
+## テスト（Vitest）
+- `npm run test`（`vitest run`）。設定は `vitest.config.ts`（node 環境・`@` エイリアス）。テストは `lib/__tests__/*.test.ts`
+- 対象は純粋関数のみ（CSV パース・通貨換算・FRED 欠損スキップ・JGB 行抽出・指標表示加工）
+
+## SEO
+- `lib/site.ts`：`SITE_URL`（`NEXT_PUBLIC_SITE_URL` → Vercel 本番URL → localhost の順でフォールバック）と `SITE_NAME`
+- `app/layout.tsx`：`metadataBase` ＋ 既定 OpenGraph
+- `app/reports/[slug]/page.tsx`：`generateMetadata`（per-report の title・description・OG・canonical・`article` type）
+- `app/sitemap.ts`：`/reports`・`/market`・`/reports/track-record` ＋ 全レポート slug を出力（`/sitemap.xml`）
+- `app/robots.ts`：全許可 ＋ sitemap 参照（`/robots.txt`）
+
 ## API仕様
 
 ### 為替（完了）
@@ -85,7 +103,7 @@
 ## テーマシステム
 
 ### lib/theme.ts
-全ページ共通のダーク/ライトテーマ定数。レポートページで使用。
+全ページ共通のダーク/ライトテーマ定数。**全ページ（レポート系・市場数値ページ）の唯一のテーマソース**。
 
 ```ts
 export const themeMap = {
@@ -106,16 +124,15 @@ export type ThemeMode = keyof typeof themeMap;
 export type Theme = typeof themeMap["dark"] | typeof themeMap["light"];
 ```
 
-### テーマの持ち方
-- `localStorage.getItem("theme")` / `localStorage.setItem("theme", next)` でページ間共有
-- キー名：`"theme"`（全ページ統一）
-- デフォルト：`"light"`
+### テーマの持ち方（lib/useTheme.ts）
+- **全クライアントコンポーネントは `useTheme()` フック（`lib/useTheme.ts`）を使用**。`const { mode, t, toggleTheme } = useTheme();` の1行で完結
+- 実装：`useSyncExternalStore` で `localStorage` を購読。`getServerSnapshot` が `"light"` を返し SSR/ハイドレーション時のミスマッチを回避、マウント後に保存値へ切り替わる
+- `toggleTheme` は `localStorage.setItem("theme", next)` ＋ `window.dispatchEvent(new Event("hg-theme-change"))` で同一タブ内の全 `useTheme` を再レンダリング。別タブからの変更は `storage` イベントで反映
+- キー名：`"theme"`（全ページ統一）／デフォルト：`"light"`
+- **旧実装の `useState`＋`useEffect`＋手書き `localStorage` パターンは撤廃済み**（4ファイルの重複を解消。`react-hooks/set-state-in-effect` 対策）
 
 ### 市場数値ページ（app/market/page.tsx・`/market`）
-- 独自 theme オブジェクト（lib/theme.ts とは別）
-- `dark`: border `#333333` / borderStrong `#444444` / textMuted `#777777`
-- `light`: textSub `#555555` / textMuted `#767676`
-- localStorage 対応済み
+- **`lib/theme.ts` の themeMap を使用（独自 theme は撤廃済み）**。罫線・配色は themeMap 値に統一
 - フッター DATA SOURCES：`["Stooq", "ExchangeRate-API", "FRED API (Federal Reserve)", "財務省 (MOF)"]`（現行 API と一致させること。Yahoo Finance・日本銀行 API は廃止済み）
 
 ### レポートページ（app/reports/）
@@ -167,10 +184,6 @@ DB 不要、Vercel 自動デプロイで反映。
 | `quote` / `quoteAuthor` | 今週の格言と著者 |
 
 3. コミット内容を報告し、ユーザー確認後に `git commit` → `git push`
-
-### scripts/gen-allocation-note.mjs（オプション・非推奨）
-Claude Code を使わず CLI 単体で `allocationNote` のみ生成したい場合の代替手段。
-`ANTHROPIC_API_KEY`（`.env.local`）が必要。通常は `/push-reports` を使うこと。
 
 ### レポート自動化（macOS launchd）
 MacBook 起動中に launchd が自動実行。
@@ -261,7 +274,6 @@ content/reports/daily/YYYY-MM-DD.md
 content/history/predictions.json        # 予測精度ログ（永続蓄積・1-file-rule 対象外）
 content/history/metrics.json            # 指標時系列ログ（永続蓄積・1-file-rule 対象外）
 .claude/commands/push-reports.md     # /push-reports スラッシュコマンド定義
-scripts/gen-allocation-note.mjs      # allocationNote 生成スクリプト（オプション・非推奨）
 ```
 
 ### レポート掲載ルール
@@ -464,7 +476,8 @@ sectors:
 | ページ | ファイル | 役割 |
 |--------|---------|------|
 | `/`（→`/reports`） | `next.config.ts` | `redirects()` で `/reports` へ 307 リダイレクト |
-| `/market` | `app/market/page.tsx` | 市場数値ページ（クライアントコンポーネント） |
+| `/market` | `app/market/page.tsx` | サーバーコンポーネント（`lib/market-data.ts` で並列データ取得・SSR） |
+| `/market` | `app/market/MarketClient.tsx` | クライアントコンポーネント（テーマ・描画） |
 | `/reports` | `app/reports/page.tsx` | サーバーコンポーネント（データ取得のみ） |
 | `/reports` | `app/reports/ReportsClient.tsx` | クライアントコンポーネント（テーマ・描画） |
 | `/reports/[slug]` | `app/reports/[slug]/page.tsx` | サーバーコンポーネント（データ取得のみ） |
@@ -502,6 +515,7 @@ sectors:
 - ベースシナリオ予測と実績を事実並置で表示
 - 評価方式：ベースシナリオの direction（up / down / neutral）と翌週S&P 500週次変動の方向が一致したか
   - 変化率 ±1.0% 未満は neutral 扱い（日次〜数日規模の値動きにおける「実質フラット」の定義。±0.5%では狭すぎて neutral 予想がほぼ的中にならない構造的問題があったため 2026-05-24 に拡大）
+  - **判定基準 ±1.0% は 2026-05-24 に確定。以後は固定・遡及変更しない**（評価済みエントリを後から再採点しない）。万一見直す場合は全履歴を新基準で再採点し変更履歴を開示する
   - 「方向一致」タグ（JADE）/ 「方向不一致」タグ（赤）/ 「PENDING」タグ（評価前）
 - サマリーバー：評価済み件数・方向一致数・不一致数・一致率（resolved が1件以上の場合に表示）
 - 注記：確率や値幅の精度は評価対象外。AI参考記録である旨を明示
@@ -596,7 +610,6 @@ lang: "ja"
 - カレントビュー frontmatter の生成は `/push-reports` スラッシュコマンドで行う（APIキー不要・Claude Code セッション内で完結）
 - `git add` の対象は `content/reports/` のみ（`.claude/` や `scripts/` は通常含めない）
 - コミットメッセージ形式：`レポート更新: [週次ファイル名] + カレントビュー生成`
-- `npm run gen-note`（`scripts/gen-allocation-note.mjs`）は Claude Code を使わない場合のオプション手段（非推奨）
 
 # currentDate
 Today's date is 2026-03-03.

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,8 +15,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "翡翠眼 | マクロ市場分析",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "翡翠眼 | マクロ市場分析",
+    template: "%s",
+  },
   description: "為替・株式指数・米国債・日本国債・コモディティのリアルタイムデータと、月次・週次・日次のマクロ市場分析レポート。",
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: "翡翠眼 | マクロ市場分析",
+    description: "為替・株式指数・米国債・日本国債・コモディティのリアルタイムデータと、月次・週次・日次のマクロ市場分析レポート。",
+    url: "/",
+  },
 };
 
 export default function RootLayout({

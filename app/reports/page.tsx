@@ -3,7 +3,6 @@ import { getMetricsHistory, MetricsHistory } from "@/lib/history";
 import ReportsClient from "./ReportsClient";
 
 export default function ReportsPage() {
-  const types: ReportType[] = ["monthly", "weekly", "daily"];
   const latestWeekly = getReportsByType("weekly")[0];
   const latestDaily  = getReportsByType("daily")[0];
 
