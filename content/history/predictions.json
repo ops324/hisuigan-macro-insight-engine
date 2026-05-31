@@ -350,7 +350,14 @@
       { "label": "WTI原油", "value": "14,123", "numericValue": 14123 },
       { "label": "金", "value": "700,920", "numericValue": 700920 }
     ],
-    "outcome": null
+    "outcome": {
+      "assessedDate": "2026-05-29",
+      "spxActualChange": "+0.6%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "up",
+      "match": false,
+      "note": "S&P 500は7,520→7,563（+0.57%）とテック主導で続伸し新高値更新。PCE 3.8%も月次減速で楽観的に消化。変化率±1.0%未満のためneutral扱い。ベースシナリオの「上昇」予想に対しneutralで不一致。"
+    }
   },
   {
     "weekSlug": "2026-W21",
@@ -387,6 +394,51 @@
       { "label": "日本10年債", "value": "2.70%", "numericValue": 2.70 },
       { "label": "WTI原油", "value": "14,395", "numericValue": 14395 },
       { "label": "金", "value": "708,090", "numericValue": 708090 }
+    ],
+    "outcome": {
+      "assessedDate": "2026-06-01",
+      "spxActualChange": "+0.2%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500は7,563→7,580（+0.22%）と小幅続伸し月末に史上最高値7,580で引け。Dell時間外安は寄りで吸収され方向感は限定的。変化率±1.0%未満のneutral判定で、ベースシナリオの「中立」と方向一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W21",
+    "date": "2026-06-01",
+    "stance": 58,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "6月FOMC前の様子見ムード、原油安の楽観とインフレ・利上げ懸念が拮抗し膠着",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "6月FOMC前の様子見ムード、原油安の楽観とインフレ・利上げ懸念が拮抗し膠着",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "米イラン合意正式署名＋雇用統計堅調→原油続落・リスクオンでS&P 7,700方向",
+        "probability": 25,
+        "direction": "up"
+      },
+      {
+        "label": "米イラン合意決裂＋CPI上振れ→原油急騰・利上げ確定でS&P 7,400方向",
+        "probability": 30,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,580", "numericValue": 7580 },
+      { "label": "日経225", "value": "66,424", "numericValue": 66424 },
+      { "label": "米10年債", "value": "4.45%", "numericValue": 4.45 },
+      { "label": "日本10年債", "value": "2.66%", "numericValue": 2.66 },
+      { "label": "WTI原油", "value": "13,992", "numericValue": 13992 },
+      { "label": "金", "value": "728,220", "numericValue": 728220 }
     ],
     "outcome": null
   }
