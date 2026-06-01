@@ -485,6 +485,51 @@
       { "label": "WTI原油", "value": "13,992", "numericValue": 13992 },
       { "label": "金", "value": "728,220", "numericValue": 728220 }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-02",
+      "spxActualChange": "+0.26%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500は7,580→7,600（+0.26%）と小幅続伸し史上最高値を更新。Nvidia +6%超がテクを牽引したが原油$92急騰が上値を抑制。変化率±1.0%未満のneutral判定で、ベースシナリオの「中立」と方向一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W22",
+    "date": "2026-06-02",
+    "stance": 58,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "原油急騰の消化＋JOLTS・NFP待ちでテクvs原油の綱引き、高値圏で方向感限定",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "原油急騰の消化＋JOLTS・NFP待ちでテクvs原油の綱引き、高値圏で方向感限定",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "JOLTS弱め＋イラン態度軟化→原油反落・利上げ後退期待でS&P 7,700方向",
+        "probability": 25,
+        "direction": "up"
+      },
+      {
+        "label": "JOLTS堅調＋ホルムズ封鎖本格化→原油$95超・利上げ確定的でS&P 7,400方向",
+        "probability": 30,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,600", "numericValue": 7600 },
+      { "label": "日経225", "value": "66,954", "numericValue": 66954 },
+      { "label": "米10年債", "value": "4.51%", "numericValue": 4.51 },
+      { "label": "日本10年債", "value": "2.68%", "numericValue": 2.68 },
+      { "label": "WTI原油", "value": "14,729", "numericValue": 14729 },
+      { "label": "金", "value": "711,775", "numericValue": 711775 }
+    ],
     "outcome": null
   }
 ]
