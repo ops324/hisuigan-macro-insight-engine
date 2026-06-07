@@ -710,6 +710,51 @@
       { "label": "WTI原油", "value": "14,589", "numericValue": 14589 },
       { "label": "金", "value": "699,717", "numericValue": 699717 }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-08",
+      "spxActualChange": "0.0%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "down",
+      "match": false,
+      "note": "S&P 500は7,384で変動なし（週次レポート作成時点で同一終値）。ベースシナリオの「下落」予想に対しneutralで不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W23",
+    "date": "2026-06-08",
+    "stance": 70,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "NFPショック消化＋CPI前の様子見で7,300-7,450レンジ膠着",
+      "probability": 40,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "NFPショック消化＋CPI前の様子見で7,300-7,450レンジ膠着",
+        "probability": 40,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "CPI下振れ期待＋売られ過ぎからのテクニカルリバウンドでS&P 7,450-7,550方向",
+        "probability": 15,
+        "direction": "up"
+      },
+      {
+        "label": "CPI上振れ＋半導体売り拡大＋30Y 5%超定着でS&P 7,200-7,350方向",
+        "probability": 45,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,384", "numericValue": 7384 },
+      { "label": "日経225", "value": "66,588", "numericValue": 66588 },
+      { "label": "米10年債", "value": "4.55%", "numericValue": 4.55 },
+      { "label": "日本10年債", "value": "2.67%", "numericValue": 2.67 },
+      { "label": "WTI原油", "value": "14,466", "numericValue": 14466 },
+      { "label": "金", "value": "693,826", "numericValue": 693826 }
+    ],
     "outcome": null
   }
 ]
