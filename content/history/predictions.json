@@ -800,6 +800,51 @@
       { "label": "WTI原油", "value": "15,006", "numericValue": 15006 },
       { "label": "金", "value": "695,268", "numericValue": 695268 }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-10",
+      "spxActualChange": "-0.9%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500は7,452→7,387（-0.87%）と小幅安。トランプのイラン再攻撃示唆で日中急落後に回復。変化率±1.0%未満のneutral判定で、ベースシナリオの「中立」と方向一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W23",
+    "date": "2026-06-10",
+    "stance": 71,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "CPI想定内（+4.1-4.3%）でFOMC前の様子見、7,350-7,420レンジ膠着",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "CPI想定内（+4.1-4.3%）でFOMC前の様子見、7,350-7,420レンジ膠着",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "CPI下振れ（+4.0%以下）＋原油安→利上げ後退期待でS&P 7,420-7,500方向",
+        "probability": 20,
+        "direction": "up"
+      },
+      {
+        "label": "CPI上振れ（+4.4%超）＋利上げ確定ムードでS&P 7,250-7,350方向",
+        "probability": 35,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      { "label": "S&P 500", "value": "7,387", "numericValue": 7387 },
+      { "label": "日経225", "value": "65,416", "numericValue": 65416 },
+      { "label": "米10年債", "value": "4.54%", "numericValue": 4.54 },
+      { "label": "日本10年債", "value": "2.67%", "numericValue": 2.67 },
+      { "label": "WTI原油", "value": "14,065", "numericValue": 14065 },
+      { "label": "金", "value": "694,099", "numericValue": 694099 }
+    ],
     "outcome": null
   }
 ]

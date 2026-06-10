@@ -17,7 +17,8 @@
     { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 7584, "displayValue": "7,584" },
     { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 7384, "displayValue": "7,384" },
     { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 7384, "displayValue": "7,384" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 7452, "displayValue": "7,452" }
+    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 7452, "displayValue": "7,452" },
+    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 7387, "displayValue": "7,387" }
   ],
   "日経225": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 61409, "displayValue": "61,409" },
@@ -37,7 +38,8 @@
     { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 67400, "displayValue": "67,400" },
     { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 66588, "displayValue": "66,588" },
     { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 66588, "displayValue": "66,588" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 63465, "displayValue": "63,465" }
+    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 63465, "displayValue": "63,465" },
+    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 65416, "displayValue": "65,416" }
   ],
   "米10年債": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 4.63, "displayValue": "4.63%" },
@@ -57,7 +59,8 @@
     { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 4.48, "displayValue": "4.48%" },
     { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 4.55, "displayValue": "4.55%" },
     { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 4.55, "displayValue": "4.55%" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 4.57, "displayValue": "4.57%" }
+    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 4.57, "displayValue": "4.57%" },
+    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 4.54, "displayValue": "4.54%" }
   ],
   "日本10年債": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 2.64, "displayValue": "2.64%" },
@@ -77,7 +80,8 @@
     { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 2.60, "displayValue": "2.60%" },
     { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 2.66, "displayValue": "2.66%" },
     { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 2.67, "displayValue": "2.67%" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 2.67, "displayValue": "2.67%" }
+    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 2.67, "displayValue": "2.67%" },
+    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 2.67, "displayValue": "2.67%" }
   ],
   "WTI原油": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 107, "displayValue": "$107" },
@@ -97,7 +101,8 @@
     { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 95.50, "displayValue": "15,272" },
     { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 91, "displayValue": "14,589" },
     { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 90.3, "displayValue": "14,466" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 93.67, "displayValue": "15,006" }
+    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 93.67, "displayValue": "15,006" },
+    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 87.73, "displayValue": "14,065" }
   ],
   "金": [
     { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 4483, "displayValue": "$4,483" },
@@ -117,6 +122,7 @@
     { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 4479, "displayValue": "716,282" },
     { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 4366, "displayValue": "699,717" },
     { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 4331, "displayValue": "693,826" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 4340, "displayValue": "695,268" }
+    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 4340, "displayValue": "695,268" },
+    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 4330, "displayValue": "694,099" }
   ]
 }
