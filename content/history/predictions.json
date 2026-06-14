@@ -28,12 +28,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,408", "numericValue": 7408 },
-      { "label": "日経225", "value": "61,409", "numericValue": 61409 },
-      { "label": "米10年債", "value": "4.63%", "numericValue": 4.63 },
-      { "label": "日本10年債", "value": "2.64%", "numericValue": 2.64 },
-      { "label": "WTI原油", "value": "$107", "numericValue": 107 },
-      { "label": "金", "value": "$4,483", "numericValue": 4483 }
+      {
+        "label": "S&P 500",
+        "value": "7,408",
+        "numericValue": 7408
+      },
+      {
+        "label": "日経225",
+        "value": "61,409",
+        "numericValue": 61409
+      },
+      {
+        "label": "米10年債",
+        "value": "4.63%",
+        "numericValue": 4.63
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.64%",
+        "numericValue": 2.64
+      },
+      {
+        "label": "WTI原油",
+        "value": "$107",
+        "numericValue": 107
+      },
+      {
+        "label": "金",
+        "value": "$4,483",
+        "numericValue": 4483
+      }
     ],
     "outcome": {
       "assessedDate": "2026-05-20",
@@ -73,12 +97,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,354", "numericValue": 7354 },
-      { "label": "日経225", "value": "60,119", "numericValue": 60119 },
-      { "label": "米10年債", "value": "4.68%", "numericValue": 4.68 },
-      { "label": "日本10年債", "value": "2.79%", "numericValue": 2.79 },
-      { "label": "WTI原油", "value": "$105", "numericValue": 105 },
-      { "label": "金", "value": "$4,534", "numericValue": 4534 }
+      {
+        "label": "S&P 500",
+        "value": "7,354",
+        "numericValue": 7354
+      },
+      {
+        "label": "日経225",
+        "value": "60,119",
+        "numericValue": 60119
+      },
+      {
+        "label": "米10年債",
+        "value": "4.68%",
+        "numericValue": 4.68
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.79%",
+        "numericValue": 2.79
+      },
+      {
+        "label": "WTI原油",
+        "value": "$105",
+        "numericValue": 105
+      },
+      {
+        "label": "金",
+        "value": "$4,534",
+        "numericValue": 4534
+      }
     ],
     "outcome": {
       "assessedDate": "2026-05-21",
@@ -118,12 +166,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,423", "numericValue": 7423 },
-      { "label": "日経225", "value": "59,804", "numericValue": 59804 },
-      { "label": "米10年債", "value": "4.63%", "numericValue": 4.63 },
-      { "label": "日本10年債", "value": "2.79%", "numericValue": 2.79 },
-      { "label": "WTI原油", "value": "$100", "numericValue": 100 },
-      { "label": "金", "value": "$4,490", "numericValue": 4490 }
+      {
+        "label": "S&P 500",
+        "value": "7,423",
+        "numericValue": 7423
+      },
+      {
+        "label": "日経225",
+        "value": "59,804",
+        "numericValue": 59804
+      },
+      {
+        "label": "米10年債",
+        "value": "4.63%",
+        "numericValue": 4.63
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.79%",
+        "numericValue": 2.79
+      },
+      {
+        "label": "WTI原油",
+        "value": "$100",
+        "numericValue": 100
+      },
+      {
+        "label": "金",
+        "value": "$4,490",
+        "numericValue": 4490
+      }
     ],
     "outcome": {
       "assessedDate": "2026-05-22",
@@ -163,12 +235,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,445", "numericValue": 7445 },
-      { "label": "日経225", "value": "61,782", "numericValue": 61782 },
-      { "label": "米10年債", "value": "4.59%", "numericValue": 4.59 },
-      { "label": "日本10年債", "value": "2.79%", "numericValue": 2.79 },
-      { "label": "WTI原油", "value": "$97", "numericValue": 97 },
-      { "label": "金", "value": "$4,500", "numericValue": 4500 }
+      {
+        "label": "S&P 500",
+        "value": "7,445",
+        "numericValue": 7445
+      },
+      {
+        "label": "日経225",
+        "value": "61,782",
+        "numericValue": 61782
+      },
+      {
+        "label": "米10年債",
+        "value": "4.59%",
+        "numericValue": 4.59
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.79%",
+        "numericValue": 2.79
+      },
+      {
+        "label": "WTI原油",
+        "value": "$97",
+        "numericValue": 97
+      },
+      {
+        "label": "金",
+        "value": "$4,500",
+        "numericValue": 4500
+      }
     ],
     "outcome": {
       "assessedDate": "2026-05-25",
@@ -208,12 +304,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,473", "numericValue": 7473 },
-      { "label": "日経225", "value": "63,339", "numericValue": 63339 },
-      { "label": "米10年債", "value": "4.57%", "numericValue": 4.57 },
-      { "label": "日本10年債", "value": "2.77%", "numericValue": 2.77 },
-      { "label": "WTI原油", "value": "15,370", "numericValue": 15370 },
-      { "label": "金", "value": "715,995", "numericValue": 715995 }
+      {
+        "label": "S&P 500",
+        "value": "7,473",
+        "numericValue": 7473
+      },
+      {
+        "label": "日経225",
+        "value": "63,339",
+        "numericValue": 63339
+      },
+      {
+        "label": "米10年債",
+        "value": "4.57%",
+        "numericValue": 4.57
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.77%",
+        "numericValue": 2.77
+      },
+      {
+        "label": "WTI原油",
+        "value": "15,370",
+        "numericValue": 15370
+      },
+      {
+        "label": "金",
+        "value": "715,995",
+        "numericValue": 715995
+      }
     ],
     "outcome": {
       "assessedDate": "2026-05-27",
@@ -253,12 +373,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,473", "numericValue": 7473 },
-      { "label": "日経225", "value": "65,158", "numericValue": 65158 },
-      { "label": "米10年債", "value": "4.57%", "numericValue": 4.57 },
-      { "label": "日本10年債", "value": "2.78%", "numericValue": 2.78 },
-      { "label": "WTI原油", "value": "14,458", "numericValue": 14458 },
-      { "label": "金", "value": "715,500", "numericValue": 715500 }
+      {
+        "label": "S&P 500",
+        "value": "7,473",
+        "numericValue": 7473
+      },
+      {
+        "label": "日経225",
+        "value": "65,158",
+        "numericValue": 65158
+      },
+      {
+        "label": "米10年債",
+        "value": "4.57%",
+        "numericValue": 4.57
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.78%",
+        "numericValue": 2.78
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,458",
+        "numericValue": 14458
+      },
+      {
+        "label": "金",
+        "value": "715,500",
+        "numericValue": 715500
+      }
     ],
     "outcome": {
       "assessedDate": "2026-05-28",
@@ -298,12 +442,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,519", "numericValue": 7519 },
-      { "label": "日経225", "value": "65,200", "numericValue": 65200 },
-      { "label": "米10年債", "value": "4.51%", "numericValue": 4.51 },
-      { "label": "日本10年債", "value": "2.71%", "numericValue": 2.71 },
-      { "label": "WTI原油", "value": "14,719", "numericValue": 14719 },
-      { "label": "金", "value": "722,940", "numericValue": 722940 }
+      {
+        "label": "S&P 500",
+        "value": "7,519",
+        "numericValue": 7519
+      },
+      {
+        "label": "日経225",
+        "value": "65,200",
+        "numericValue": 65200
+      },
+      {
+        "label": "米10年債",
+        "value": "4.51%",
+        "numericValue": 4.51
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.71%",
+        "numericValue": 2.71
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,719",
+        "numericValue": 14719
+      },
+      {
+        "label": "金",
+        "value": "722,940",
+        "numericValue": 722940
+      }
     ],
     "outcome": {
       "assessedDate": "2026-05-28",
@@ -343,12 +511,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,520", "numericValue": 7520 },
-      { "label": "日経225", "value": "65,800", "numericValue": 65800 },
-      { "label": "米10年債", "value": "4.48%", "numericValue": 4.48 },
-      { "label": "日本10年債", "value": "2.70%", "numericValue": 2.70 },
-      { "label": "WTI原油", "value": "14,123", "numericValue": 14123 },
-      { "label": "金", "value": "700,920", "numericValue": 700920 }
+      {
+        "label": "S&P 500",
+        "value": "7,520",
+        "numericValue": 7520
+      },
+      {
+        "label": "日経225",
+        "value": "65,800",
+        "numericValue": 65800
+      },
+      {
+        "label": "米10年債",
+        "value": "4.48%",
+        "numericValue": 4.48
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.70%",
+        "numericValue": 2.7
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,123",
+        "numericValue": 14123
+      },
+      {
+        "label": "金",
+        "value": "700,920",
+        "numericValue": 700920
+      }
     ],
     "outcome": {
       "assessedDate": "2026-05-29",
@@ -388,12 +580,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,563", "numericValue": 7563 },
-      { "label": "日経225", "value": "64,693", "numericValue": 64693 },
-      { "label": "米10年債", "value": "4.50%", "numericValue": 4.50 },
-      { "label": "日本10年債", "value": "2.70%", "numericValue": 2.70 },
-      { "label": "WTI原油", "value": "14,395", "numericValue": 14395 },
-      { "label": "金", "value": "708,090", "numericValue": 708090 }
+      {
+        "label": "S&P 500",
+        "value": "7,563",
+        "numericValue": 7563
+      },
+      {
+        "label": "日経225",
+        "value": "64,693",
+        "numericValue": 64693
+      },
+      {
+        "label": "米10年債",
+        "value": "4.50%",
+        "numericValue": 4.5
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.70%",
+        "numericValue": 2.7
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,395",
+        "numericValue": 14395
+      },
+      {
+        "label": "金",
+        "value": "708,090",
+        "numericValue": 708090
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-01",
@@ -433,12 +649,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,580", "numericValue": 7580 },
-      { "label": "日経225", "value": "66,424", "numericValue": 66424 },
-      { "label": "米10年債", "value": "4.45%", "numericValue": 4.45 },
-      { "label": "日本10年債", "value": "2.66%", "numericValue": 2.66 },
-      { "label": "WTI原油", "value": "13,992", "numericValue": 13992 },
-      { "label": "金", "value": "728,220", "numericValue": 728220 }
+      {
+        "label": "S&P 500",
+        "value": "7,580",
+        "numericValue": 7580
+      },
+      {
+        "label": "日経225",
+        "value": "66,424",
+        "numericValue": 66424
+      },
+      {
+        "label": "米10年債",
+        "value": "4.45%",
+        "numericValue": 4.45
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.66%",
+        "numericValue": 2.66
+      },
+      {
+        "label": "WTI原油",
+        "value": "13,992",
+        "numericValue": 13992
+      },
+      {
+        "label": "金",
+        "value": "728,220",
+        "numericValue": 728220
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-01",
@@ -478,12 +718,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,580", "numericValue": 7580 },
-      { "label": "日経225", "value": "66,424", "numericValue": 66424 },
-      { "label": "米10年債", "value": "4.45%", "numericValue": 4.45 },
-      { "label": "日本10年債", "value": "2.66%", "numericValue": 2.66 },
-      { "label": "WTI原油", "value": "13,992", "numericValue": 13992 },
-      { "label": "金", "value": "728,220", "numericValue": 728220 }
+      {
+        "label": "S&P 500",
+        "value": "7,580",
+        "numericValue": 7580
+      },
+      {
+        "label": "日経225",
+        "value": "66,424",
+        "numericValue": 66424
+      },
+      {
+        "label": "米10年債",
+        "value": "4.45%",
+        "numericValue": 4.45
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.66%",
+        "numericValue": 2.66
+      },
+      {
+        "label": "WTI原油",
+        "value": "13,992",
+        "numericValue": 13992
+      },
+      {
+        "label": "金",
+        "value": "728,220",
+        "numericValue": 728220
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-02",
@@ -523,12 +787,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,600", "numericValue": 7600 },
-      { "label": "日経225", "value": "66,954", "numericValue": 66954 },
-      { "label": "米10年債", "value": "4.51%", "numericValue": 4.51 },
-      { "label": "日本10年債", "value": "2.68%", "numericValue": 2.68 },
-      { "label": "WTI原油", "value": "14,729", "numericValue": 14729 },
-      { "label": "金", "value": "711,775", "numericValue": 711775 }
+      {
+        "label": "S&P 500",
+        "value": "7,600",
+        "numericValue": 7600
+      },
+      {
+        "label": "日経225",
+        "value": "66,954",
+        "numericValue": 66954
+      },
+      {
+        "label": "米10年債",
+        "value": "4.51%",
+        "numericValue": 4.51
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.68%",
+        "numericValue": 2.68
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,729",
+        "numericValue": 14729
+      },
+      {
+        "label": "金",
+        "value": "711,775",
+        "numericValue": 711775
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-03",
@@ -568,12 +856,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,610", "numericValue": 7610 },
-      { "label": "日経225", "value": "66,734", "numericValue": 66734 },
-      { "label": "米10年債", "value": "4.46%", "numericValue": 4.46 },
-      { "label": "日本10年債", "value": "2.57%", "numericValue": 2.57 },
-      { "label": "WTI原油", "value": "14,505", "numericValue": 14505 },
-      { "label": "金", "value": "716,441", "numericValue": 716441 }
+      {
+        "label": "S&P 500",
+        "value": "7,610",
+        "numericValue": 7610
+      },
+      {
+        "label": "日経225",
+        "value": "66,734",
+        "numericValue": 66734
+      },
+      {
+        "label": "米10年債",
+        "value": "4.46%",
+        "numericValue": 4.46
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.57%",
+        "numericValue": 2.57
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,505",
+        "numericValue": 14505
+      },
+      {
+        "label": "金",
+        "value": "716,441",
+        "numericValue": 716441
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-04",
@@ -613,12 +925,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,554", "numericValue": 7554 },
-      { "label": "日経225", "value": "68,402", "numericValue": 68402 },
-      { "label": "米10年債", "value": "4.49%", "numericValue": 4.49 },
-      { "label": "日本10年債", "value": "2.65%", "numericValue": 2.65 },
-      { "label": "WTI原油", "value": "15,389", "numericValue": 15389 },
-      { "label": "金", "value": "709,842", "numericValue": 709842 }
+      {
+        "label": "S&P 500",
+        "value": "7,554",
+        "numericValue": 7554
+      },
+      {
+        "label": "日経225",
+        "value": "68,402",
+        "numericValue": 68402
+      },
+      {
+        "label": "米10年債",
+        "value": "4.49%",
+        "numericValue": 4.49
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.65%",
+        "numericValue": 2.65
+      },
+      {
+        "label": "WTI原油",
+        "value": "15,389",
+        "numericValue": 15389
+      },
+      {
+        "label": "金",
+        "value": "709,842",
+        "numericValue": 709842
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-05",
@@ -658,12 +994,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,584", "numericValue": 7584 },
-      { "label": "日経225", "value": "67,400", "numericValue": 67400 },
-      { "label": "米10年債", "value": "4.48%", "numericValue": 4.48 },
-      { "label": "日本10年債", "value": "2.60%", "numericValue": 2.60 },
-      { "label": "WTI原油", "value": "15,272", "numericValue": 15272 },
-      { "label": "金", "value": "716,282", "numericValue": 716282 }
+      {
+        "label": "S&P 500",
+        "value": "7,584",
+        "numericValue": 7584
+      },
+      {
+        "label": "日経225",
+        "value": "67,400",
+        "numericValue": 67400
+      },
+      {
+        "label": "米10年債",
+        "value": "4.48%",
+        "numericValue": 4.48
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.60%",
+        "numericValue": 2.6
+      },
+      {
+        "label": "WTI原油",
+        "value": "15,272",
+        "numericValue": 15272
+      },
+      {
+        "label": "金",
+        "value": "716,282",
+        "numericValue": 716282
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-08",
@@ -703,12 +1063,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,384", "numericValue": 7384 },
-      { "label": "日経225", "value": "66,588", "numericValue": 66588 },
-      { "label": "米10年債", "value": "4.55%", "numericValue": 4.55 },
-      { "label": "日本10年債", "value": "2.66%", "numericValue": 2.66 },
-      { "label": "WTI原油", "value": "14,589", "numericValue": 14589 },
-      { "label": "金", "value": "699,717", "numericValue": 699717 }
+      {
+        "label": "S&P 500",
+        "value": "7,384",
+        "numericValue": 7384
+      },
+      {
+        "label": "日経225",
+        "value": "66,588",
+        "numericValue": 66588
+      },
+      {
+        "label": "米10年債",
+        "value": "4.55%",
+        "numericValue": 4.55
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.66%",
+        "numericValue": 2.66
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,589",
+        "numericValue": 14589
+      },
+      {
+        "label": "金",
+        "value": "699,717",
+        "numericValue": 699717
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-08",
@@ -748,12 +1132,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,384", "numericValue": 7384 },
-      { "label": "日経225", "value": "66,588", "numericValue": 66588 },
-      { "label": "米10年債", "value": "4.55%", "numericValue": 4.55 },
-      { "label": "日本10年債", "value": "2.67%", "numericValue": 2.67 },
-      { "label": "WTI原油", "value": "14,466", "numericValue": 14466 },
-      { "label": "金", "value": "693,826", "numericValue": 693826 }
+      {
+        "label": "S&P 500",
+        "value": "7,384",
+        "numericValue": 7384
+      },
+      {
+        "label": "日経225",
+        "value": "66,588",
+        "numericValue": 66588
+      },
+      {
+        "label": "米10年債",
+        "value": "4.55%",
+        "numericValue": 4.55
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.67%",
+        "numericValue": 2.67
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,466",
+        "numericValue": 14466
+      },
+      {
+        "label": "金",
+        "value": "693,826",
+        "numericValue": 693826
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-09",
@@ -793,12 +1201,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,452", "numericValue": 7452 },
-      { "label": "日経225", "value": "63,465", "numericValue": 63465 },
-      { "label": "米10年債", "value": "4.57%", "numericValue": 4.57 },
-      { "label": "日本10年債", "value": "2.67%", "numericValue": 2.67 },
-      { "label": "WTI原油", "value": "15,006", "numericValue": 15006 },
-      { "label": "金", "value": "695,268", "numericValue": 695268 }
+      {
+        "label": "S&P 500",
+        "value": "7,452",
+        "numericValue": 7452
+      },
+      {
+        "label": "日経225",
+        "value": "63,465",
+        "numericValue": 63465
+      },
+      {
+        "label": "米10年債",
+        "value": "4.57%",
+        "numericValue": 4.57
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.67%",
+        "numericValue": 2.67
+      },
+      {
+        "label": "WTI原油",
+        "value": "15,006",
+        "numericValue": 15006
+      },
+      {
+        "label": "金",
+        "value": "695,268",
+        "numericValue": 695268
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-10",
@@ -838,12 +1270,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,387", "numericValue": 7387 },
-      { "label": "日経225", "value": "65,416", "numericValue": 65416 },
-      { "label": "米10年債", "value": "4.54%", "numericValue": 4.54 },
-      { "label": "日本10年債", "value": "2.67%", "numericValue": 2.67 },
-      { "label": "WTI原油", "value": "14,065", "numericValue": 14065 },
-      { "label": "金", "value": "694,099", "numericValue": 694099 }
+      {
+        "label": "S&P 500",
+        "value": "7,387",
+        "numericValue": 7387
+      },
+      {
+        "label": "日経225",
+        "value": "65,416",
+        "numericValue": 65416
+      },
+      {
+        "label": "米10年債",
+        "value": "4.54%",
+        "numericValue": 4.54
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.67%",
+        "numericValue": 2.67
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,065",
+        "numericValue": 14065
+      },
+      {
+        "label": "金",
+        "value": "694,099",
+        "numericValue": 694099
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-11",
@@ -883,12 +1339,36 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,267", "numericValue": 7267 },
-      { "label": "日経225", "value": "64,179", "numericValue": 64179 },
-      { "label": "米10年債", "value": "4.53%", "numericValue": 4.53 },
-      { "label": "日本10年債", "value": "2.68%", "numericValue": 2.68 },
-      { "label": "WTI原油", "value": "14,282", "numericValue": 14282 },
-      { "label": "金", "value": "673,974", "numericValue": 673974 }
+      {
+        "label": "S&P 500",
+        "value": "7,267",
+        "numericValue": 7267
+      },
+      {
+        "label": "日経225",
+        "value": "64,179",
+        "numericValue": 64179
+      },
+      {
+        "label": "米10年債",
+        "value": "4.53%",
+        "numericValue": 4.53
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.68%",
+        "numericValue": 2.68
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,282",
+        "numericValue": 14282
+      },
+      {
+        "label": "金",
+        "value": "673,974",
+        "numericValue": 673974
+      }
     ],
     "outcome": {
       "assessedDate": "2026-06-12",
@@ -928,12 +1408,105 @@
       }
     ],
     "keyMetrics": [
-      { "label": "S&P 500", "value": "7,393", "numericValue": 7393 },
-      { "label": "日経225", "value": "64,217", "numericValue": 64217 },
-      { "label": "米10年債", "value": "4.53%", "numericValue": 4.53 },
-      { "label": "日本10年債", "value": "2.69%", "numericValue": 2.69 },
-      { "label": "WTI原油", "value": "13,761", "numericValue": 13761 },
-      { "label": "金", "value": "672,648", "numericValue": 672648 }
+      {
+        "label": "S&P 500",
+        "value": "7,393",
+        "numericValue": 7393
+      },
+      {
+        "label": "日経225",
+        "value": "64,217",
+        "numericValue": 64217
+      },
+      {
+        "label": "米10年債",
+        "value": "4.53%",
+        "numericValue": 4.53
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.69%",
+        "numericValue": 2.69
+      },
+      {
+        "label": "WTI原油",
+        "value": "13,761",
+        "numericValue": 13761
+      },
+      {
+        "label": "金",
+        "value": "672,648",
+        "numericValue": 672648
+      }
+    ],
+    "outcome": {
+      "assessedDate": "2026-06-15",
+      "spxActualChange": "+0.0%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500は7,393で前回スナップショット（6/12終値）から横ばい（週次ベース+0.1%）。CPI 4.2%ショックで木曜7,267まで急落後、トランプのイラン攻撃中止＋合意間近表明でWTI原油急落とともに金曜7,393へV字回復。変化率±1.0%未満のneutral判定で、ベースシナリオの『中立』と方向一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W24",
+    "date": "2026-06-15",
+    "stance": 67,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "BOJ・FOMC前後の様子見と利上げ確定後のアク抜け期待が拮抗し7,350-7,450レンジ膠着",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "BOJ・FOMC前後の様子見と利上げ確定後のアク抜け期待が拮抗し7,350-7,450レンジ膠着",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "FOMCドットプロットがDec据え置き示唆＋BOJハト派利上げ→アク抜けラリーでS&P 7,450-7,550方向",
+        "probability": 25,
+        "direction": "up"
+      },
+      {
+        "label": "FOMCが年内複数利上げ示唆＋BOJタカ派→30年債5.2%・株安でS&P 7,200-7,300方向",
+        "probability": 30,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,393",
+        "numericValue": 7393
+      },
+      {
+        "label": "日経225",
+        "value": "64,217",
+        "numericValue": 64217
+      },
+      {
+        "label": "米10年債",
+        "value": "4.53%",
+        "numericValue": 4.53
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.69%",
+        "numericValue": 2.69
+      },
+      {
+        "label": "WTI原油",
+        "value": "13,761",
+        "numericValue": 13761
+      },
+      {
+        "label": "金",
+        "value": "672,648",
+        "numericValue": 672648
+      }
     ],
     "outcome": null
   }

@@ -1,140 +1,806 @@
 {
   "S&P 500": [
-    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 7408, "displayValue": "7,408" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 7354, "displayValue": "7,354" },
-    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 7423, "displayValue": "7,423" },
-    { "date": "2026-05-22", "weekSlug": "2026-W20", "numericValue": 7445, "displayValue": "7,445" },
-    { "date": "2026-05-25", "weekSlug": "2026-W21", "numericValue": 7473, "displayValue": "7,473" },
-    { "date": "2026-05-26", "weekSlug": "2026-W21", "numericValue": 7473, "displayValue": "7,473" },
-    { "date": "2026-05-27", "weekSlug": "2026-W21", "numericValue": 7519, "displayValue": "7,519" },
-    { "date": "2026-05-28", "weekSlug": "2026-W21", "numericValue": 7520, "displayValue": "7,520" },
-    { "date": "2026-05-29", "weekSlug": "2026-W21", "numericValue": 7563, "displayValue": "7,563" },
-    { "date": "2026-06-01", "weekSlug": "2026-W21", "numericValue": 7580, "displayValue": "7,580" },
-    { "date": "2026-06-01", "weekSlug": "2026-W22", "numericValue": 7580, "displayValue": "7,580" },
-    { "date": "2026-06-02", "weekSlug": "2026-W22", "numericValue": 7600, "displayValue": "7,600" },
-    { "date": "2026-06-03", "weekSlug": "2026-W22", "numericValue": 7610, "displayValue": "7,610" },
-    { "date": "2026-06-04", "weekSlug": "2026-W22", "numericValue": 7554, "displayValue": "7,554" },
-    { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 7584, "displayValue": "7,584" },
-    { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 7384, "displayValue": "7,384" },
-    { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 7384, "displayValue": "7,384" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 7452, "displayValue": "7,452" },
-    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 7387, "displayValue": "7,387" },
-    { "date": "2026-06-11", "weekSlug": "2026-W23", "numericValue": 7267, "displayValue": "7,267" },
-    { "date": "2026-06-12", "weekSlug": "2026-W23", "numericValue": 7393, "displayValue": "7,393" }
+    {
+      "date": "2026-05-18",
+      "weekSlug": "2026-W20",
+      "numericValue": 7408,
+      "displayValue": "7,408"
+    },
+    {
+      "date": "2026-05-20",
+      "weekSlug": "2026-W20",
+      "numericValue": 7354,
+      "displayValue": "7,354"
+    },
+    {
+      "date": "2026-05-21",
+      "weekSlug": "2026-W20",
+      "numericValue": 7423,
+      "displayValue": "7,423"
+    },
+    {
+      "date": "2026-05-22",
+      "weekSlug": "2026-W20",
+      "numericValue": 7445,
+      "displayValue": "7,445"
+    },
+    {
+      "date": "2026-05-25",
+      "weekSlug": "2026-W21",
+      "numericValue": 7473,
+      "displayValue": "7,473"
+    },
+    {
+      "date": "2026-05-26",
+      "weekSlug": "2026-W21",
+      "numericValue": 7473,
+      "displayValue": "7,473"
+    },
+    {
+      "date": "2026-05-27",
+      "weekSlug": "2026-W21",
+      "numericValue": 7519,
+      "displayValue": "7,519"
+    },
+    {
+      "date": "2026-05-28",
+      "weekSlug": "2026-W21",
+      "numericValue": 7520,
+      "displayValue": "7,520"
+    },
+    {
+      "date": "2026-05-29",
+      "weekSlug": "2026-W21",
+      "numericValue": 7563,
+      "displayValue": "7,563"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W21",
+      "numericValue": 7580,
+      "displayValue": "7,580"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W22",
+      "numericValue": 7580,
+      "displayValue": "7,580"
+    },
+    {
+      "date": "2026-06-02",
+      "weekSlug": "2026-W22",
+      "numericValue": 7600,
+      "displayValue": "7,600"
+    },
+    {
+      "date": "2026-06-03",
+      "weekSlug": "2026-W22",
+      "numericValue": 7610,
+      "displayValue": "7,610"
+    },
+    {
+      "date": "2026-06-04",
+      "weekSlug": "2026-W22",
+      "numericValue": 7554,
+      "displayValue": "7,554"
+    },
+    {
+      "date": "2026-06-05",
+      "weekSlug": "2026-W22",
+      "numericValue": 7584,
+      "displayValue": "7,584"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W22",
+      "numericValue": 7384,
+      "displayValue": "7,384"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W23",
+      "numericValue": 7384,
+      "displayValue": "7,384"
+    },
+    {
+      "date": "2026-06-09",
+      "weekSlug": "2026-W23",
+      "numericValue": 7452,
+      "displayValue": "7,452"
+    },
+    {
+      "date": "2026-06-10",
+      "weekSlug": "2026-W23",
+      "numericValue": 7387,
+      "displayValue": "7,387"
+    },
+    {
+      "date": "2026-06-11",
+      "weekSlug": "2026-W23",
+      "numericValue": 7267,
+      "displayValue": "7,267"
+    },
+    {
+      "date": "2026-06-12",
+      "weekSlug": "2026-W23",
+      "numericValue": 7393,
+      "displayValue": "7,393"
+    },
+    {
+      "date": "2026-06-15",
+      "weekSlug": "2026-W24",
+      "numericValue": 7393,
+      "displayValue": "7,393"
+    }
   ],
   "日経225": [
-    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 61409, "displayValue": "61,409" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 60119, "displayValue": "60,119" },
-    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 59804, "displayValue": "59,804" },
-    { "date": "2026-05-22", "weekSlug": "2026-W20", "numericValue": 61782, "displayValue": "61,782" },
-    { "date": "2026-05-25", "weekSlug": "2026-W21", "numericValue": 63339, "displayValue": "63,339" },
-    { "date": "2026-05-26", "weekSlug": "2026-W21", "numericValue": 65158, "displayValue": "65,158" },
-    { "date": "2026-05-27", "weekSlug": "2026-W21", "numericValue": 65200, "displayValue": "65,200" },
-    { "date": "2026-05-28", "weekSlug": "2026-W21", "numericValue": 65800, "displayValue": "65,800" },
-    { "date": "2026-05-29", "weekSlug": "2026-W21", "numericValue": 64693, "displayValue": "64,693" },
-    { "date": "2026-06-01", "weekSlug": "2026-W21", "numericValue": 66424, "displayValue": "66,424" },
-    { "date": "2026-06-01", "weekSlug": "2026-W22", "numericValue": 66424, "displayValue": "66,424" },
-    { "date": "2026-06-02", "weekSlug": "2026-W22", "numericValue": 66954, "displayValue": "66,954" },
-    { "date": "2026-06-03", "weekSlug": "2026-W22", "numericValue": 66734, "displayValue": "66,734" },
-    { "date": "2026-06-04", "weekSlug": "2026-W22", "numericValue": 68402, "displayValue": "68,402" },
-    { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 67400, "displayValue": "67,400" },
-    { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 66588, "displayValue": "66,588" },
-    { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 66588, "displayValue": "66,588" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 63465, "displayValue": "63,465" },
-    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 65416, "displayValue": "65,416" },
-    { "date": "2026-06-11", "weekSlug": "2026-W23", "numericValue": 64179, "displayValue": "64,179" },
-    { "date": "2026-06-12", "weekSlug": "2026-W23", "numericValue": 64217, "displayValue": "64,217" }
+    {
+      "date": "2026-05-18",
+      "weekSlug": "2026-W20",
+      "numericValue": 61409,
+      "displayValue": "61,409"
+    },
+    {
+      "date": "2026-05-20",
+      "weekSlug": "2026-W20",
+      "numericValue": 60119,
+      "displayValue": "60,119"
+    },
+    {
+      "date": "2026-05-21",
+      "weekSlug": "2026-W20",
+      "numericValue": 59804,
+      "displayValue": "59,804"
+    },
+    {
+      "date": "2026-05-22",
+      "weekSlug": "2026-W20",
+      "numericValue": 61782,
+      "displayValue": "61,782"
+    },
+    {
+      "date": "2026-05-25",
+      "weekSlug": "2026-W21",
+      "numericValue": 63339,
+      "displayValue": "63,339"
+    },
+    {
+      "date": "2026-05-26",
+      "weekSlug": "2026-W21",
+      "numericValue": 65158,
+      "displayValue": "65,158"
+    },
+    {
+      "date": "2026-05-27",
+      "weekSlug": "2026-W21",
+      "numericValue": 65200,
+      "displayValue": "65,200"
+    },
+    {
+      "date": "2026-05-28",
+      "weekSlug": "2026-W21",
+      "numericValue": 65800,
+      "displayValue": "65,800"
+    },
+    {
+      "date": "2026-05-29",
+      "weekSlug": "2026-W21",
+      "numericValue": 64693,
+      "displayValue": "64,693"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W21",
+      "numericValue": 66424,
+      "displayValue": "66,424"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W22",
+      "numericValue": 66424,
+      "displayValue": "66,424"
+    },
+    {
+      "date": "2026-06-02",
+      "weekSlug": "2026-W22",
+      "numericValue": 66954,
+      "displayValue": "66,954"
+    },
+    {
+      "date": "2026-06-03",
+      "weekSlug": "2026-W22",
+      "numericValue": 66734,
+      "displayValue": "66,734"
+    },
+    {
+      "date": "2026-06-04",
+      "weekSlug": "2026-W22",
+      "numericValue": 68402,
+      "displayValue": "68,402"
+    },
+    {
+      "date": "2026-06-05",
+      "weekSlug": "2026-W22",
+      "numericValue": 67400,
+      "displayValue": "67,400"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W22",
+      "numericValue": 66588,
+      "displayValue": "66,588"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W23",
+      "numericValue": 66588,
+      "displayValue": "66,588"
+    },
+    {
+      "date": "2026-06-09",
+      "weekSlug": "2026-W23",
+      "numericValue": 63465,
+      "displayValue": "63,465"
+    },
+    {
+      "date": "2026-06-10",
+      "weekSlug": "2026-W23",
+      "numericValue": 65416,
+      "displayValue": "65,416"
+    },
+    {
+      "date": "2026-06-11",
+      "weekSlug": "2026-W23",
+      "numericValue": 64179,
+      "displayValue": "64,179"
+    },
+    {
+      "date": "2026-06-12",
+      "weekSlug": "2026-W23",
+      "numericValue": 64217,
+      "displayValue": "64,217"
+    },
+    {
+      "date": "2026-06-15",
+      "weekSlug": "2026-W24",
+      "numericValue": 64217,
+      "displayValue": "64,217"
+    }
   ],
   "米10年債": [
-    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 4.63, "displayValue": "4.63%" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 4.68, "displayValue": "4.68%" },
-    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 4.63, "displayValue": "4.63%" },
-    { "date": "2026-05-22", "weekSlug": "2026-W20", "numericValue": 4.59, "displayValue": "4.59%" },
-    { "date": "2026-05-25", "weekSlug": "2026-W21", "numericValue": 4.57, "displayValue": "4.57%" },
-    { "date": "2026-05-26", "weekSlug": "2026-W21", "numericValue": 4.57, "displayValue": "4.57%" },
-    { "date": "2026-05-27", "weekSlug": "2026-W21", "numericValue": 4.51, "displayValue": "4.51%" },
-    { "date": "2026-05-28", "weekSlug": "2026-W21", "numericValue": 4.48, "displayValue": "4.48%" },
-    { "date": "2026-05-29", "weekSlug": "2026-W21", "numericValue": 4.50, "displayValue": "4.50%" },
-    { "date": "2026-06-01", "weekSlug": "2026-W21", "numericValue": 4.45, "displayValue": "4.45%" },
-    { "date": "2026-06-01", "weekSlug": "2026-W22", "numericValue": 4.45, "displayValue": "4.45%" },
-    { "date": "2026-06-02", "weekSlug": "2026-W22", "numericValue": 4.51, "displayValue": "4.51%" },
-    { "date": "2026-06-03", "weekSlug": "2026-W22", "numericValue": 4.46, "displayValue": "4.46%" },
-    { "date": "2026-06-04", "weekSlug": "2026-W22", "numericValue": 4.49, "displayValue": "4.49%" },
-    { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 4.48, "displayValue": "4.48%" },
-    { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 4.55, "displayValue": "4.55%" },
-    { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 4.55, "displayValue": "4.55%" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 4.57, "displayValue": "4.57%" },
-    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 4.54, "displayValue": "4.54%" },
-    { "date": "2026-06-11", "weekSlug": "2026-W23", "numericValue": 4.53, "displayValue": "4.53%" },
-    { "date": "2026-06-12", "weekSlug": "2026-W23", "numericValue": 4.53, "displayValue": "4.53%" }
+    {
+      "date": "2026-05-18",
+      "weekSlug": "2026-W20",
+      "numericValue": 4.63,
+      "displayValue": "4.63%"
+    },
+    {
+      "date": "2026-05-20",
+      "weekSlug": "2026-W20",
+      "numericValue": 4.68,
+      "displayValue": "4.68%"
+    },
+    {
+      "date": "2026-05-21",
+      "weekSlug": "2026-W20",
+      "numericValue": 4.63,
+      "displayValue": "4.63%"
+    },
+    {
+      "date": "2026-05-22",
+      "weekSlug": "2026-W20",
+      "numericValue": 4.59,
+      "displayValue": "4.59%"
+    },
+    {
+      "date": "2026-05-25",
+      "weekSlug": "2026-W21",
+      "numericValue": 4.57,
+      "displayValue": "4.57%"
+    },
+    {
+      "date": "2026-05-26",
+      "weekSlug": "2026-W21",
+      "numericValue": 4.57,
+      "displayValue": "4.57%"
+    },
+    {
+      "date": "2026-05-27",
+      "weekSlug": "2026-W21",
+      "numericValue": 4.51,
+      "displayValue": "4.51%"
+    },
+    {
+      "date": "2026-05-28",
+      "weekSlug": "2026-W21",
+      "numericValue": 4.48,
+      "displayValue": "4.48%"
+    },
+    {
+      "date": "2026-05-29",
+      "weekSlug": "2026-W21",
+      "numericValue": 4.5,
+      "displayValue": "4.50%"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W21",
+      "numericValue": 4.45,
+      "displayValue": "4.45%"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W22",
+      "numericValue": 4.45,
+      "displayValue": "4.45%"
+    },
+    {
+      "date": "2026-06-02",
+      "weekSlug": "2026-W22",
+      "numericValue": 4.51,
+      "displayValue": "4.51%"
+    },
+    {
+      "date": "2026-06-03",
+      "weekSlug": "2026-W22",
+      "numericValue": 4.46,
+      "displayValue": "4.46%"
+    },
+    {
+      "date": "2026-06-04",
+      "weekSlug": "2026-W22",
+      "numericValue": 4.49,
+      "displayValue": "4.49%"
+    },
+    {
+      "date": "2026-06-05",
+      "weekSlug": "2026-W22",
+      "numericValue": 4.48,
+      "displayValue": "4.48%"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W22",
+      "numericValue": 4.55,
+      "displayValue": "4.55%"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W23",
+      "numericValue": 4.55,
+      "displayValue": "4.55%"
+    },
+    {
+      "date": "2026-06-09",
+      "weekSlug": "2026-W23",
+      "numericValue": 4.57,
+      "displayValue": "4.57%"
+    },
+    {
+      "date": "2026-06-10",
+      "weekSlug": "2026-W23",
+      "numericValue": 4.54,
+      "displayValue": "4.54%"
+    },
+    {
+      "date": "2026-06-11",
+      "weekSlug": "2026-W23",
+      "numericValue": 4.53,
+      "displayValue": "4.53%"
+    },
+    {
+      "date": "2026-06-12",
+      "weekSlug": "2026-W23",
+      "numericValue": 4.53,
+      "displayValue": "4.53%"
+    },
+    {
+      "date": "2026-06-15",
+      "weekSlug": "2026-W24",
+      "numericValue": 4.53,
+      "displayValue": "4.53%"
+    }
   ],
   "日本10年債": [
-    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 2.64, "displayValue": "2.64%" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 2.79, "displayValue": "2.79%" },
-    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 2.79, "displayValue": "2.79%" },
-    { "date": "2026-05-22", "weekSlug": "2026-W20", "numericValue": 2.79, "displayValue": "2.79%" },
-    { "date": "2026-05-25", "weekSlug": "2026-W21", "numericValue": 2.77, "displayValue": "2.77%" },
-    { "date": "2026-05-26", "weekSlug": "2026-W21", "numericValue": 2.78, "displayValue": "2.78%" },
-    { "date": "2026-05-27", "weekSlug": "2026-W21", "numericValue": 2.71, "displayValue": "2.71%" },
-    { "date": "2026-05-28", "weekSlug": "2026-W21", "numericValue": 2.70, "displayValue": "2.70%" },
-    { "date": "2026-05-29", "weekSlug": "2026-W21", "numericValue": 2.70, "displayValue": "2.70%" },
-    { "date": "2026-06-01", "weekSlug": "2026-W21", "numericValue": 2.66, "displayValue": "2.66%" },
-    { "date": "2026-06-01", "weekSlug": "2026-W22", "numericValue": 2.66, "displayValue": "2.66%" },
-    { "date": "2026-06-02", "weekSlug": "2026-W22", "numericValue": 2.68, "displayValue": "2.68%" },
-    { "date": "2026-06-03", "weekSlug": "2026-W22", "numericValue": 2.57, "displayValue": "2.57%" },
-    { "date": "2026-06-04", "weekSlug": "2026-W22", "numericValue": 2.65, "displayValue": "2.65%" },
-    { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 2.60, "displayValue": "2.60%" },
-    { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 2.66, "displayValue": "2.66%" },
-    { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 2.67, "displayValue": "2.67%" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 2.67, "displayValue": "2.67%" },
-    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 2.67, "displayValue": "2.67%" },
-    { "date": "2026-06-11", "weekSlug": "2026-W23", "numericValue": 2.68, "displayValue": "2.68%" },
-    { "date": "2026-06-12", "weekSlug": "2026-W23", "numericValue": 2.69, "displayValue": "2.69%" }
+    {
+      "date": "2026-05-18",
+      "weekSlug": "2026-W20",
+      "numericValue": 2.64,
+      "displayValue": "2.64%"
+    },
+    {
+      "date": "2026-05-20",
+      "weekSlug": "2026-W20",
+      "numericValue": 2.79,
+      "displayValue": "2.79%"
+    },
+    {
+      "date": "2026-05-21",
+      "weekSlug": "2026-W20",
+      "numericValue": 2.79,
+      "displayValue": "2.79%"
+    },
+    {
+      "date": "2026-05-22",
+      "weekSlug": "2026-W20",
+      "numericValue": 2.79,
+      "displayValue": "2.79%"
+    },
+    {
+      "date": "2026-05-25",
+      "weekSlug": "2026-W21",
+      "numericValue": 2.77,
+      "displayValue": "2.77%"
+    },
+    {
+      "date": "2026-05-26",
+      "weekSlug": "2026-W21",
+      "numericValue": 2.78,
+      "displayValue": "2.78%"
+    },
+    {
+      "date": "2026-05-27",
+      "weekSlug": "2026-W21",
+      "numericValue": 2.71,
+      "displayValue": "2.71%"
+    },
+    {
+      "date": "2026-05-28",
+      "weekSlug": "2026-W21",
+      "numericValue": 2.7,
+      "displayValue": "2.70%"
+    },
+    {
+      "date": "2026-05-29",
+      "weekSlug": "2026-W21",
+      "numericValue": 2.7,
+      "displayValue": "2.70%"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W21",
+      "numericValue": 2.66,
+      "displayValue": "2.66%"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W22",
+      "numericValue": 2.66,
+      "displayValue": "2.66%"
+    },
+    {
+      "date": "2026-06-02",
+      "weekSlug": "2026-W22",
+      "numericValue": 2.68,
+      "displayValue": "2.68%"
+    },
+    {
+      "date": "2026-06-03",
+      "weekSlug": "2026-W22",
+      "numericValue": 2.57,
+      "displayValue": "2.57%"
+    },
+    {
+      "date": "2026-06-04",
+      "weekSlug": "2026-W22",
+      "numericValue": 2.65,
+      "displayValue": "2.65%"
+    },
+    {
+      "date": "2026-06-05",
+      "weekSlug": "2026-W22",
+      "numericValue": 2.6,
+      "displayValue": "2.60%"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W22",
+      "numericValue": 2.66,
+      "displayValue": "2.66%"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W23",
+      "numericValue": 2.67,
+      "displayValue": "2.67%"
+    },
+    {
+      "date": "2026-06-09",
+      "weekSlug": "2026-W23",
+      "numericValue": 2.67,
+      "displayValue": "2.67%"
+    },
+    {
+      "date": "2026-06-10",
+      "weekSlug": "2026-W23",
+      "numericValue": 2.67,
+      "displayValue": "2.67%"
+    },
+    {
+      "date": "2026-06-11",
+      "weekSlug": "2026-W23",
+      "numericValue": 2.68,
+      "displayValue": "2.68%"
+    },
+    {
+      "date": "2026-06-12",
+      "weekSlug": "2026-W23",
+      "numericValue": 2.69,
+      "displayValue": "2.69%"
+    },
+    {
+      "date": "2026-06-15",
+      "weekSlug": "2026-W24",
+      "numericValue": 2.69,
+      "displayValue": "2.69%"
+    }
   ],
   "WTI原油": [
-    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 107, "displayValue": "$107" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 105, "displayValue": "$105" },
-    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 100, "displayValue": "$100" },
-    { "date": "2026-05-22", "weekSlug": "2026-W20", "numericValue": 97, "displayValue": "$97" },
-    { "date": "2026-05-25", "weekSlug": "2026-W21", "numericValue": 96.6, "displayValue": "15,370" },
-    { "date": "2026-05-26", "weekSlug": "2026-W21", "numericValue": 91, "displayValue": "14,458" },
-    { "date": "2026-05-27", "weekSlug": "2026-W21", "numericValue": 92.36, "displayValue": "14,719" },
-    { "date": "2026-05-28", "weekSlug": "2026-W21", "numericValue": 88.68, "displayValue": "14,123" },
-    { "date": "2026-05-29", "weekSlug": "2026-W21", "numericValue": 90.35, "displayValue": "14,395" },
-    { "date": "2026-06-01", "weekSlug": "2026-W21", "numericValue": 88, "displayValue": "13,992" },
-    { "date": "2026-06-01", "weekSlug": "2026-W22", "numericValue": 88, "displayValue": "13,992" },
-    { "date": "2026-06-02", "weekSlug": "2026-W22", "numericValue": 92.16, "displayValue": "14,729" },
-    { "date": "2026-06-03", "weekSlug": "2026-W22", "numericValue": 91, "displayValue": "14,505" },
-    { "date": "2026-06-04", "weekSlug": "2026-W22", "numericValue": 96.29, "displayValue": "15,389" },
-    { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 95.50, "displayValue": "15,272" },
-    { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 91, "displayValue": "14,589" },
-    { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 90.3, "displayValue": "14,466" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 93.67, "displayValue": "15,006" },
-    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 87.73, "displayValue": "14,065" },
-    { "date": "2026-06-11", "weekSlug": "2026-W23", "numericValue": 89, "displayValue": "14,282" },
-    { "date": "2026-06-12", "weekSlug": "2026-W23", "numericValue": 85.94, "displayValue": "13,761" }
+    {
+      "date": "2026-05-18",
+      "weekSlug": "2026-W20",
+      "numericValue": 107,
+      "displayValue": "$107"
+    },
+    {
+      "date": "2026-05-20",
+      "weekSlug": "2026-W20",
+      "numericValue": 105,
+      "displayValue": "$105"
+    },
+    {
+      "date": "2026-05-21",
+      "weekSlug": "2026-W20",
+      "numericValue": 100,
+      "displayValue": "$100"
+    },
+    {
+      "date": "2026-05-22",
+      "weekSlug": "2026-W20",
+      "numericValue": 97,
+      "displayValue": "$97"
+    },
+    {
+      "date": "2026-05-25",
+      "weekSlug": "2026-W21",
+      "numericValue": 96.6,
+      "displayValue": "15,370"
+    },
+    {
+      "date": "2026-05-26",
+      "weekSlug": "2026-W21",
+      "numericValue": 91,
+      "displayValue": "14,458"
+    },
+    {
+      "date": "2026-05-27",
+      "weekSlug": "2026-W21",
+      "numericValue": 92.36,
+      "displayValue": "14,719"
+    },
+    {
+      "date": "2026-05-28",
+      "weekSlug": "2026-W21",
+      "numericValue": 88.68,
+      "displayValue": "14,123"
+    },
+    {
+      "date": "2026-05-29",
+      "weekSlug": "2026-W21",
+      "numericValue": 90.35,
+      "displayValue": "14,395"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W21",
+      "numericValue": 88,
+      "displayValue": "13,992"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W22",
+      "numericValue": 88,
+      "displayValue": "13,992"
+    },
+    {
+      "date": "2026-06-02",
+      "weekSlug": "2026-W22",
+      "numericValue": 92.16,
+      "displayValue": "14,729"
+    },
+    {
+      "date": "2026-06-03",
+      "weekSlug": "2026-W22",
+      "numericValue": 91,
+      "displayValue": "14,505"
+    },
+    {
+      "date": "2026-06-04",
+      "weekSlug": "2026-W22",
+      "numericValue": 96.29,
+      "displayValue": "15,389"
+    },
+    {
+      "date": "2026-06-05",
+      "weekSlug": "2026-W22",
+      "numericValue": 95.5,
+      "displayValue": "15,272"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W22",
+      "numericValue": 91,
+      "displayValue": "14,589"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W23",
+      "numericValue": 90.3,
+      "displayValue": "14,466"
+    },
+    {
+      "date": "2026-06-09",
+      "weekSlug": "2026-W23",
+      "numericValue": 93.67,
+      "displayValue": "15,006"
+    },
+    {
+      "date": "2026-06-10",
+      "weekSlug": "2026-W23",
+      "numericValue": 87.73,
+      "displayValue": "14,065"
+    },
+    {
+      "date": "2026-06-11",
+      "weekSlug": "2026-W23",
+      "numericValue": 89,
+      "displayValue": "14,282"
+    },
+    {
+      "date": "2026-06-12",
+      "weekSlug": "2026-W23",
+      "numericValue": 85.94,
+      "displayValue": "13,761"
+    },
+    {
+      "date": "2026-06-15",
+      "weekSlug": "2026-W24",
+      "numericValue": 85.94,
+      "displayValue": "13,761"
+    }
   ],
   "金": [
-    { "date": "2026-05-18", "weekSlug": "2026-W20", "numericValue": 4483, "displayValue": "$4,483" },
-    { "date": "2026-05-20", "weekSlug": "2026-W20", "numericValue": 4534, "displayValue": "$4,534" },
-    { "date": "2026-05-21", "weekSlug": "2026-W20", "numericValue": 4490, "displayValue": "$4,490" },
-    { "date": "2026-05-22", "weekSlug": "2026-W20", "numericValue": 4500, "displayValue": "$4,500" },
-    { "date": "2026-05-25", "weekSlug": "2026-W21", "numericValue": 4500, "displayValue": "715,995" },
-    { "date": "2026-05-26", "weekSlug": "2026-W21", "numericValue": 4500, "displayValue": "715,500" },
-    { "date": "2026-05-27", "weekSlug": "2026-W21", "numericValue": 4540, "displayValue": "722,940" },
-    { "date": "2026-05-28", "weekSlug": "2026-W21", "numericValue": 4400, "displayValue": "700,920" },
-    { "date": "2026-05-29", "weekSlug": "2026-W21", "numericValue": 4444, "displayValue": "708,090" },
-    { "date": "2026-06-01", "weekSlug": "2026-W21", "numericValue": 4580, "displayValue": "728,220" },
-    { "date": "2026-06-01", "weekSlug": "2026-W22", "numericValue": 4580, "displayValue": "728,220" },
-    { "date": "2026-06-02", "weekSlug": "2026-W22", "numericValue": 4455, "displayValue": "711,775" },
-    { "date": "2026-06-03", "weekSlug": "2026-W22", "numericValue": 4495, "displayValue": "716,441" },
-    { "date": "2026-06-04", "weekSlug": "2026-W22", "numericValue": 4440, "displayValue": "709,734" },
-    { "date": "2026-06-05", "weekSlug": "2026-W22", "numericValue": 4479, "displayValue": "716,282" },
-    { "date": "2026-06-08", "weekSlug": "2026-W22", "numericValue": 4366, "displayValue": "699,717" },
-    { "date": "2026-06-08", "weekSlug": "2026-W23", "numericValue": 4331, "displayValue": "693,826" },
-    { "date": "2026-06-09", "weekSlug": "2026-W23", "numericValue": 4340, "displayValue": "695,268" },
-    { "date": "2026-06-10", "weekSlug": "2026-W23", "numericValue": 4330, "displayValue": "694,099" },
-    { "date": "2026-06-11", "weekSlug": "2026-W23", "numericValue": 4200, "displayValue": "673,974" },
-    { "date": "2026-06-12", "weekSlug": "2026-W23", "numericValue": 4201, "displayValue": "672,648" }
+    {
+      "date": "2026-05-18",
+      "weekSlug": "2026-W20",
+      "numericValue": 4483,
+      "displayValue": "$4,483"
+    },
+    {
+      "date": "2026-05-20",
+      "weekSlug": "2026-W20",
+      "numericValue": 4534,
+      "displayValue": "$4,534"
+    },
+    {
+      "date": "2026-05-21",
+      "weekSlug": "2026-W20",
+      "numericValue": 4490,
+      "displayValue": "$4,490"
+    },
+    {
+      "date": "2026-05-22",
+      "weekSlug": "2026-W20",
+      "numericValue": 4500,
+      "displayValue": "$4,500"
+    },
+    {
+      "date": "2026-05-25",
+      "weekSlug": "2026-W21",
+      "numericValue": 4500,
+      "displayValue": "715,995"
+    },
+    {
+      "date": "2026-05-26",
+      "weekSlug": "2026-W21",
+      "numericValue": 4500,
+      "displayValue": "715,500"
+    },
+    {
+      "date": "2026-05-27",
+      "weekSlug": "2026-W21",
+      "numericValue": 4540,
+      "displayValue": "722,940"
+    },
+    {
+      "date": "2026-05-28",
+      "weekSlug": "2026-W21",
+      "numericValue": 4400,
+      "displayValue": "700,920"
+    },
+    {
+      "date": "2026-05-29",
+      "weekSlug": "2026-W21",
+      "numericValue": 4444,
+      "displayValue": "708,090"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W21",
+      "numericValue": 4580,
+      "displayValue": "728,220"
+    },
+    {
+      "date": "2026-06-01",
+      "weekSlug": "2026-W22",
+      "numericValue": 4580,
+      "displayValue": "728,220"
+    },
+    {
+      "date": "2026-06-02",
+      "weekSlug": "2026-W22",
+      "numericValue": 4455,
+      "displayValue": "711,775"
+    },
+    {
+      "date": "2026-06-03",
+      "weekSlug": "2026-W22",
+      "numericValue": 4495,
+      "displayValue": "716,441"
+    },
+    {
+      "date": "2026-06-04",
+      "weekSlug": "2026-W22",
+      "numericValue": 4440,
+      "displayValue": "709,734"
+    },
+    {
+      "date": "2026-06-05",
+      "weekSlug": "2026-W22",
+      "numericValue": 4479,
+      "displayValue": "716,282"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W22",
+      "numericValue": 4366,
+      "displayValue": "699,717"
+    },
+    {
+      "date": "2026-06-08",
+      "weekSlug": "2026-W23",
+      "numericValue": 4331,
+      "displayValue": "693,826"
+    },
+    {
+      "date": "2026-06-09",
+      "weekSlug": "2026-W23",
+      "numericValue": 4340,
+      "displayValue": "695,268"
+    },
+    {
+      "date": "2026-06-10",
+      "weekSlug": "2026-W23",
+      "numericValue": 4330,
+      "displayValue": "694,099"
+    },
+    {
+      "date": "2026-06-11",
+      "weekSlug": "2026-W23",
+      "numericValue": 4200,
+      "displayValue": "673,974"
+    },
+    {
+      "date": "2026-06-12",
+      "weekSlug": "2026-W23",
+      "numericValue": 4201,
+      "displayValue": "672,648"
+    },
+    {
+      "date": "2026-06-15",
+      "weekSlug": "2026-W24",
+      "numericValue": 4201,
+      "displayValue": "672,648"
+    }
   ]
 }
