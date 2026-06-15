@@ -1508,6 +1508,75 @@
         "numericValue": 672648
       }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-16",
+      "spxActualChange": "+2.2%",
+      "spxDirection": "up",
+      "baseScenarioDirection": "neutral",
+      "match": false,
+      "note": "S&P 500は7,393→7,554（+2.18%）と米・イラン和平合意の正式発表で史上最高値を更新。WTI原油$80割れ・米10年債4.42%低下を伴うリスクオン。ベースシナリオの「中立」予想に対し1%超の上昇で不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W24",
+    "date": "2026-06-16",
+    "stance": 61,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "BOJ・FOMC通過待ちで高値圏もみ合い、和平合意の好材料一巡と二大中銀イベント前の様子見が拮抗",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "BOJ・FOMC通過待ちで高値圏もみ合い、和平合意の好材料一巡と二大中銀イベント前の様子見が拮抗",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "ハト派的BOJ＋FOMCドット据え置き示唆→インフレ後退期待でリスクオン継続、最高値追い",
+        "probability": 25,
+        "direction": "up"
+      },
+      {
+        "label": "タカ派BOJ＋円高・キャリー巻き戻し、またはFOMCタカ派→高値圏から調整",
+        "probability": 30,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,554",
+        "numericValue": 7554
+      },
+      {
+        "label": "日経225",
+        "value": "69,318",
+        "numericValue": 69318
+      },
+      {
+        "label": "米10年債",
+        "value": "4.42%",
+        "numericValue": 4.42
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.67%",
+        "numericValue": 2.67
+      },
+      {
+        "label": "WTI原油",
+        "value": "12,890",
+        "numericValue": 12890
+      },
+      {
+        "label": "金",
+        "value": "688,301",
+        "numericValue": 688301
+      }
+    ],
     "outcome": null
   }
 ]
