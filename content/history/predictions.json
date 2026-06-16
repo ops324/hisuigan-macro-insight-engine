@@ -1577,6 +1577,75 @@
         "numericValue": 688301
       }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-17",
+      "spxActualChange": "-0.07%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500は7,554→7,549（-0.07%）と日銀1%利上げを波乱なく通過し小幅横ばい。DOW +0.64%（5万2千台目前）vs NASDAQ -1.15%とローテーションで方向感は限定的。変化率±1.0%未満のneutral判定で、ベースシナリオの『中立』と方向一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W24",
+    "date": "2026-06-17",
+    "stance": 57,
+    "stanceLabel": "中立",
+    "baseScenario": {
+      "label": "FOMC結果待ちで高値圏もみ合い、BOJ波乱なく通過した後の様子見とローテーションが拮抗",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "FOMC結果待ちで高値圏もみ合い、BOJ波乱なく通過した後の様子見とローテーションが拮抗",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "FOMCハト派（ドット据え置き・利下げ余地維持）＋原油安継続→インフレ後退期待でリスクオン継続、最高値追い",
+        "probability": 30,
+        "direction": "up"
+      },
+      {
+        "label": "FOMCタカ派（2026利下げゼロ修正）＋ハイテク続落→長期金利再上昇でグロース調整",
+        "probability": 25,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,549",
+        "numericValue": 7549
+      },
+      {
+        "label": "日経225",
+        "value": "69,404",
+        "numericValue": 69404
+      },
+      {
+        "label": "米10年債",
+        "value": "4.47%",
+        "numericValue": 4.47
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.70%",
+        "numericValue": 2.7
+      },
+      {
+        "label": "WTI原油",
+        "value": "12,113",
+        "numericValue": 12113
+      },
+      {
+        "label": "金",
+        "value": "697,433",
+        "numericValue": 697433
+      }
+    ],
     "outcome": null
   }
 ]

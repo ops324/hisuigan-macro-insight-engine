@@ -137,6 +137,12 @@
       "weekSlug": "2026-W24",
       "numericValue": 7554,
       "displayValue": "7,554"
+    },
+    {
+      "date": "2026-06-17",
+      "weekSlug": "2026-W24",
+      "numericValue": 7549,
+      "displayValue": "7,549"
     }
   ],
   "日経225": [
@@ -277,6 +283,12 @@
       "weekSlug": "2026-W24",
       "numericValue": 69318,
       "displayValue": "69,318"
+    },
+    {
+      "date": "2026-06-17",
+      "weekSlug": "2026-W24",
+      "numericValue": 69404,
+      "displayValue": "69,404"
     }
   ],
   "米10年債": [
@@ -417,6 +429,12 @@
       "weekSlug": "2026-W24",
       "numericValue": 4.42,
       "displayValue": "4.42%"
+    },
+    {
+      "date": "2026-06-17",
+      "weekSlug": "2026-W24",
+      "numericValue": 4.47,
+      "displayValue": "4.47%"
     }
   ],
   "日本10年債": [
@@ -557,6 +575,12 @@
       "weekSlug": "2026-W24",
       "numericValue": 2.67,
       "displayValue": "2.67%"
+    },
+    {
+      "date": "2026-06-17",
+      "weekSlug": "2026-W24",
+      "numericValue": 2.7,
+      "displayValue": "2.70%"
     }
   ],
   "WTI原油": [
@@ -697,6 +721,12 @@
       "weekSlug": "2026-W24",
       "numericValue": 80.53,
       "displayValue": "12,890"
+    },
+    {
+      "date": "2026-06-17",
+      "weekSlug": "2026-W24",
+      "numericValue": 12113,
+      "displayValue": "12,113"
     }
   ],
   "金": [
@@ -837,6 +867,12 @@
       "weekSlug": "2026-W24",
       "numericValue": 4300,
       "displayValue": "688,301"
+    },
+    {
+      "date": "2026-06-17",
+      "weekSlug": "2026-W24",
+      "numericValue": 697433,
+      "displayValue": "697,433"
     }
   ]
 }
