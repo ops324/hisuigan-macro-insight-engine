@@ -1646,6 +1646,75 @@
         "numericValue": 697433
       }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-19",
+      "spxActualChange": "-0.6%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500は7,549→7,500（-0.65%）。6/17夜のタカ派FOMC（ドット中央値3.8%・年内利上げ示唆）で一時下落も、翌6/18にApple・Intel半導体提携を好感した半導体主導の反発（+1.08%・SMH +6%）でほぼ取り戻した。変化率±1.0%未満のneutral判定で、ベースシナリオの『中立』と方向一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W24",
+    "date": "2026-06-19",
+    "stance": 54,
+    "stanceLabel": "中立",
+    "baseScenario": {
+      "label": "最高値圏で高値圏もみ合い、半導体高・和平・原油安の追い風とタカ派FOMC・米国不在の手掛かり難が拮抗",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "最高値圏で高値圏もみ合い、半導体高・和平・原油安の追い風とタカ派FOMC・米国不在の手掛かり難が拮抗",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "半導体・AIテーマ継続＋米イラン和平・原油安でリスクオン、日経最高値追い・S&P 7,600方向",
+        "probability": 35,
+        "direction": "up"
+      },
+      {
+        "label": "タカ派FOMC織り込み再燃（米10年債4.55%超）＋高値圏の利益確定でグロース調整",
+        "probability": 20,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,500",
+        "numericValue": 7500
+      },
+      {
+        "label": "日経225",
+        "value": "71,053",
+        "numericValue": 71053
+      },
+      {
+        "label": "米10年債",
+        "value": "4.46%",
+        "numericValue": 4.46
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.70%",
+        "numericValue": 2.7
+      },
+      {
+        "label": "WTI原油",
+        "value": "12,118",
+        "numericValue": 12118
+      },
+      {
+        "label": "金",
+        "value": "678,900",
+        "numericValue": 678900
+      }
+    ],
     "outcome": null
   }
 ]
