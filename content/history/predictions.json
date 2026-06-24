@@ -1715,6 +1715,75 @@
         "numericValue": 678900
       }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-25",
+      "spxActualChange": "-1.9%",
+      "spxDirection": "down",
+      "baseScenarioDirection": "neutral",
+      "match": false,
+      "note": "S&P 500は7,500→7,358（-1.9%）。6/23にBofAの年内3回利上げ予想＋9月利上げ確率68%への急騰を発端とする世界同時リスクオフ（KOSPI -10%サーキットブレーカー・日経-3.55%）でグロース・半導体が急落。6/24は自律反発で一部取り戻したが、前回スナップショットからは1%超の下落。ベースシナリオの「中立」予想に対し下落方向で不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W24",
+    "date": "2026-06-25",
+    "stance": 58,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "マイクロン決算の追い風と、引き締め長期化・PCE警戒が拮抗し高値圏で神経質な往来",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "マイクロン決算の追い風と、引き締め長期化・PCE警戒が拮抗し高値圏で神経質な往来",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "マイクロン主導の半導体反発＋PCE想定内のピークアウト観測でリスクオン、日経7万円台・S&P最高値圏回復",
+        "probability": 30,
+        "direction": "up"
+      },
+      {
+        "label": "PCE上振れ＋9月利上げ織り込み深化→実質金利上昇でグロース再調整・世界株安再燃",
+        "probability": 25,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,358",
+        "numericValue": 7358
+      },
+      {
+        "label": "日経225",
+        "value": "70,583",
+        "numericValue": 70583
+      },
+      {
+        "label": "米10年債",
+        "value": "4.40%",
+        "numericValue": 4.4
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.67%",
+        "numericValue": 2.67
+      },
+      {
+        "label": "WTI原油",
+        "value": "11,690",
+        "numericValue": 11690
+      },
+      {
+        "label": "金",
+        "value": "644,704",
+        "numericValue": 644704
+      }
+    ],
     "outcome": null
   }
 ]
