@@ -58,8 +58,8 @@ describe("direction helpers", () => {
   });
 
   it("maps direction to colors", () => {
-    expect(directionColor("up")).toBe("#3aaf8a");
-    expect(directionColor("down")).toBe("#e05252");
-    expect(directionColor("flat")).toBe("#888888");
+    expect(directionColor("up")).toBe("#4e8d6f");
+    expect(directionColor("down")).toBe("#c25f52");
+    expect(directionColor("flat")).toBe("#8c8576");
   });
 });

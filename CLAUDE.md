@@ -9,12 +9,13 @@
 - 市場数値画面（株式指数・為替・債券・コモディティ）は `/market`（`app/market/page.tsx`）。レポートページヘッダー右側の「マーケット」リンクからアクセス
 - テーマ：ダーク/ライト切り替え（localStorage "theme" キーで全ページ共有・永続化）
 - テーマ切替ボタン表示：`LIGHT` / `DARK`（絵文字なし）
-- アクセント：翡翠グリーン #2d8c6e / #3aaf8a
+- アクセント：彩度を落とした翡翠グリーン（ライト `#2f6f55` / ダーク `#6aa589`）。色源は `lib/theme.ts` の `t.positive` に一本化（旧ネオン翡翠 #2d8c6e / #3aaf8a・モジュールレベルの `JADE` 定数は撤廃済み）
+- デザイン基調：**金融エディトリアル**（FT・Monocle・日経の紙面感）。暖かい紙＋墨＋減彩翡翠。グロー（放射背景・box-shadow 光彩・drop-shadow）は全廃
 - 角丸：全て直角
 - 数値：monospaceフォント
 - データは15〜20分遅延表示
 - 市場数値ページ（`/market`）ナビの「レポート」タブ：カタカナ表記（`レポート`）
-- `/reports` ヘッダー：ブレッドクラムなし（ロゴ「翡翠眼」のみ。右側に「マーケット」リンクとテーマトグル）。「マーケット」リンクは `color: t.positive`（翡翠グリーン・ダーク `#3aaf8a`・ライト `#1e6b53`）でリンクであることを視覚的に明示
+- `/reports` ヘッダー：ブレッドクラムなし（ロゴ「翡翠眼」のみ。右側に「マーケット」リンクとテーマトグル）。「マーケット」リンクは `color: t.positive`（減彩翡翠・ダーク `#6aa589`・ライト `#2f6f55`）でリンクであることを視覚的に明示
 - `/reports/[slug]`・`/reports/track-record` のヘッダーブレッドクラム・`/reports` の h1 タイトル：カタカナ表記（`レポート`）
 - レポートページのタイトルセクション（格言バナーの直上）サブタイトル文言：「月次・週次・日次のマクロ市場分析レポート」のみ
 
@@ -105,19 +106,21 @@
 ### lib/theme.ts
 全ページ共通のダーク/ライトテーマ定数。**全ページ（レポート系・市場数値ページ）の唯一のテーマソース**。
 
+金融エディトリアル・パレット（暖かい紙＋墨＋減彩翡翠＋オックスブラッド）。キー名・`as const` 構造は不変。
+
 ```ts
 export const themeMap = {
-  dark: {
-    bg: "#0d0d0d", surface: "#141414", surfaceAlt: "#1e1e1e",
-    border: "#2e2e2e", borderStrong: "#383838",
-    text: "#e5e5e5", textSub: "#888888", textMuted: "#777777",
-    headerBg: "#0d0d0d", positive: "#3aaf8a", negative: "#e05252",
+  dark: { // 暖かい墨（ネオン排除）
+    bg: "#15140f", surface: "#1c1b15", surfaceAlt: "#24221b",
+    border: "#302d24", borderStrong: "#403c30",
+    text: "#ece7da", textSub: "#a39c8c", textMuted: "#807969",
+    headerBg: "#15140f", positive: "#6aa589", negative: "#cf6f60",
   },
-  light: {
-    bg: "#f4f4f4", surface: "#ffffff", surfaceAlt: "#f0f0f0",
-    border: "#e0e0e0", borderStrong: "#c8c8c8",
-    text: "#111111", textSub: "#555555", textMuted: "#767676",
-    headerBg: "#ffffff", positive: "#1e6b53", negative: "#c0392b",
+  light: { // 紙面（エディトリアルの主役）
+    bg: "#f4f1ea", surface: "#fbfaf6", surfaceAlt: "#ece7db",
+    border: "#e0d9ca", borderStrong: "#cabfa8",
+    text: "#1b1a16", textSub: "#57534a", textMuted: "#8c8576",
+    headerBg: "#fbfaf6", positive: "#2f6f55", negative: "#a23c30",
   },
 }
 export type ThemeMode = keyof typeof themeMap;
@@ -175,7 +178,7 @@ DB 不要、Vercel 自動デプロイで反映。
 | `regime` | 現在のマクロ局面（景気 cycle・インフレ inflation・金融政策 policy・総括 summary） |
 | `keyMetrics` | 主要指標スナップショット 4〜6 件（label・value・change・direction） |
 | シナリオ `rationale` | 各予測シナリオの確率・判断の根拠（1〜2 文） |
-| `themes` | 注目テーマリスト（絵文字＋テキスト 3〜5件） |
+| `themes` | 注目テーマリスト（絵文字＋テキスト 3〜5件。絵文字は表示時に無発光スウォッチへ変換されるが frontmatter には従来どおり絵文字を記述する） |
 | `scenarios` | 予測シナリオ 3件（確率合計100%） |
 | `allocation` | 資産配分比率（合計100%） |
 | `allocationNote` | 「なぜこの配分か」2〜3文 |
@@ -314,7 +317,7 @@ keyMetrics:
     value: "4.63%"        # 単位込みの文字列。コモディティは円換算の数字のみ（例：WTI → "15,427"）
     change: "+0.05"       # 前回比（任意。確かな数値が取れる場合のみ）
     direction: "up"       # up | down | flat（任意）
-themes:
+themes:                  # 先頭の信号絵文字は表示時に無発光スウォッチへ変換（🔴=朱・🟡=琥珀・🟢=翡翠など）。frontmatter は絵文字記述のままでよい
   - "🔴 テーマ1"
   - "🟡 テーマ2"
   - "🟢 テーマ3"
@@ -441,30 +444,23 @@ sectors:
 - 主要指標ストリップ（keyMetrics）：ヘッダーと3カラムグリッドの間に表示。デザイン方向は「精密ティッカー」。ラベル「主要指標」（JADE）を左、右に**期間ラベル＋as-of日付**「前週比 · YYYY-MM-DD 時点」（textMuted）を配置。各セル（上から）＝① **資産クラスeyebrow**（9px・JADE・uppercase・`minHeight` で高さ予約。グループ先頭セルのみ表示）／② 指標名（11px・textMuted・`flex:1 minWidth:0` で ellipsis）＋スパークライン（右端・`flexShrink:0`・2点以上で表示）／③ 値（18px・monospace・bold）／④ **デルタ角チップ**（任意・`minHeight:21` で高さ予約）。チップは方向色の地（`${dc}1a`）＋方向色文字＋▲/▼/—、直角（角丸なし）。`keyMetrics` がない場合は非表示
 - 資産クラス推定（`metricGroup(label)`）：ラベルから 金利（債/金利/利回り/イールド）→ コモディティ（原油/WTI/ブレント/天然ガス/金/銀/銅/プラチナ）→ 為替（/・円・ドル等）→ 株式（S&P/NASDAQ/ダウ/日経/TOPIX/株/指数）→ その他 の順で判定（コモディティの「金」と金利を衝突させないため金利を先に判定）。連続する同一グループの先頭セルにのみ eyebrow を表示。グループ未保有データでも安全に動作（型変更不要・generator 非依存）
 - 変化単位整理（`changeDisplay(value, change)`）：値が `%` で終わる利回り系で change が裸の符号付き数値（%・$・pt・bp なし）のとき `pt` を補う（例：米10年債 `-0.04` → `-0.04pt`）。それ以外は change を verbatim 表示
-- セルホバー（`.hg-metric-cell` / globals.css）：翡翠インナーボーダー（`inset 0 0 0 1px rgba(45,140,110,0.5)`・z-index:5）＋ツールチップ（`.hg-metric-tip`）出現。ツールチップ＝セル下に絶対配置（右半分のセルは `right:0`、左半分は `left:0` でビューポート見切れ回避）。内容＝指標名＋最新精密値（`metrics.json` 最新点 `displayValue（date）`、無ければ `value（as-of 時点）`）＋直近N週レンジ「直近N週: lo 〜 hi」。テーマ連動色は inline・出現アニメは CSS クラスで制御。**Turbopack の CSS キャッシュ問題に注意**：globals.css にクラス追加後は `.next` 削除＋サーバー再起動でないと新ルールが読み込まれない場合あり
-- スパークライン（`Sparkline` コンポーネント）：各指標セル右上にインライン SVG（既定 58×24px）。`metrics.json` の当該指標を直近12件描画。2点未満は非表示。リッチ仕様＝① 折れ線下にグラデーション面塗り（縦方向 `<linearGradient>`：上 stopOpacity 0.3 → 下 0、id は呼び出し側 index 由来の `hg-spark-${idSeed}` で一意化＝ハイドレーション安全）／② 折れ線は trend 色の実線・strokeWidth 1.75・round cap・join／③ **最大・最小点に控えめな中空マーカー**（r1.7・fill none・stroke trend・opacity0.45。終点と重なる場合は省略＝レンジ文脈）／④ 終点に3重円（外周ハロー r4 opacity0.22 ＋ 本体 r2.4 ＋ 白ハイライト r1 opacity0.85）／⑤ 内側パディング `padX=2, padY=4` で上下端の見切れ防止。trend 色＝直近2点比較で上昇=JADE・下落=`#e05252`。座標は `Math.round` で決定的（SSR/CSR 一致）
-- スパークライン（`Sparkline` コンポーネント）：各指標セル右上にインライン SVG（既定 58×24px）。`metrics.json` の当該指標を直近12件描画。2点未満は非表示。リッチ仕様＝① 折れ線下にグラデーション面塗り（縦方向 `<linearGradient>`：上 stopOpacity 0.3 → 下 0、id は呼び出し側 index 由来の `hg-spark-${idSeed}` で一意化＝ハイドレーション安全）／② 折れ線は trend 色の実線・strokeWidth 1.75・round cap・join／③ 終点に3重円（外周ハロー r4 opacity0.22 ＋ 本体 r2.4 ＋ 白ハイライト r1 opacity0.85）／④ 内側パディング `padX=2, padY=4` で上下端の見切れ防止。trend 色＝直近2点比較で上昇=JADE・下落=`#e05252`。座標は `Math.round` で決定的（SSR/CSR 一致）
+- セルホバー（`.hg-metric-cell` / globals.css）：減彩翡翠インナーボーダー（`inset 0 0 0 1px rgba(63,115,90,0.40)`・z-index:5）＋ツールチップ（`.hg-metric-tip`）出現。ツールチップ＝セル下に絶対配置（右半分のセルは `right:0`、左半分は `left:0` でビューポート見切れ回避）、影は浅め（`0 4px 14px rgba(0,0,0,0.12)`）。内容＝指標名＋最新精密値（`metrics.json` 最新点 `displayValue（date）`、無ければ `value（as-of 時点）`）＋直近N週レンジ「直近N週: lo 〜 hi」。テーマ連動色は inline・出現アニメは CSS クラスで制御。**Turbopack の CSS キャッシュ問題に注意**：globals.css にクラス追加後は `.next` 削除＋サーバー再起動でないと新ルールが読み込まれない場合あり
+- スパークライン（`Sparkline` コンポーネント）：各指標セル下部にセル全幅のインライン SVG（既定 高さ40px・`viewBox` 論理幅200・`preserveAspectRatio="none"`）。`metrics.json` の当該指標を直近12〜16件描画。2点未満は非表示。**フラット仕様＝1本の細い折れ線（strokeWidth 1.25・round cap/join）＋終点の単一ドット（r2）のみ**（旧 7層装飾＝面塗りグラデ・グリッド線・最大最小マーカー・3重終点円は全廃）。trend 色＝直近2点比較で上昇＝`color`（＝`t.positive` 減彩翡翠）・下落＝`downColor`（＝`t.negative`）。座標は `Math.round` で決定的（SSR/CSR 一致）
 - 現在のレジームパネル（regime）：主要指標ストリップと3カラムグリッドの間に表示。ラベル「現在のレジーム」（JADE）の下に景気局面・インフレ局面・金融政策局面の3セル（各セル＝局面ラベル11px＋局面名15px・bold）。直下に総括（summary）を翡翠グリーンの左ボーダー付きで表示。`regime` がない場合は非表示
 - スタンスゲージには「中長期目線」の注記と「AI（翡翠眼）による参考値。投資助言ではありません。」を表示
-- スタンス前回比（stancePrev）：ゲージトラック上に前回値位置を中空リング（ゴーストマーカー・`t.textMuted` ボーダー）で描画し、現在のドットとの距離で変化を可視化。RISK-ON/OFF行の下に「前回比 ↑+4 前回 68」を表示。デルタ配色は増加（リスクオフ寄り）=琥珀 `#bf8a3e`・減少=JADE・横ばい=textMuted。`stancePrev` がない場合は非表示
+- スタンスゲージ：墨の細トラック（`t.border`）＋ 現在値までを `t.textSub` 単色で塗る（旧 翡翠→赤グラデは廃止）。現在値は実線ドット（`t.text`）、前回値は中空リング（ゴーストマーカー・`t.textMuted` ボーダー）で描画
+- スタンス前回比（stancePrev）：RISK-ON/OFF行の下に「前回比 ↑+4 前回 68」を表示。デルタ配色は増加（リスクオフ寄り）=減彩琥珀 `#b08a4a`・減少=`t.positive`・横ばい=`t.textMuted`。`stancePrev` がない場合は非表示
 - スタンス判断根拠（stanceRationale）：スタンス欄の前回比行と免責注記の間に「判断根拠」ラベル＋本文を翡翠グリーンの左ボーダー付きで表示。`stanceRationale` がない場合は非表示
 - シナリオ判断根拠（scenario.rationale）：各予測シナリオの確率バー直下に根拠テキスト（11px・textMuted）を表示。各シナリオの `rationale` がない場合はその行のみ非表示
 - 予測シナリオのラベル：「予測シナリオ（AI推定・参考値）」（翡翠眼を省略した短縮形）
-- 参考資産配分モデル：3カラムの直下に横幅フルで表示。ラベル「参考資産配分モデル（AI推定・参考値）」「投資助言ではありません」を両端に表示（`white-space: nowrap`）。SVGドーナツグラフ（168px）＋凡例（カラースウォッチ・ラベル・%）の横並び構成
-- 解説文（allocationNote）：frontmatterの `allocationNote` フィールドから取得。**`/push-reports` スラッシュコマンドが月次・週次・日次レポートを統合して Claude Code セッション内で自動生成し書き込む**（手動記述不要・APIキー不要）。「なぜこの配分か」2〜3文。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー（`2px solid ${JADE}66`・paddingLeft 12px）付きで表示。フォントサイズ12px・`t.textSub`色・行間1.85。`allocationNote` がない場合は非表示
+- 参考資産配分モデル：3カラムの直下に横幅フルで表示。ラベル「参考資産配分モデル（AI推定・参考値）」「投資助言ではありません」を両端に表示（`white-space: nowrap`）。**水平100%積み上げバー（高さ10px・角丸無し・グロー無し・トーナル配色）＋ 序列付き凡例リスト**（無発光の小矩形スウォッチ・ラベル・% の縦並び）の構成
+- 解説文（allocationNote）：frontmatterの `allocationNote` フィールドから取得。**`/push-reports` スラッシュコマンドが月次・週次・日次レポートを統合して Claude Code セッション内で自動生成し書き込む**（手動記述不要・APIキー不要）。「なぜこの配分か」2〜3文。ラベル行の直下・グラフの上に減彩翡翠の左ボーダー（`2px solid ${t.positive}66`・paddingLeft 12px）付きで表示。フォントサイズ12px・`t.textSub`色・行間1.85。`allocationNote` がない場合は非表示
 - `quote`/`quoteAuthor` も **`/push-reports` が自動生成**（手動記述不要）。今週の市場環境に示唆を与える格言・名言（30文字以内）と著者名を生成。AI生成の場合は `quoteAuthor: "翡翠眼"` とする
-- ドーナツグラフ：セグメント間に2.5度のギャップを設け、上端（12時方向）スタート。外径46%・内径30%（リング幅16%、存在感のある太さ）
-- ベースリング：セグメント背後に `t.borderStrong` 色 opacity 0.45 のガイドリングを描画
-- インナーリム：innerR+0.5px に `stroke="white" strokeWidth=1.5 opacity=0.1` のハイライトリングで立体感を付与
-- センター装飾：翡翠グリーンの三重グロー円（r=12 opacity=0.07 + r=7 opacity=0.14 + r=3 opacity=0.45）
-- グロー：SVG全体に `drop-shadow(0 6px 22px rgba(45,140,110,0.34))` で翡翠色の深みある光彩
-- 配色：`ALLOC_COLORS = ["#2d8c6e", "#c4963a", "#6b96b8", "#a87db5", "#74c4ad", "#a0a0a0"]`（翡翠・琥珀/金・鋼青・菫/紫水晶・浅翡翠・銀）
-- 凡例マーカー：円形ドット（9px）＋強めのグロー（`boxShadow: 0 0 8px colorCC`）
-- 凡例レイアウト：各行に `borderBottom: 1px solid t.border`・`padding: 9px 0` のセパレーター。ラベル13px `t.text` `fontWeight:500`・パーセント13px `t.textSub` `fontWeight:600` monospace
-- モバイル時：ドーナツと凡例が縦積みに変換（`flexWrap: "wrap"`）
-- **SSR Hydration 注意**：`AllocationDonut` の SVG パスは `Math.cos`/`Math.sin` を使った浮動小数点計算のため、Node.js とブラウザ V8 で結果が微妙に異なりミスマッチが起きる。`mounted` state（`useState(false)` + `useEffect`）でクライアントマウント後のみ SVG を描画し、SSR 時はプレースホルダー `<div>` を返す実装にしてあること
+- 比率チャート（`AllocationDonut` コンポーネント・名称は踏襲だが**実体は水平積み上げバー**）：① 上部に高さ10px の100%積み上げバー（`t.border` 枠・セグメント間は `t.surface` 1px 区切り・角丸無し・グロー無し）／② 下部に序列付き凡例（各行＝10px 無発光矩形スウォッチ＋ラベル13px `t.text`＋% 13px `t.textSub` monospace、行間は `borderBottom: 1px solid t.border`・`padding: 8px 0`）。drop-shadow・三重グロー円・白インナーリム・凡例ドットのハロー（`boxShadow`）は全廃
+- 配色（トーナル・序列あり）：`ALLOC_COLORS = ["#2f6f55", "#7d9a6f", "#b9a35f", "#c0894d", "#9a8579", "#bcb4a4"]`（翡翠起点の土系トーナル）
+- **SSR Hydration**：バー幅は百分率のみ（`Math.cos`/`Math.sin` 不使用）のため決定論的。旧ドーナツの `mounted` プレースホルダー回避ロジックは不要・撤去済み
 - stance/themes/scenarios が frontmatter にない場合は非表示
-- 注目セクター：資産配分モデルの直下に表示。ラベル「注目セクター（AI推定・参考値）」「投資助言ではありません」を両端に表示（`white-space: nowrap`）。AllocationDonut コンポーネントを SECTOR_COLORS パレットで再利用（168px SVGドーナツグラフ＋凡例）
+- 注目セクター：資産配分モデルの直下に表示。ラベル「注目セクター（AI推定・参考値）」「投資助言ではありません」を両端に表示（`white-space: nowrap`）。`AllocationDonut`（積み上げバー）を `SECTOR_COLORS` パレットで再利用
 - 解説文（sectorsNote）：frontmatter の `sectorsNote` フィールドから取得。`/push-reports` が自動生成。ラベル行の直下・グラフの上に翡翠グリーンの左ボーダー付きで表示（allocationNote と同スタイル）
 - sectors がない場合は注目セクターのみ非表示
 - allocation がない場合は配分モデルのみ非表示
@@ -522,12 +518,12 @@ sectors:
 - フィードバックループ：予測ログは `/push-reports`（Step 1.7）で次回のスタンス・シナリオ生成にレビューされ、**系統的バイアスのみ**を補正する（直近1〜2件の結果への過剰反応＝リーセンシーバイアスは明示的に回避。評価済み5件未満では大きな補正をしない）
 
 ### スパークライン（KeyMetrics コンポーネント内）
-- 各指標セルのラベル行右端にインライン SVG（既定 幅58px・高さ24px・`flexShrink:0`）
-- `metrics.json` の当該指標データを直近12件読み込んで折れ線を描画
+- 各指標セル下部にセル全幅のインライン SVG（既定 高さ40px・`viewBox` 論理幅200・`preserveAspectRatio="none"`）
+- `metrics.json` の当該指標データを直近12〜16件読み込んで折れ線を描画
 - 2点以上ある場合のみ表示（1点以下は非表示）
-- リッチ仕様：折れ線下にグラデーション面塗り（縦 `<linearGradient>`：上 0.3 → 下 0、id は呼び出し側 index 由来 `hg-spark-${idSeed}` で一意化）＋ trend 色実線（strokeWidth 1.75・round）＋ 最大/最小の中空マーカー（r1.7・fill none・opacity0.45・終点重複時は省略＝レンジ文脈）＋ 終点3重円（外周ハロー r4 opacity0.22 ＋ 本体 r2.4 ＋ 白ハイライト r1 opacity0.85）。内側パディング `padX=2,padY=4`
-- 直近2点の比較で上昇=JADE・下落=赤（`#e05252`）でライン・面塗り・ドットを色分け。座標は `Math.round` で決定的（SSR/CSR 一致）
-- 方向ラベル（`directionLabel`）は ▲（up）/ ▼（down）/ —（flat）。デルタチップで使用
+- **フラット仕様：1本の細い折れ線（strokeWidth 1.25・round cap/join）＋ 終点の単一ドット（r2）のみ**。旧装飾（面塗りグラデ・グリッド線・最大最小中空マーカー・終点3重円）は全廃
+- 直近2点の比較で上昇＝`color`（`t.positive` 減彩翡翠）・下落＝`downColor`（`t.negative`）でライン・終点ドットを色分け。座標は `Math.round` で決定的（SSR/CSR 一致）
+- 方向ラベル（`directionLabel`）は ▲（up）/ ▼（down）/ —（flat）。デルタチップで使用。方向色（`directionColor`）も減彩トーン（up `#4e8d6f`・down `#c25f52`・flat `#8c8576`）
 - スパークライン用データは `/push-reports` の Step 3.5 で毎週自動蓄積
 
 ### content/history/ 運用ルール
@@ -562,37 +558,39 @@ sectors:
 ### インタラクションクラス一覧（hover・transition）
 | クラス | 対象 | 効果 |
 |--------|------|------|
-| `.hg-data-card` | 市場数値ページ データグリッドセル | ホバーで翡翠色インナーボーダー（`inset box-shadow`） |
-| `.hg-treasury-row` | 債券テーブル行 | ホバーで薄い翡翠背景（`rgba(45,140,110,0.04)`） |
+| `.hg-data-card` | 市場数値ページ データグリッドセル | ホバーで減彩翡翠インナーボーダー（`inset 0 0 0 1px rgba(63,115,90,0.20)`） |
+| `.hg-treasury-row` | 債券テーブル行 | ホバーで薄い減彩翡翠背景（`rgba(63,115,90,0.05)`） |
 | `.hg-nav-link` | ヘッダーナビリンク | ホバーで翡翠色に変化 |
 | `.hg-metric-cell` | カレントビュー主要指標セル | ホバーで翡翠インナーボーダー＋ツールチップ出現 |
 | `.hg-metric-tip` | 主要指標セルのツールチップ | 既定 opacity:0、親セル hover で出現（精密値・レンジ表示） |
 
 ## デザイン定数
 ```js
-const JADE = { main: "#2d8c6e", light: "#3aaf8a", dim: "#1e6b53" }
-const ALLOC_COLORS = ["#2d8c6e", "#c4963a", "#6b96b8", "#a87db5", "#74c4ad", "#a0a0a0"]
-// 翡翠・琥珀/金・鋼青・菫/紫水晶・浅翡翠・銀
-const SECTOR_COLORS = ["#3a7bd5", "#d4a843", "#5ba88c", "#c75b5b", "#8b6baf", "#a0a0a0"]
-// 群青・黄金・翠・朱・藤紫・銀
+// アクセント翡翠はモジュールレベル定数を撤廃し t.positive（モード連動の減彩翡翠：ライト #2f6f55 / ダーク #6aa589）に一本化
+const ALLOC_COLORS = ["#2f6f55", "#7d9a6f", "#b9a35f", "#c0894d", "#9a8579", "#bcb4a4"]
+// 翡翠起点の土系トーナル（序列あり）
+const SECTOR_COLORS = ["#3c5e74", "#6f8a86", "#b9a35f", "#b06a55", "#8a7d8f", "#bcb4a4"]
+// 鋼青起点のトーナル
+// 方向色（lib/metrics.ts directionColor）：up #4e8d6f / down #c25f52 / flat #8c8576（減彩）
+// スタンス増加デルタ＝減彩琥珀 #b08a4a
 ```
 
-## タイポグラフィ体系（3書体）
-コンセプト：「エディトリアル・マクロ・ターミナル × 日本的精度」。役割で書体を分ける。
+## タイポグラフィ体系（4書体）
+コンセプト：「洗練された金融エディトリアル × 日本的精度」。役割で書体を分ける。
 | 役割 | 書体 | 用途 |
 |------|------|------|
-| 編集の声（明朝） | `var(--font-serif-jp)` = Shippori Mincho（OSフォールバック付き） | ロゴ「翡翠眼」・各ページのマストヘッド/タイトル・格言（プルクオート/エピグラフ）・レポート本文の h1/h2・一覧の月次/週次/日次見出し |
+| 編集の声（和文明朝） | `var(--font-serif-jp)` = Shippori Mincho（OSフォールバック付き） | ロゴ「翡翠眼」・各ページのマストヘッド/タイトル・格言（プルクオート/エピグラフ）・レポート本文の h1/h2・一覧の月次/週次/日次見出し |
+| 編集の声（Latin明朝） | `var(--font-serif-en)` = Newsreader（OSフォールバック付き） | 英語見出し・英語ラベル（市場ページの `EQUITY INDICES` 等のサブタイトルはイタリック）・数字見出し。紙面感の強化用 |
 | UI（サンセリフ） | `var(--font-geist-sans)` | ナビ・ラベル・補助テキスト |
 | データ（等幅） | `monospace` | 数値（株価・利回り・%・指標値）。既存どおり変更しない |
 
-- Shippori Mincho は `app/layout.tsx` の `<head>` で Google Fonts `<link>` 読込（和文グリフは unicode-range で必要分のみ取得）。`--font-serif-jp` は `globals.css` で定義
-- **明朝は「編集的な見出し・引用」専用**。小さなUIラベルやデータには使わない（明朝の細部が潰れ可読性が落ちるため）
+- Shippori Mincho・Newsreader は `app/layout.tsx` の `<head>` で Google Fonts `<link>`（1リンクに統合）で読込。`--font-serif-jp` / `--font-serif-en` は `globals.css` で定義
+- **明朝（和文・Latin）は「編集的な見出し・引用」専用**。小さなUIラベルやデータには使わない（細部が潰れ可読性が落ちるため）
 - 格言は斜体ではなく明朝アップライト＋装飾引用符（`.hg-quote-mark`）。和文に合成斜体は不自然なため
-- アクセントバーは単色から翡翠グラデーション（`linear-gradient(positive, JADE)`）＋微グロー（`box-shadow`）に統一
+- アクセントバーは**減彩翡翠の単色実線**（`t.positive`）。旧仕様のグラデーション（`linear-gradient`）＋グロー（`box-shadow`）は全廃
 
 ## 背景の空気感・モーション
-- 各ページのルートに翡翠グリーンの微細な放射グラデーション（`backgroundImage`）を重ねて奥行きを付与。**`backgroundColor` と `backgroundImage` を分けて指定**すること（`background` ショートハンドと `backgroundAttachment` 等を混在させると React の再レンダリング警告が出る）
-- ダーク：上部中央＋右上の翡翠グロー（opacity 0.10/0.06）。ライト：より淡く（0.07/0.035）
+- **各ページの背景はフラットな単色紙面**（`backgroundColor: t.bg` のみ）。旧仕様の翡翠グリーン放射グラデーション（`backgroundImage`）・マストヘッドのグラデ背景は全廃（AI臭の主因のため）
 - ページロード演出：`globals.css` の `@keyframes hg-fade-up` / `.hg-reveal`（段階表示は inline `animationDelay` でずらす）。`@media (prefers-reduced-motion: reduce)` で無効化
 
 ## メタデータ（app/layout.tsx）

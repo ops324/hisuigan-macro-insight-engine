@@ -4,8 +4,6 @@ import { useState } from "react";
 import { ReportMeta } from "@/lib/reports";
 import { Theme } from "@/lib/theme";
 
-const JADE = "#2d8c6e";
-
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return dateStr;
@@ -22,7 +20,7 @@ export function ReportCard({ report, t }: { report: ReportMeta; t: Theme }) {
         padding: "20px 24px",
         background: t.surface,
         textDecoration: "none",
-        borderLeft: `2px solid ${hovered ? JADE : "transparent"}`,
+        borderLeft: `2px solid ${hovered ? t.positive : "transparent"}`,
         transition: "border-color 0.15s",
       }}
       onMouseEnter={() => setHovered(true)}

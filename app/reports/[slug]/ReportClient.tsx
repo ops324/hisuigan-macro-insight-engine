@@ -6,8 +6,6 @@ import remarkGfm from "remark-gfm";
 import { Report, ReportType } from "@/lib/reports";
 import { useTheme } from "@/lib/useTheme";
 
-const JADE = "#2d8c6e";
-
 const TYPE_LABELS: Record<ReportType, string> = {
   monthly: "月次",
   weekly:  "週次",
@@ -15,9 +13,9 @@ const TYPE_LABELS: Record<ReportType, string> = {
 };
 
 const TYPE_SUBTITLES: Record<ReportType, string> = {
-  monthly: "PORTFOLIO HEALTH CHECK",
-  weekly:  "ENVIRONMENT LOG",
-  daily:   "CONSCIOUSNESS LOG",
+  monthly: "中長期の俯瞰",
+  weekly:  "市場環境の記録",
+  daily:   "日々の動向",
 };
 
 function formatDate(dateStr: string): string {
@@ -64,17 +62,13 @@ export default function ReportClient({ report }: { report: Report }) {
 
   const headings = extractHeadings(report.content);
 
-  const pageBg = mode === "dark"
-    ? `radial-gradient(125% 60% at 50% -8%, rgba(58,175,138,0.09), rgba(58,175,138,0.025) 32%, transparent 60%)`
-    : `radial-gradient(125% 60% at 50% -10%, rgba(45,140,110,0.06), transparent 58%)`;
-
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: t.bg, backgroundImage: pageBg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: t.bg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
       {/* ヘッダー */}
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 14, height: 56 }}>
-          <div style={{ width: 3, height: 22, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 10px ${JADE}55`, flexShrink: 0 }} />
-          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.14em", color: t.text, textDecoration: "none" }}>
+          <div style={{ width: 3, height: 22, background: t.positive, flexShrink: 0 }} />
+          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
             翡翠眼
           </Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
@@ -102,9 +96,9 @@ export default function ReportClient({ report }: { report: Report }) {
             <span style={{
               display: "inline-block",
               padding: "2px 10px",
-              background: `${JADE}18`,
-              border: `1px solid ${JADE}44`,
-              color: JADE,
+              background: `${t.positive}18`,
+              border: `1px solid ${t.positive}44`,
+              color: t.positive,
               fontSize: 10,
               letterSpacing: "0.12em",
               fontWeight: 700,
@@ -130,7 +124,7 @@ export default function ReportClient({ report }: { report: Report }) {
         {/* 格言 */}
         {report.quote && (
           <div style={{
-            borderLeft: `2px solid ${JADE}66`,
+            borderLeft: `2px solid ${t.positive}66`,
             paddingLeft: 20,
             marginBottom: 48,
             opacity: 0.75,
@@ -155,8 +149,8 @@ export default function ReportClient({ report }: { report: Report }) {
             marginBottom: 48,
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-              <div style={{ width: 2, height: 12, background: JADE, flexShrink: 0 }} />
-              <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.85 }}>目次</span>
+              <div style={{ width: 2, height: 12, background: t.positive, flexShrink: 0 }} />
+              <span style={{ fontSize: 10, color: t.positive, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.85 }}>目次</span>
             </div>
             <ol style={{ margin: 0, padding: 0, listStyle: "none" }}>
               {headings.map((h, i) => (
@@ -225,7 +219,7 @@ export default function ReportClient({ report }: { report: Report }) {
               ),
               blockquote: ({ children }) => (
                 <blockquote style={{
-                  borderLeft: `3px solid ${JADE}`,
+                  borderLeft: `3px solid ${t.positive}`,
                   paddingLeft: 16,
                   margin: "24px 0",
                   color: t.textMuted,
@@ -306,7 +300,7 @@ export default function ReportClient({ report }: { report: Report }) {
 
         {/* フッター戻りリンク */}
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: `1px solid ${t.border}` }}>
-          <Link href="/reports" style={{ fontSize: 13, color: JADE, textDecoration: "none", letterSpacing: "0.04em" }}>
+          <Link href="/reports" style={{ fontSize: 13, color: t.positive, textDecoration: "none", letterSpacing: "0.04em" }}>
             ← レポート一覧に戻る
           </Link>
         </div>

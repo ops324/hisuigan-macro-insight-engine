@@ -1,7 +1,8 @@
 // カレントビュー主要指標の表示ヘルパー。ReportsClient から利用。純粋関数はテスト対象。
 
+// 彩度を落とした方向色（ネオン廃止・紙面に馴染む。両テーマで判読可）
 export function directionColor(d: string): string {
-  return d === "up" ? "#3aaf8a" : d === "down" ? "#e05252" : "#888888";
+  return d === "up" ? "#4e8d6f" : d === "down" ? "#c25f52" : "#8c8576";
 }
 
 export function directionLabel(d: string): string {

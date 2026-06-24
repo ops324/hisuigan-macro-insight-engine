@@ -3,13 +3,12 @@ import Link from "next/link";
 import { PredictionRecord } from "@/lib/history";
 import { useTheme } from "@/lib/useTheme";
 
-const JADE = "#2d8c6e";
-
 function dirLabel(d: string) {
   return d === "up" ? "↑ 上昇" : d === "down" ? "↓ 下落" : "→ 横ばい";
 }
+// 彩度を落とした方向色（ネオン廃止・lib/metrics の directionColor と統一）
 function dirColor(d: string) {
-  return d === "up" ? "#3aaf8a" : d === "down" ? "#e05252" : "#888";
+  return d === "up" ? "#4e8d6f" : d === "down" ? "#c25f52" : "#8c8576";
 }
 
 interface Props {
@@ -23,17 +22,13 @@ export default function TrackRecordClient({ predictions }: Props) {
   const resolved = sorted.filter((p) => p.outcome !== null);
   const hitCount = resolved.filter((p) => p.outcome!.match).length;
 
-  const pageBg = mode === "dark"
-    ? `radial-gradient(125% 60% at 50% -8%, rgba(58,175,138,0.09), rgba(58,175,138,0.025) 32%, transparent 60%)`
-    : `radial-gradient(125% 60% at 50% -10%, rgba(45,140,110,0.06), transparent 58%)`;
-
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: t.bg, backgroundImage: pageBg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: t.bg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
       {/* ヘッダー */}
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 14, height: 56 }}>
-          <div style={{ width: 3, height: 22, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 10px ${JADE}55`, flexShrink: 0 }} />
-          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.14em", color: t.text, textDecoration: "none" }}>翡翠眼</Link>
+          <div style={{ width: 3, height: 22, background: t.positive, flexShrink: 0 }} />
+          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>翡翠眼</Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
           <Link href="/reports" style={{ fontSize: 14, color: t.textSub, letterSpacing: "0.05em", textDecoration: "none" }}>レポート</Link>
           <span style={{ color: t.textMuted, fontSize: 14 }}>/</span>
@@ -51,8 +46,8 @@ export default function TrackRecordClient({ predictions }: Props) {
       <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "28px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 8 }}>
-            <div style={{ width: 4, height: 34, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 14px ${JADE}55`, flexShrink: 0 }} />
-            <h1 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 32, fontWeight: 700, letterSpacing: "0.1em", margin: 0, color: t.text, lineHeight: 1 }}>予測ログ</h1>
+            <div style={{ width: 3, height: 34, background: t.positive, flexShrink: 0 }} />
+            <h1 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 32, fontWeight: 700, letterSpacing: "0.05em", margin: 0, color: t.text, lineHeight: 1 }}>予測ログ</h1>
           </div>
           <p style={{ fontSize: 12, color: t.textMuted, margin: 0, letterSpacing: "0.04em", paddingLeft: 12 }}>
             週次レポートのベースシナリオ予測と実績の事実並置
@@ -75,7 +70,7 @@ export default function TrackRecordClient({ predictions }: Props) {
             ].map((item, i) => (
               <div key={i} style={{ flex: 1, background: t.surface, padding: "16px 20px" }}>
                 <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.06em", marginBottom: 6 }}>{item.label}</div>
-                <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "monospace", color: i === 3 ? JADE : t.text }}>{item.value}</div>
+                <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "monospace", color: i === 3 ? t.positive : t.text }}>{item.value}</div>
               </div>
             ))}
           </div>
@@ -103,7 +98,7 @@ export default function TrackRecordClient({ predictions }: Props) {
                     <div style={{ fontSize: 12, fontWeight: 600, color: t.text, fontFamily: "monospace", marginBottom: 4 }}>{p.weekSlug}</div>
                     <div style={{ fontSize: 10, color: t.textMuted }}>{p.date}</div>
                     <div style={{ marginTop: 8, fontSize: 10, color: t.textMuted }}>スタンス</div>
-                    <div style={{ fontSize: 14, fontWeight: 700, fontFamily: "monospace", color: JADE }}>{p.stance}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, fontFamily: "monospace", color: t.positive }}>{p.stance}</div>
                     <div style={{ fontSize: 10, color: t.textMuted }}>{p.stanceLabel}</div>
                   </div>
 
@@ -155,8 +150,8 @@ export default function TrackRecordClient({ predictions }: Props) {
                           fontSize: 11,
                           fontWeight: 700,
                           letterSpacing: "0.08em",
-                          border: `1px solid ${oc.match ? JADE : "#e05252"}`,
-                          color: oc.match ? JADE : "#e05252",
+                          border: `1px solid ${oc.match ? t.positive : t.negative}`,
+                          color: oc.match ? t.positive : t.negative,
                           marginBottom: 8,
                         }}>
                           {oc.match ? "方向一致" : "方向不一致"}
@@ -194,7 +189,7 @@ export default function TrackRecordClient({ predictions }: Props) {
         </p>
 
         <div style={{ marginTop: 24 }}>
-          <Link href="/reports" style={{ fontSize: 13, color: JADE, textDecoration: "none", letterSpacing: "0.04em" }}>
+          <Link href="/reports" style={{ fontSize: 13, color: t.positive, textDecoration: "none", letterSpacing: "0.04em" }}>
             ← レポート一覧に戻る
           </Link>
         </div>

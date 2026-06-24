@@ -4,8 +4,6 @@ import { Theme } from "@/lib/theme";
 import { useTheme } from "@/lib/useTheme";
 import { StockItem, ForexItem, TreasuryItem, CommodityItem } from "@/lib/market-data";
 
-const JADE = { main: "#2d8c6e", light: "#3aaf8a", dim: "#1e6b53" };
-
 export interface SectionState<T> {
   data: T[] | null;
   error: string | null;
@@ -31,13 +29,13 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
   const changeColor = (val: string) => (isPositive(val) ? t.positive : t.negative);
 
   return (
-    <div style={{ backgroundColor: t.bg, backgroundImage: mode === "dark" ? "radial-gradient(125% 60% at 50% -8%, rgba(58,175,138,0.09), rgba(58,175,138,0.025) 32%, transparent 60%)" : "radial-gradient(125% 60% at 50% -10%, rgba(45,140,110,0.06), transparent 58%)", color: t.text, minHeight: "100vh", fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif" }}>
+    <div style={{ backgroundColor: t.bg, color: t.text, minHeight: "100vh", fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif" }}>
       {/* Header */}
       <header style={{ backgroundColor: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}`, position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{ width: 3, height: 22, background: `linear-gradient(${JADE.light}, ${JADE.main})`, boxShadow: `0 0 10px ${JADE.main}55`, flexShrink: 0 }} />
-            <span style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.14em", color: t.text }}>翡翠眼</span>
+            <div style={{ width: 3, height: 22, background: t.positive, flexShrink: 0 }} />
+            <span style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.08em", color: t.text }}>翡翠眼</span>
           </div>
           <nav style={{ display: "flex", alignItems: "center", gap: 0 }}>
             <div className="hg-nav-sections" style={{ display: "flex" }}>
@@ -47,7 +45,7 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
                 </a>
               ))}
             </div>
-            <Link href="/reports" className="hg-nav-link" style={{ fontSize: 12, color: JADE.light, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}` }}>
+            <Link href="/reports" className="hg-nav-link" style={{ fontSize: 12, color: t.positive, padding: "8px 14px", textDecoration: "none", letterSpacing: "0.05em", borderLeft: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}` }}>
               レポート
             </Link>
             <button
@@ -62,10 +60,10 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
       </header>
 
       {/* Status Bar */}
-      <div style={{ backgroundColor: mode === "dark" ? "#0c1210" : "#f2f8f5", borderBottom: `1px solid ${JADE.main}28` }}>
+      <div style={{ backgroundColor: t.surfaceAlt, borderBottom: `1px solid ${t.border}` }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "5px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span className="hg-status-text" style={{ fontSize: 11, color: mode === "dark" ? `${JADE.light}66` : t.textMuted, letterSpacing: "0.06em" }}>LIVE DATA — 15〜20分遅延 | 投資判断の根拠とする場合は一次情報をご確認ください</span>
-          <span style={{ fontSize: 11, color: JADE.main, fontFamily: "monospace" }}>最終更新：{lastUpdated}</span>
+          <span className="hg-status-text" style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.06em" }}>LIVE DATA — 15〜20分遅延 | 投資判断の根拠とする場合は一次情報をご確認ください</span>
+          <span style={{ fontSize: 11, color: t.textSub, fontFamily: "monospace" }}>最終更新：{lastUpdated}</span>
         </div>
       </div>
 
@@ -161,8 +159,8 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
           <div className="hg-footer-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <div style={{ width: 3, height: 16, background: `linear-gradient(${JADE.light}, ${JADE.main})`, flexShrink: 0 }} />
-                <span style={{ fontFamily: "var(--font-serif-jp)", fontSize: 16, fontWeight: 700, color: t.text, letterSpacing: "0.12em" }}>翡翠眼</span>
+                <div style={{ width: 3, height: 16, background: t.positive, flexShrink: 0 }} />
+                <span style={{ fontFamily: "var(--font-serif-jp)", fontSize: 16, fontWeight: 700, color: t.text, letterSpacing: "0.08em" }}>翡翠眼</span>
               </div>
               <p style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.8, maxWidth: 480 }}>
                 本サイトに掲載されている情報は、投資判断の参考を目的としたものであり、投資を勧誘するものではありません。
@@ -225,9 +223,9 @@ function Section({ id, title, subtitle, note, t, children }: {
   return (
     <section id={id} style={{ marginBottom: 32 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, paddingBottom: 10, borderBottom: `1px solid ${t.border}` }}>
-        <div style={{ width: 2, height: 14, backgroundColor: "#2d8c6e", flexShrink: 0 }} />
+        <div style={{ width: 2, height: 14, backgroundColor: t.positive, flexShrink: 0 }} />
         <h2 style={{ fontSize: 15, fontWeight: 700, color: t.text, margin: 0, letterSpacing: "0.04em" }}>{title}</h2>
-        <span style={{ fontSize: 10, color: "#2d8c6e", letterSpacing: "0.14em", opacity: 0.7 }}>{subtitle}</span>
+        <span style={{ fontFamily: "var(--font-serif-en)", fontStyle: "italic", fontSize: 12, color: t.textMuted, letterSpacing: "0.04em" }}>{subtitle}</span>
         {note && (
           <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", marginLeft: "auto" }}>※{note}</span>
         )}

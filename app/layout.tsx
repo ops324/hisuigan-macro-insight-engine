@@ -41,8 +41,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* 和文セリフ（明朝）: 翡翠眼ロゴ・マストヘッド・格言などエディトリアルな見出しに使用 */}
+        {/* Latin セリフ（Newsreader）: 英語見出し・ラベル・数字見出しの紙面感強化 */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap"
           rel="stylesheet"
         />
       </head>

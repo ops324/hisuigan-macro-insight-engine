@@ -1,5 +1,4 @@
 "use client";
-import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ReportMeta, ReportType, ScenarioItem, AllocationItem, KeyMetricItem, RegimeInfo } from "@/lib/reports";
 import { MetricsHistory, MetricPoint } from "@/lib/history";
@@ -8,103 +7,65 @@ import { useTheme } from "@/lib/useTheme";
 import { directionColor, directionLabel, changeDisplay, metricGroup } from "@/lib/metrics";
 import { ReportCard } from "./ReportCard";
 
-const JADE = "#2d8c6e";
-
 const TYPE_LABELS: Record<ReportType, string> = {
   monthly: "月次",
   weekly:  "週次",
   daily:   "日次",
 };
 
+// 抑制トーンの和文サブタイトル（旧 CONSCIOUSNESS LOG 等の不自然な英語を置換）
 const TYPE_SUBTITLES: Record<ReportType, string> = {
-  monthly: "PORTFOLIO HEALTH CHECK",
-  weekly:  "ENVIRONMENT LOG",
-  daily:   "CONSCIOUSNESS LOG",
+  monthly: "中長期の俯瞰",
+  weekly:  "市場環境の記録",
+  daily:   "日々の動向",
 };
 
-// 翡翠・琥珀・鋼青・菫・浅翡翠・銀 — 上品で運気を高める配色
-const ALLOC_COLORS = ["#2d8c6e", "#c4963a", "#6b96b8", "#a87db5", "#74c4ad", "#a0a0a0"];
-// 群青・黄金・翠・朱・藤紫・銀 — セクター用配色
-const SECTOR_COLORS = ["#3a7bd5", "#d4a843", "#5ba88c", "#c75b5b", "#8b6baf", "#a0a0a0"];
+// 翡翠を起点とした序列のある土系トーナル（虹色を廃しエディトリアルに）
+const ALLOC_COLORS = ["#2f6f55", "#7d9a6f", "#b9a35f", "#c0894d", "#9a8579", "#bcb4a4"];
+// セクター用トーナル（鋼青起点）
+const SECTOR_COLORS = ["#3c5e74", "#6f8a86", "#b9a35f", "#b06a55", "#8a7d8f", "#bcb4a4"];
 
-function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
-  const rad = ((angleDeg - 90) * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+// テーマ文字列先頭の信号絵文字を無発光スウォッチへ変換（frontmatter は不変・表示層のみ）
+const THEME_SWATCH: Record<string, string> = {
+  "🔴": "#b5544a", "🟠": "#c0894d", "🟡": "#b9a35f",
+  "🟢": "#5f8c70", "🔵": "#5b7f9c", "🟣": "#8a7d8f",
+};
+function parseTheme(theme: string): { color: string | null; text: string } {
+  const trimmed = theme.trimStart();
+  const first = [...trimmed][0];
+  if (first && THEME_SWATCH[first]) {
+    return { color: THEME_SWATCH[first], text: trimmed.slice(first.length).trimStart() };
+  }
+  return { color: null, text: theme };
 }
 
-function donutSegmentPath(cx: number, cy: number, outerR: number, innerR: number, startDeg: number, endDeg: number) {
-  const o1 = polarToCartesian(cx, cy, outerR, startDeg);
-  const o2 = polarToCartesian(cx, cy, outerR, endDeg);
-  const i2 = polarToCartesian(cx, cy, innerR, endDeg);
-  const i1 = polarToCartesian(cx, cy, innerR, startDeg);
-  const large = endDeg - startDeg > 180 ? 1 : 0;
-  return `M ${o1.x} ${o1.y} A ${outerR} ${outerR} 0 ${large} 1 ${o2.x} ${o2.y} L ${i2.x} ${i2.y} A ${innerR} ${innerR} 0 ${large} 0 ${i1.x} ${i1.y} Z`;
-}
-
+// フラットな水平100%積み上げバー＋序列付き凡例（旧ドーナツの drop-shadow / グロー円 / ハロー凡例を全廃）
 function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: AllocationItem[]; t: typeof themeMap["dark"] | typeof themeMap["light"]; colors?: string[] }) {
-  // SSR/ハイドレーション時は false、クライアントマウント後に true（Math.cos/sin 由来の浮動小数ミスマッチ回避）
-  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
-  const size = 168;
-  const cx = size / 2;
-  const cy = size / 2;
-  const outerR = size * 0.46;
-  const innerR = size * 0.30; // リング幅16%：より存在感のある太さ
-  const gap = 2.5;
-  const offsets = items.reduce<number[]>((acc, item) => {
-    acc.push((acc[acc.length - 1] ?? 0) + item.percent);
-    return acc;
-  }, []);
-  const segments = items.map((item, i) => {
-    const cumStart = offsets[i] - item.percent;
-    const start = (cumStart / 100) * 360 + gap / 2;
-    const end = (offsets[i] / 100) * 360 - gap / 2;
-    return { item, start, end, color: colors[i % colors.length] };
-  });
-  const donutSvg = mounted ? (
-    <svg
-      width={size}
-      height={size}
-      aria-hidden="true"
-      style={{ flexShrink: 0, filter: "drop-shadow(0 6px 22px rgba(45,140,110,0.34))" }}
-    >
-      <circle
-        cx={cx} cy={cy}
-        r={(outerR + innerR) / 2}
-        fill="none"
-        stroke={t.borderStrong}
-        strokeWidth={outerR - innerR}
-        opacity={0.45}
-      />
-      {segments.map((seg, i) => (
-        <path key={i} d={donutSegmentPath(cx, cy, outerR, innerR, seg.start, seg.end)} fill={seg.color} />
-      ))}
-      <circle cx={cx} cy={cy} r={innerR + 0.5} fill="none" stroke="white" strokeWidth={1.5} opacity={0.1} />
-      <circle cx={cx} cy={cy} r={12} fill={JADE} opacity={0.07} />
-      <circle cx={cx} cy={cy} r={7}  fill={JADE} opacity={0.14} />
-      <circle cx={cx} cy={cy} r={3}  fill={JADE} opacity={0.45} />
-    </svg>
-  ) : (
-    <div style={{ width: size, height: size, flexShrink: 0 }} />
-  );
+  const total = items.reduce((sum, it) => sum + it.percent, 0) || 100;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 36, flexWrap: "wrap" }}>
-      {donutSvg}
-      <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 200 }}>
+    <div>
+      {/* 比率バー（角丸無し・グロー無し・トーナル） */}
+      <div style={{ display: "flex", width: "100%", height: 10, border: `1px solid ${t.border}`, overflow: "hidden", marginBottom: 18 }}>
         {items.map((item, i) => (
           <div key={i} style={{
-            display: "flex", alignItems: "center", gap: 10,
-            padding: "9px 0",
+            width: `${(item.percent / total) * 100}%`,
+            background: colors[i % colors.length],
+            borderRight: i < items.length - 1 ? `1px solid ${t.surface}` : "none",
+          }} />
+        ))}
+      </div>
+      {/* 序列付き凡例 */}
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {items.map((item, i) => (
+          <div key={i} style={{
+            display: "flex", alignItems: "center", gap: 11,
+            padding: "8px 0",
             borderBottom: i < items.length - 1 ? `1px solid ${t.border}` : "none",
           }}>
-            <div style={{
-              width: 9, height: 9,
-              borderRadius: "50%",
-              background: colors[i % colors.length],
-              flexShrink: 0,
-              boxShadow: `0 0 8px ${colors[i % colors.length]}cc`,
-            }} />
-            <span style={{ fontSize: 13, color: t.text, flex: 1, letterSpacing: "0.02em", fontWeight: 500 }}>{item.label}</span>
-            <span style={{ fontSize: 13, color: t.textSub, fontFamily: "monospace", fontWeight: 600, letterSpacing: "0.04em" }}>{item.percent}%</span>
+            {/* 無発光の小矩形スウォッチ */}
+            <div style={{ width: 10, height: 10, background: colors[i % colors.length], flexShrink: 0 }} />
+            <span style={{ fontSize: 13, color: t.text, flex: 1, letterSpacing: "0.01em", fontWeight: 500 }}>{item.label}</span>
+            <span style={{ fontSize: 13, color: t.textSub, fontFamily: "monospace", fontWeight: 600, letterSpacing: "0.02em" }}>{item.percent}%</span>
           </div>
         ))}
       </div>
@@ -114,10 +75,11 @@ function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Allocatio
 
 const SPARK_VW = 200; // SVG viewBox 論理幅（preserveAspectRatio="none" で実幅にストレッチ）
 
-function Sparkline({ points, color, idSeed, height = 52 }: {
+// エディトリアル・スパークライン：1本の細線＋終点の単一ドットのみ（旧 7層装飾を全廃）
+function Sparkline({ points, color, downColor, height = 40 }: {
   points: MetricPoint[];
   color: string;
-  idSeed: number | string;
+  downColor: string;
   height?: number;
 }) {
   if (points.length < 2) return null;
@@ -125,7 +87,7 @@ function Sparkline({ points, color, idSeed, height = 52 }: {
   const min = Math.min(...vals);
   const max = Math.max(...vals);
   const range = max - min || 1;
-  const padX = 4, padY = 8;
+  const padX = 4, padY = 7;
   const innerW = SPARK_VW - padX * 2;
   const innerH = height - padY * 2;
   const xStep = innerW / (points.length - 1);
@@ -134,15 +96,7 @@ function Sparkline({ points, color, idSeed, height = 52 }: {
   const linePts = points.map((p, i) => `${toX(i)},${toY(p.numericValue)}`);
   const lastIdx = points.length - 1;
   const lx = toX(lastIdx), ly = toY(vals[lastIdx]);
-  const trend = vals[lastIdx] >= vals[vals.length - 2] ? color : "#e05252";
-  const gradId = `hg-spark-${idSeed}`;
-  const areaPath = `M ${linePts.join(" L ")} L ${lx},${height} L ${toX(0)},${height} Z`;
-  // 水平グリッドライン（25%・50%・75%）
-  const gridLevels = [0.25, 0.5, 0.75];
-  // 最大・最小点に中空マーカー（終点と重なる場合は省く）
-  const minIdx = vals.indexOf(min);
-  const maxIdx = vals.indexOf(max);
-  const ghosts = [minIdx, maxIdx].filter((idx, k, arr) => idx !== lastIdx && arr.indexOf(idx) === k);
+  const trend = vals[lastIdx] >= vals[vals.length - 2] ? color : downColor;
   return (
     <svg
       width="100%"
@@ -153,45 +107,12 @@ function Sparkline({ points, color, idSeed, height = 52 }: {
       aria-label={`直近${points.length}期間の推移（${vals[lastIdx] >= vals[vals.length - 2] ? "上昇" : "下落"}傾向）`}
       style={{ display: "block" }}
     >
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={trend} stopOpacity={0.38} />
-          <stop offset="70%" stopColor={trend} stopOpacity={0.08} />
-          <stop offset="100%" stopColor={trend} stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      {/* グリッドライン */}
-      {gridLevels.map((f) => {
-        const gy = toY(min + range * f);
-        return (
-          <line key={f}
-            x1={padX} y1={gy} x2={SPARK_VW - padX} y2={gy}
-            stroke={trend}
-            strokeOpacity={f === 0.5 ? 0.22 : 0.1}
-            strokeWidth={0.6}
-            strokeDasharray={f === 0.5 ? "4 4" : undefined}
-          />
-        );
-      })}
-      {/* エリア塗り */}
-      <path d={areaPath} fill={`url(#${gradId})`} />
-      {/* 折れ線 */}
       <polyline
         points={linePts.join(" ")} fill="none"
-        stroke={trend} strokeWidth={1.7}
+        stroke={trend} strokeWidth={1.25}
         strokeLinejoin="round" strokeLinecap="round"
       />
-      {/* 最高値・最安値マーカー */}
-      {ghosts.map((idx) => (
-        <circle key={idx}
-          cx={toX(idx)} cy={toY(vals[idx])}
-          r={2.4} fill="none" stroke={trend} strokeWidth={1.2} opacity={0.55}
-        />
-      ))}
-      {/* 終点：外周ハロー + 本体 + 白ハイライト */}
-      <circle cx={lx} cy={ly} r={5.5} fill={trend} opacity={0.18} />
-      <circle cx={lx} cy={ly} r={3} fill={trend} />
-      <circle cx={lx} cy={ly} r={1.3} fill="#fff" opacity={0.9} />
+      <circle cx={lx} cy={ly} r={2} fill={trend} />
     </svg>
   );
 }
@@ -206,7 +127,7 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
   return (
     <div style={{ marginBottom: 20 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
-        <span style={{ fontSize: 11, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>主要指標</span>
+        <span style={{ fontSize: 11, color: t.positive, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>主要指標</span>
         <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap" }}>前週比 · {asOf} 時点</span>
       </div>
       <div
@@ -238,7 +159,7 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
               {/* 資産クラス eyebrow */}
               <div style={{ minHeight: 13, marginBottom: 5 }}>
                 {isGroupStart && (
-                  <span style={{ fontSize: 9, color: JADE, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.7, textTransform: "uppercase" }}>{groups[i]}</span>
+                  <span style={{ fontSize: 9, color: t.positive, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.7, textTransform: "uppercase" }}>{groups[i]}</span>
                 )}
               </div>
               {/* 指標名（左）＋ 価格・変化（右） */}
@@ -266,7 +187,7 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
               {/* スパークライン — セル全幅・下部フラッシュ */}
               {hasChart && (
                 <div style={{ marginLeft: -15, marginRight: -15 }}>
-                  <Sparkline points={hist!} color={JADE} idSeed={i} />
+                  <Sparkline points={hist!} color={t.positive} downColor={t.negative} />
                 </div>
               )}
               {/* ホバーツールチップ */}
@@ -277,7 +198,7 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
                   ...(tipRight ? { right: 0 } : { left: 0 }),
                   background: t.headerBg, border: `1px solid ${t.borderStrong}`,
                   padding: "8px 10px", minWidth: 150, whiteSpace: "nowrap",
-                  boxShadow: "0 10px 28px rgba(0,0,0,0.28)",
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
                 }}
               >
                 <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em", marginBottom: 3 }}>{m.label}</div>
@@ -301,7 +222,7 @@ function RegimePanel({ regime, t }: { regime: RegimeInfo; t: typeof themeMap["da
   return (
     <div style={{ marginBottom: 20 }}>
       <div style={{ marginBottom: 8 }}>
-        <span style={{ fontSize: 11, color: JADE, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>現在のレジーム</span>
+        <span style={{ fontSize: 11, color: t.positive, letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85, whiteSpace: "nowrap" }}>現在のレジーム</span>
       </div>
       <div
         className="hg-cv-regime"
@@ -315,7 +236,7 @@ function RegimePanel({ regime, t }: { regime: RegimeInfo; t: typeof themeMap["da
         ))}
       </div>
       {regime.summary && (
-        <p style={{ fontSize: 12, color: t.textSub, margin: "10px 0 0", lineHeight: 1.8, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}66`, paddingLeft: 12 }}>
+        <p style={{ fontSize: 12, color: t.textSub, margin: "10px 0 0", lineHeight: 1.8, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }}>
           {regime.summary}
         </p>
       )}
@@ -328,7 +249,7 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
   if (stance == null && !themes && !scenarios) return null;
 
   const delta = stance != null && stancePrev != null ? stance - stancePrev : null;
-  const deltaColor = delta == null ? t.textMuted : delta > 0 ? "#bf8a3e" : delta < 0 ? JADE : t.textMuted;
+  const deltaColor = delta == null ? t.textMuted : delta > 0 ? "#b08a4a" : delta < 0 ? t.positive : t.textMuted;
   const deltaArrow = delta == null ? "" : delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
   const deltaText = delta == null ? "" : delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : "±0";
 
@@ -336,14 +257,14 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
     <div style={{ marginBottom: 48 }}>
       <div className="hg-cv-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 11, color: JADE, fontWeight: 700, letterSpacing: "0.12em", whiteSpace: "nowrap" }}>カレントビュー</span>
+          <span style={{ fontSize: 11, color: t.positive, fontWeight: 700, letterSpacing: "0.12em", whiteSpace: "nowrap" }}>カレントビュー</span>
           <span style={{ fontSize: 10, color: t.textSub, letterSpacing: "0.06em", whiteSpace: "nowrap" }}>月次・週次・日次統合 · 中長期視点</span>
           <span className="hg-cv-header-sub" style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 11, color: t.textMuted }}>·</span>
             <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.04em" }}>{report.title}</span>
           </span>
         </div>
-        <Link href={`/reports/${report.slug}`} style={{ fontSize: 11, color: JADE, textDecoration: "none", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>
+        <Link href={`/reports/${report.slug}`} style={{ fontSize: 11, color: t.positive, textDecoration: "none", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>
           詳細レポートを読む →
         </Link>
       </div>
@@ -358,11 +279,11 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
         {/* スタンス */}
         {stance != null && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", marginBottom: 2, opacity: 0.85 }}>スタンス</div>
+            <div style={{ fontSize: 10, color: t.positive, letterSpacing: "0.12em", marginBottom: 2, opacity: 0.85 }}>スタンス</div>
             <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.06em", marginBottom: 14 }}>中長期目線</div>
             <div style={{ fontSize: 20, fontWeight: 700, color: t.text, marginBottom: 18, letterSpacing: "-0.01em" }}>{stanceLabel ?? "—"}</div>
-            <div style={{ position: "relative", height: 3, background: t.borderStrong, marginBottom: 8 }}>
-              <div style={{ position: "absolute", left: 0, width: `${stance}%`, height: "100%", background: `linear-gradient(to right, ${JADE}, #e05252)` }} />
+            <div style={{ position: "relative", height: 3, background: t.border, marginBottom: 8 }}>
+              <div style={{ position: "absolute", left: 0, width: `${stance}%`, height: "100%", background: t.textSub }} />
               {stancePrev != null && (
                 <div style={{ position: "absolute", left: `${stancePrev}%`, top: "50%", transform: "translate(-50%, -50%)", width: 7, height: 7, borderRadius: "50%", background: t.surface, border: `1.5px solid ${t.textMuted}`, boxSizing: "border-box" }} />
               )}
@@ -381,8 +302,8 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
             )}
             {stanceRationale && (
               <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 12, marginBottom: 14 }}>
-                <div style={{ fontSize: 9, color: JADE, letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7, opacity: 0.85 }}>判断根拠</div>
-                <p style={{ fontSize: 11, color: t.textSub, lineHeight: 1.8, margin: 0, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}66`, paddingLeft: 10 }}>
+                <div style={{ fontSize: 9, color: t.positive, letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7, opacity: 0.85 }}>判断根拠</div>
+                <p style={{ fontSize: 11, color: t.textSub, lineHeight: 1.8, margin: 0, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 10 }}>
                   {stanceRationale}
                 </p>
               </div>
@@ -396,16 +317,22 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
         {/* テーマ */}
         {themes && themes.length > 0 && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", marginBottom: 14, opacity: 0.85 }}>市況概要</div>
+            <div style={{ fontSize: 10, color: t.positive, letterSpacing: "0.12em", marginBottom: 14, opacity: 0.85 }}>市況概要</div>
             {report.marketOverview && (
               <p style={{ fontSize: 13, color: t.textSub, lineHeight: 1.85, margin: "0 0 16px", borderBottom: `1px solid ${t.border}`, paddingBottom: 14 }}>
                 {report.marketOverview}
               </p>
             )}
             <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-              {themes.map((theme, i) => (
-                <div key={i} style={{ fontSize: 13, color: t.textSub, lineHeight: 1.6, paddingBottom: 9, borderBottom: i < themes.length - 1 ? `1px solid ${t.border}` : "none" }}>{theme}</div>
-              ))}
+              {themes.map((theme, i) => {
+                const { color, text } = parseTheme(theme);
+                return (
+                  <div key={i} style={{ display: "flex", gap: 10, fontSize: 13, color: t.textSub, lineHeight: 1.6, paddingBottom: 9, borderBottom: i < themes.length - 1 ? `1px solid ${t.border}` : "none" }}>
+                    {color && <span style={{ width: 7, height: 7, background: color, flexShrink: 0, marginTop: 6 }} />}
+                    <span style={{ flex: 1 }}>{text}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -413,7 +340,7 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
         {/* シナリオ */}
         {scenarios && scenarios.length > 0 && (
           <div style={{ background: t.surface, padding: "20px" }}>
-            <div style={{ fontSize: 10, color: JADE, letterSpacing: "0.1em", marginBottom: 14, opacity: 0.85 }}>予測シナリオ（AI推定・参考値）</div>
+            <div style={{ fontSize: 10, color: t.positive, letterSpacing: "0.1em", marginBottom: 14, opacity: 0.85 }}>予測シナリオ（AI推定・参考値）</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {(scenarios as ScenarioItem[]).map((s, i) => (
                 <div key={i} style={{ paddingBottom: 12, borderBottom: i < (scenarios as ScenarioItem[]).length - 1 ? `1px solid ${t.border}` : "none" }}>
@@ -422,13 +349,13 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
                       <span style={{ fontSize: 13, color: directionColor(s.direction), fontWeight: 700 }}>{directionLabel(s.direction)}</span>
                       <span style={{ fontSize: 12, color: s.base ? t.text : t.textSub, fontWeight: s.base ? 600 : 400 }}>
                         {s.label}
-                        {s.base && <span style={{ fontSize: 9, color: JADE, marginLeft: 5, letterSpacing: "0.1em", fontWeight: 700 }}>BASE</span>}
+                        {s.base && <span style={{ fontSize: 9, color: t.positive, marginLeft: 5, letterSpacing: "0.1em", fontWeight: 700 }}>BASE</span>}
                       </span>
                     </div>
                     <span style={{ fontSize: 13, color: t.textSub, fontFamily: "monospace", fontWeight: 600 }}>{s.probability}%</span>
                   </div>
-                  <div style={{ height: 3, background: t.borderStrong, borderRadius: 2 }}>
-                    <div style={{ height: "100%", width: `${s.probability}%`, background: directionColor(s.direction), opacity: s.base ? 1 : 0.55, borderRadius: 2 }} />
+                  <div style={{ height: 3, background: t.border }}>
+                    <div style={{ height: "100%", width: `${s.probability}%`, background: directionColor(s.direction), opacity: s.base ? 1 : 0.55 }} />
                   </div>
                   {s.rationale && (
                     <p style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.75, margin: "8px 0 0", letterSpacing: "0.02em" }}>
@@ -450,7 +377,7 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
             <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap", flexShrink: 0 }}>投資助言ではありません</span>
           </div>
           {report.allocationNote && (
-            <p style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}66`, paddingLeft: 12 }}>
+            <p style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }}>
               {report.allocationNote}
             </p>
           )}
@@ -466,7 +393,7 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
             <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap", flexShrink: 0 }}>投資助言ではありません</span>
           </div>
           {report.sectorsNote && (
-            <p style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${JADE}66`, paddingLeft: 12 }}>
+            <p style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }}>
               {report.sectorsNote}
             </p>
           )}
@@ -489,21 +416,14 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
 
   const types: ReportType[] = ["monthly", "weekly", "daily"];
 
-  // 翡翠グリーンの微細な光彩を重ねた背景（フラットな単色に深みを与える）
-  const pageBg = mode === "dark"
-    ? `radial-gradient(125% 70% at 50% -8%, rgba(58,175,138,0.10), rgba(58,175,138,0.03) 32%, transparent 60%), radial-gradient(90% 55% at 92% 2%, rgba(45,140,110,0.06), transparent 55%)`
-    : `radial-gradient(125% 70% at 50% -10%, rgba(45,140,110,0.07), transparent 58%), radial-gradient(90% 50% at 92% 0%, rgba(45,140,110,0.035), transparent 55%)`;
-  const mastheadBg = mode === "dark"
-    ? `radial-gradient(120% 220% at 0% 0%, rgba(58,175,138,0.09), transparent 46%), ${t.surface}`
-    : `radial-gradient(120% 220% at 0% 0%, rgba(45,140,110,0.05), transparent 46%), ${t.surface}`;
-
+  // フラットな紙面（放射グロー廃止）
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: t.bg, backgroundImage: pageBg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: t.bg, color: t.text, fontFamily: "var(--font-geist-sans)" }}>
       {/* ヘッダー */}
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: `${t.headerBg}f2`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${t.border}` }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 14, height: 56 }}>
-          <div style={{ width: 3, height: 22, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 10px ${JADE}55`, flexShrink: 0 }} />
-          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.14em", color: t.text, textDecoration: "none" }}>
+          <div style={{ width: 3, height: 22, background: t.positive, flexShrink: 0 }} />
+          <Link href="/reports" style={{ fontFamily: "var(--font-serif-jp)", fontSize: 20, fontWeight: 700, letterSpacing: "0.08em", color: t.text, textDecoration: "none" }}>
             翡翠眼
           </Link>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
@@ -522,15 +442,15 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
       </header>
 
       {/* ページタイトル（マストヘッド） */}
-      <div style={{ borderBottom: `1px solid ${t.border}`, background: mastheadBg, padding: "48px 0 40px" }}>
+      <div style={{ borderBottom: `1px solid ${t.border}`, background: t.surface, padding: "52px 0 44px" }}>
         <div className="hg-reveal" style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12 }}>
-            <div style={{ width: 4, height: 46, background: `linear-gradient(${t.positive}, ${JADE})`, boxShadow: `0 0 18px ${JADE}55`, flexShrink: 0 }} />
-            <h1 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 44, fontWeight: 700, letterSpacing: "0.1em", margin: 0, color: t.text, lineHeight: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
+            <div style={{ width: 3, height: 46, background: t.positive, flexShrink: 0 }} />
+            <h1 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 44, fontWeight: 700, letterSpacing: "0.05em", margin: 0, color: t.text, lineHeight: 1 }}>
               レポート
             </h1>
           </div>
-          <p style={{ fontSize: 13, color: t.textSub, margin: 0, letterSpacing: "0.1em", paddingLeft: 20 }}>
+          <p style={{ fontSize: 13, color: t.textSub, margin: 0, letterSpacing: "0.06em", paddingLeft: 19 }}>
             月次・週次・日次のマクロ市場分析レポート
           </p>
         </div>
@@ -540,7 +460,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
       {latestWeekly?.quote && (
         <div style={{ borderBottom: `1px solid ${t.border}`, background: t.bg }}>
           <div className="hg-reveal" style={{ maxWidth: 1280, margin: "0 auto", padding: "26px 24px", display: "flex", alignItems: "flex-start", gap: 18, animationDelay: "0.08s" }}>
-            <span className="hg-quote-mark" aria-hidden style={{ fontSize: 56, color: JADE, opacity: 0.28, marginTop: -6, flexShrink: 0 }}>&ldquo;</span>
+            <span className="hg-quote-mark" aria-hidden style={{ fontSize: 56, color: t.positive, opacity: 0.28, marginTop: -6, flexShrink: 0 }}>&ldquo;</span>
             <div style={{ paddingTop: 4 }}>
               <p style={{ fontFamily: "var(--font-serif-jp)", fontSize: 21, fontWeight: 600, color: t.text, margin: "0 0 8px", lineHeight: 1.65, letterSpacing: "0.04em" }}>
                 {latestWeekly.quote}
@@ -563,16 +483,16 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
 
         {/* 現状解説（最新日次レポートより） */}
         {latestDaily?.description && (
-          <div style={{ marginBottom: 48, borderLeft: `2px solid ${JADE}44`, paddingLeft: 16 }}>
+          <div style={{ marginBottom: 48, borderLeft: `2px solid ${t.positive}44`, paddingLeft: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-              <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.1em", fontWeight: 700 }}>DAILY BRIEF</span>
+              <span style={{ fontSize: 10, color: t.positive, letterSpacing: "0.1em", fontWeight: 700 }}>DAILY BRIEF</span>
               <span style={{ fontSize: 10, color: t.textMuted }}>·</span>
               <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em" }}>{latestDaily.date}</span>
             </div>
             <p style={{ fontSize: 13, color: t.textSub, margin: 0, lineHeight: 1.85 }}>
               {latestDaily.description}
             </p>
-            <Link href={`/reports/${latestDaily.slug}`} style={{ fontSize: 11, color: JADE, textDecoration: "none", letterSpacing: "0.04em", display: "inline-block", marginTop: 8 }}>
+            <Link href={`/reports/${latestDaily.slug}`} style={{ fontSize: 11, color: t.positive, textDecoration: "none", letterSpacing: "0.04em", display: "inline-block", marginTop: 8 }}>
               詳細を読む →
             </Link>
           </div>
@@ -581,7 +501,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
         {/* 予測ログリンク */}
         <div style={{ marginBottom: 40, display: "flex", alignItems: "center", gap: 16 }}>
           <div style={{ flex: 1, height: 1, background: t.border }} />
-          <Link href="/reports/track-record" style={{ fontSize: 12, color: JADE, textDecoration: "none", letterSpacing: "0.06em", whiteSpace: "nowrap", border: `1px solid ${JADE}55`, padding: "6px 14px" }}>
+          <Link href="/reports/track-record" style={{ fontSize: 12, color: t.positive, textDecoration: "none", letterSpacing: "0.06em", whiteSpace: "nowrap", border: `1px solid ${t.positive}55`, padding: "6px 14px" }}>
             予測ログ（ベースシナリオ vs 実績）→
           </Link>
           <div style={{ flex: 1, height: 1, background: t.border }} />
@@ -592,11 +512,11 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
           return (
             <section key={type} style={{ marginBottom: 56 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, paddingBottom: 10, borderBottom: `1px solid ${t.border}` }}>
-                <div style={{ width: 3, height: 18, background: `linear-gradient(${t.positive}, ${JADE})`, flexShrink: 0 }} />
+                <div style={{ width: 3, height: 18, background: `linear-gradient(${t.positive}, ${t.positive})`, flexShrink: 0 }} />
                 <h2 style={{ fontFamily: "var(--font-serif-jp)", fontSize: 19, fontWeight: 700, margin: 0, color: t.text, letterSpacing: "0.08em" }}>
                   {TYPE_LABELS[type]}
                 </h2>
-                <span style={{ fontSize: 10, color: JADE, letterSpacing: "0.12em", opacity: 0.75 }}>
+                <span style={{ fontSize: 10, color: t.positive, letterSpacing: "0.12em", opacity: 0.75 }}>
                   {TYPE_SUBTITLES[type]}
                 </span>
               </div>
