@@ -156,10 +156,10 @@ function KeyMetrics({ items, asOf, metricsHistory, t }: {
           const hasChart = hist && hist.length >= 2;
           return (
             <div key={i} className="hg-metric-cell" style={{ position: "relative", background: t.surface, padding: hasChart ? "12px 15px 0 15px" : "12px 15px" }}>
-              {/* 資産クラス eyebrow */}
-              <div style={{ minHeight: 13, marginBottom: 5 }}>
+              {/* 資産クラス eyebrow（高さ・行間を固定し、有無でセル中身がズレないようにする） */}
+              <div style={{ height: 13, lineHeight: "13px", marginBottom: 5 }}>
                 {isGroupStart && (
-                  <span style={{ fontSize: 9, color: t.positive, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.7, textTransform: "uppercase" }}>{groups[i]}</span>
+                  <span style={{ fontSize: 9, color: t.positive, letterSpacing: "0.14em", fontWeight: 700, opacity: 0.7, textTransform: "uppercase", lineHeight: "13px", display: "inline-block", verticalAlign: "top" }}>{groups[i]}</span>
                 )}
               </div>
               {/* 指標名（左）＋ 価格・変化（右） */}
