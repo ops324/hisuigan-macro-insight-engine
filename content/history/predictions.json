@@ -1784,6 +1784,75 @@
         "numericValue": 644704
       }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-26",
+      "spxActualChange": "-0.01%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500は7,358→7,357（-0.01%）と横ばい。6/25はメモリ不足（RAMageddon）を理由としたAppleの値上げで同社株-5.3%・メガテックが下落も、DOW +0.14%最高値圏維持・工業/金融へのローテーションで指数は相殺。夜の5月PCE +4.1%（3年ぶり高水準）でインフレ再加速を確認したが値幅は限定的。変化率±1.0%未満のneutral判定で、ベースシナリオの『中立』と方向一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W24",
+    "date": "2026-06-26",
+    "stance": 60,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "AI・半導体の業績の追い風と、インフレ再加速・年内利上げ織り込みが拮抗し高値圏で神経質な往来",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "AI・半導体の業績の追い風と、インフレ再加速・年内利上げ織り込みが拮抗し高値圏で神経質な往来",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "AI実需継続（マイクロン・日経最高値）＋ローテーションの健全な幅でリスクオン継続、最高値追い",
+        "probability": 30,
+        "direction": "up"
+      },
+      {
+        "label": "年内利上げ織り込み深化＋RAMageddonのメガテック波及→実質金利上昇でグロース調整・世界株安",
+        "probability": 25,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,357",
+        "numericValue": 7357
+      },
+      {
+        "label": "日経225",
+        "value": "72,366",
+        "numericValue": 72366
+      },
+      {
+        "label": "米10年債",
+        "value": "4.41%",
+        "numericValue": 4.41
+      },
+      {
+        "label": "日本10年債",
+        "value": "2.67%",
+        "numericValue": 2.67
+      },
+      {
+        "label": "WTI原油",
+        "value": "11,453",
+        "numericValue": 11453
+      },
+      {
+        "label": "金",
+        "value": "653,882",
+        "numericValue": 653882
+      }
+    ],
     "outcome": null
   }
 ]
