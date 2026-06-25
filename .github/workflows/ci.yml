@@ -1,0 +1,49 @@
+name: CI
+
+# 手動開発（機能・デザイン）の PR でのみ実行する。
+# ⚠ push: main では発火させない。レポート bot が毎日 main へ直 push するため、
+#    push トリガーにすると無意味な CI 実行（＋ build 時の外部 API 呼び出し）が毎日走る。
+on:
+  pull_request:
+    branches: [main]
+
+# 同一 PR の古い実行はキャンセル
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # 既存のフォント警告は許容（--max-warnings 0 は付けない）
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # シークレット不要。prerender 時の外部 API 失敗は market-data の allSettled が吸収する
+      - run: npm run build
