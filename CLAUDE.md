@@ -4,6 +4,31 @@
 マクロ市場情報サイト「翡翠眼」。Next.js (App Router) + Vercel構成。
 サイト名：翡翠眼（ひすいがん）
 
+## 開発ワークフロー（手動・非自動）
+変更の経路を「自動（レポート）」と「手動（機能・デザイン）」で分ける。
+
+### 自動（レポート）— main 直 push（変更なし）
+- launchd（月次・週次・日次）と `/push-reports` は従来どおり `content/` を `main` へ直接 commit & push する。PR は使わない。
+- CI（後述）は **PR 限定トリガー**のため、bot の main 直 push では発火しない（無駄な実行・外部 API 呼び出しを避けるための意図的設計）。
+
+### 手動（機能・デザイン・リファクタ）— ブランチ＋PR
+- `app/`・`lib/`・`globals.css` 等のコード/デザイン変更は必ず作業ブランチを切り、PR 経由で `main` へマージする。
+- ブランチ命名：`feat/*`（機能）・`fix/*`（修正）・`design/*`（デザイン）・`chore/*`（雑務）
+- 流れ：ブランチ作成 → 変更 → push → `gh pr create` → CI（lint / test / build）green ＆ Vercel Preview 確認 → squash merge → ブランチ削除
+- レポート（`content/`）と手動開発（`app/`・`lib/`）は触るパスが重ならないため、PR ブランチ生存中も bot の main 直 push と競合しない（マージ前に main を取り込めば良い）。
+
+### CI（`.github/workflows/ci.yml`）
+- トリガー：`pull_request`（base `main`）**のみ**。`push: main` では発火させない。
+- ジョブ（並列・Node 20・`npm ci`）：`lint`（`npm run lint`・既存警告は許容）/ `test`（`npm run test`）/ `build`（`npm run build`・シークレット不要）。
+- PR テンプレート：`.github/pull_request_template.md`。
+
+### main 保護について
+- **ブランチ保護は掛けていない（規約ベース）**。理由：bot が同一アカウント（ops324）で main 直 push しており、「PR 必須」保護を厳格化すると bot の push までブロックされるため。手動作業の PR 運用は規約で守る。
+- 将来強制したくなった場合の選択肢：① 管理者バイパス付き保護、② bot 用に GitHub App / 別トークンを分離して bot だけ保護をバイパス。
+
+### Vercel Preview
+- Git 連携済みのため、PR/ブランチ push ごとに Preview デプロイが自動生成される（設定ファイル不要）。Preview URL で本番反映前に表示確認する。
+
 ## 確定仕様
 - 初回訪問時のデフォルト表示：レポートページ。`/` にアクセスすると `/reports` にリダイレクト（`next.config.ts` の `redirects()`・307）
 - 市場数値画面（株式指数・為替・債券・コモディティ）は `/market`（`app/market/page.tsx`）。レポートページヘッダー右側の「マーケット」リンクからアクセス
