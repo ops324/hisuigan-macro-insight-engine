@@ -196,12 +196,14 @@ DB 不要、Vercel 自動デプロイで反映。
 
 | 生成フィールド | 内容 |
 |--------------|------|
-| `stance` / `stanceLabel` | 中長期リスクオフ度（0〜100）とラベル |
+| `stance` / `stanceLabel` | 中長期リスクオフ度（0〜100）とラベル。**長期(6M+)ゲージ**＝週次変化は原則 ±5pt 以内、月次の長期水準を一次アンカーとし日次イベントで乱高下させない（[長期予測精度](#長期6m予測精度の方針) 参照） |
 | `stancePrev` | 旧 `stance` 値の退避（前回比表示用。stance 上書き前に保存） |
-| `stanceRationale` | なぜこの stance 値か（数字の判断根拠 2〜3 文） |
+| `stanceRationale` | なぜこの stance 値か。**遅い構造変数を最低3つ引用**（バリュエーション/ERP・政策サイクル/実質金利・業績・信用スプレッド・カーブ・長期トレンド）。日次イベントだけを根拠にしない |
+| `longTermViews` | **全資産の長期(6M+)方向**。資産別 `{asset, bias(up/neutral/down), rationale}`（S&P 500・日経225・米10年債・日本10年債・USD/JPY・WTI原油・金）。rationale はその資産固有の構造ドライバーを最低2つ引用。track-record の資産別6M採点に使用 |
+| `structuralInputs` | （任意）stance/見立ての根拠となった構造変数スナップショット（valuation/policy/earnings/credit/curve/trend） |
 | `marketOverview` | 月次中長期観・週次テーマ・日次動向を統合した市況概要 |
 | `regime` | 現在のマクロ局面（景気 cycle・インフレ inflation・金融政策 policy・総括 summary） |
-| `keyMetrics` | 主要指標スナップショット 4〜6 件（label・value・change・direction） |
+| `keyMetrics` | 主要指標スナップショット 4〜6 件（label・value・change・direction）。**為替の長期採点のため `USD/JPY` を必ず含める**（metrics.json に系列蓄積） |
 | シナリオ `rationale` | 各予測シナリオの確率・判断の根拠（1〜2 文） |
 | `themes` | 注目テーマリスト（絵文字＋テキスト 3〜5件。絵文字は表示時に無発光スウォッチへ変換されるが frontmatter には従来どおり絵文字を記述する） |
 | `scenarios` | 予測シナリオ 3件（確率合計100%） |
@@ -328,7 +330,16 @@ description: "要約（省略可）。/reports の DAILY BRIEF セクション�
 stance: 68              # 0=リスクオン〜100=リスクオフ
 stancePrev: 65          # ⚠ 手動記述不要。/push-reports が旧 stance 値を退避。前回比表示用
 stanceLabel: "守り重視"
-stanceRationale: "なぜこの stance 値か（省略可）。⚠ 手動記述不要。/push-reports が自動生成"
+stanceRationale: "なぜこの stance 値か（省略可）。⚠ 手動記述不要。/push-reports が自動生成。構造変数を最低3つ引用"
+# 全資産の長期(6M+)方向（省略可）。⚠ 手動記述不要。/push-reports・月次生成が自動生成。track-record の資産別6M採点に使用
+longTermViews:
+  - asset: "S&P 500"
+    bias: "neutral"        # up | neutral | down（6M+の方向）
+    rationale: "その資産固有の構造ドライバーを最低2つ引用（株＝バリュエーション/業績/政策 等）"
+  - asset: "USD/JPY"
+    bias: "up"
+    rationale: "日米金利差・実質金利差・当局介入 等"
+  # 同様に 日経225・米10年債・日本10年債・WTI原油・金 を列挙
 marketOverview: "市況の概要テキスト（省略可）。市況概要パネルのテーマ一覧上部に表示"
 # 現在のレジーム（省略可）。⚠ 手動記述不要。/push-reports が自動生成
 regime:
@@ -541,6 +552,13 @@ sectors:
 - サマリーバー：評価済み件数・方向一致数・不一致数・一致率（resolved が1件以上の場合に表示）
 - 注記：確率や値幅の精度は評価対象外。AI参考記録である旨を明示
 - フィードバックループ：予測ログは `/push-reports`（Step 1.7）で次回のスタンス・シナリオ生成にレビューされ、**系統的バイアスのみ**を補正する（直近1〜2件の結果への過剰反応＝リーセンシーバイアスは明示的に回避。評価済み5件未満では大きな補正をしない）
+
+### 長期（6M+）予測精度の方針
+**本プロダクトの主目的は長期（6M+）の予測精度**。track-record は二層構成：
+- **長期検証（全資産・6M+）＝主指標**：stance と資産別 `longTermViews` の方向を、各資産の **6M 前方リターン**で採点（`lib/track-record.ts`）。資産別の中立バンドは 株 ±1.0%・利回り ±0.15pt・為替 ±0.5%・コモディティ ±1.5%。6M ホライズンは独立観測が年に数個しか得られず**有意な IC には年単位の蓄積**を要するため、本評価は約2026-11以降に点灯。それまでの即時指標は **stance 滑らかさ**（長期ゲージが日次で乱高下していないか）。暫定の短窓 IC は**重複窓・有効N僅少の参考値**で過信しない（`sampleNonOverlapping` で独立化・有効N併記）。
+- **短期サニティ層（参考）**：日次±1%S&P方向（locked ±1%）。near-random で長期スキルではない。現状は「常に中立」素朴ベースライン未満（素朴比マイナス）であることを正直に開示。
+- 採点インフラ純粋関数は `lib/track-record.ts`（`forwardReturn`/`sampleNonOverlapping`/`assetLongViewScore`/`informationCoefficient`/`bucketedForwardReturns`/`stanceSmoothness`/`shortTermSummary`・`lib/__tests__/history.test.ts` でテスト）。fs 非依存でクライアントからも利用。型は `lib/history.ts`。
+- **生成規律**：stance/見立ては**月次レポートを長期の一次アンカー**とし、週次・日次はバンド内微修正のみ。stance 週次変化は原則 ±5pt 以内（超えるのは文書化されたレジーム/構造シフト時）。根拠は遅い構造変数（バリュエーション・政策・信用・カーブ等）に置き、日次イベントだけで動かさない。
 
 ### スパークライン（KeyMetrics コンポーネント内）
 - 各指標セル下部にセル全幅のインライン SVG（既定 高さ40px・`viewBox` 論理幅200・`preserveAspectRatio="none"`）

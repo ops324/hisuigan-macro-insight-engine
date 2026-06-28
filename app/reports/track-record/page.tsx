@@ -1,7 +1,8 @@
-import { getPredictions } from "@/lib/history";
+import { getPredictions, getMetricsHistory } from "@/lib/history";
 import TrackRecordClient from "./TrackRecordClient";
 
 export default function TrackRecordPage() {
   const predictions = getPredictions();
-  return <TrackRecordClient predictions={predictions} />;
+  const metricsHistory = getMetricsHistory();
+  return <TrackRecordClient predictions={predictions} metricsHistory={metricsHistory} />;
 }
