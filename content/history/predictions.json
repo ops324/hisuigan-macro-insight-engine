@@ -1853,6 +1853,75 @@
         "numericValue": 653882
       }
     ],
+    "outcome": {
+      "assessedDate": "2026-06-29",
+      "spxActualChange": "-0.04%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500はスナップショット比較で7,357→7,354（-0.04%）と横ばい。週中は6/22のBroadcomガイダンス起点の半導体世界連鎖安（約1.3兆ドル消失）で週間-2.0%まで下押すも、マイクロン決算（売上+346%）が実需を裏付け下げを吸収、DOWは最高値圏（週+0.6%）を維持。5月PCE+4.1%（3年ぶり高水準）も『予想線』で金利低下・株反発。変化率±1.0%未満のneutral判定で、ベースシナリオの『中立（高値圏で神経質な往来）』と方向一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W26",
+    "date": "2026-06-29",
+    "stance": 62,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "AI実需（マイクロン）と割高調整・インフレ再加速・利上げバイアスが拮抗、原油急落＆金利低下が下支えし高値圏で神経質な往来",
+      "probability": 45,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "AI実需（マイクロン）と割高調整・インフレ再加速・利上げバイアスが拮抗、原油急落＆金利低下が下支えし高値圏で神経質な往来",
+        "probability": 45,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "原油急落＆金利低下のディスインフレ期待＋AI実需継続でバリュエーション調整一巡、ローテーション主導でリスクオン回帰",
+        "probability": 30,
+        "direction": "up"
+      },
+      {
+        "label": "AIバリュエーション調整深化（OpenAI延期・$1.3兆消失）＋PCE再加速で利上げ織り込み深化＋日経高値圏の脆さ→世界株安",
+        "probability": 25,
+        "direction": "down"
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,354",
+        "numericValue": 7354
+      },
+      {
+        "label": "日経225",
+        "value": "69,360",
+        "numericValue": 69360
+      },
+      {
+        "label": "USD/JPY",
+        "value": "161.81",
+        "numericValue": 161.81
+      },
+      {
+        "label": "米10年債",
+        "value": "4.38%",
+        "numericValue": 4.38
+      },
+      {
+        "label": "WTI原油",
+        "value": "11,142",
+        "numericValue": 11142
+      },
+      {
+        "label": "金",
+        "value": "653,712",
+        "numericValue": 653712
+      }
+    ],
     "outcome": null
   }
 ]
