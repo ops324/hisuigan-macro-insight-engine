@@ -19,6 +19,15 @@ export interface PredictionScenario {
   base?: boolean;
 }
 
+export type Direction = "up" | "down" | "neutral";
+
+// 資産別の長期方向バイアス（月次・週次の longTermViews frontmatter から harvest）
+export interface LongTermView {
+  asset: string;
+  bias: Direction;
+  rationale?: string;
+}
+
 export interface PredictionMetric {
   label: string;
   value: string;
@@ -38,6 +47,9 @@ export interface PredictionRecord {
   scenarios: PredictionScenario[];
   keyMetrics: PredictionMetric[];
   outcome: PredictionOutcome | null;
+  // 任意・後方互換：資産別の長期方向と、その根拠となった構造変数のスナップショット
+  longTermViews?: LongTermView[];
+  structuralInputs?: Record<string, string>;
 }
 
 export interface MetricPoint {
