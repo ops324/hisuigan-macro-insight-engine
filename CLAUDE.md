@@ -556,7 +556,7 @@ sectors:
 ### 長期（6M+）予測精度の方針
 **本プロダクトの主目的は長期（6M+）の予測精度**。track-record は二層構成：
 - **長期検証（全資産・6M+）＝主指標**：stance と資産別 `longTermViews` の方向を、各資産の **6M 前方リターン**で採点（`lib/track-record.ts`）。資産別の中立バンドは 株 ±1.0%・利回り ±0.15pt・為替 ±0.5%・コモディティ ±1.5%。6M ホライズンは独立観測が年に数個しか得られず**有意な IC には年単位の蓄積**を要するため、本評価は約2026-11以降に点灯。それまでの即時指標は **stance 滑らかさ**（長期ゲージが日次で乱高下していないか）。暫定の短窓 IC は**重複窓・有効N僅少の参考値**で過信しない（`sampleNonOverlapping` で独立化・有効N併記）。
-- **短期サニティ層（参考）**：日次±1%S&P方向（locked ±1%）。near-random で長期スキルではない。現状は「常に中立」素朴ベースライン未満（素朴比マイナス）であることを正直に開示。
+- **予測記録（参考）**：週次ベースシナリオと翌週S&P方向（locked ±1%）の**事実並置のみ**。短期方向は near-random で評価対象外のため、**的中率・素朴比などの集計は表示しない**（ノイズ・誤読回避。`shortTermSummary` は lib に残置するが UI 非表示）。判定基準 ±1.0% は 2026-05-24 確定・遡及変更なし。
 - 採点インフラ純粋関数は `lib/track-record.ts`（`forwardReturn`/`sampleNonOverlapping`/`assetLongViewScore`/`informationCoefficient`/`bucketedForwardReturns`/`stanceSmoothness`/`shortTermSummary`・`lib/__tests__/history.test.ts` でテスト）。fs 非依存でクライアントからも利用。型は `lib/history.ts`。
 - **生成規律**：stance/見立ては**月次レポートを長期の一次アンカー**とし、週次・日次はバンド内微修正のみ。stance 週次変化は原則 ±5pt 以内（超えるのは文書化されたレジーム/構造シフト時）。根拠は遅い構造変数（バリュエーション・政策・信用・カーブ等）に置き、日次イベントだけで動かさない。
 

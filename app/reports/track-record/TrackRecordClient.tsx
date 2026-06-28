@@ -4,7 +4,6 @@ import type { PredictionRecord, MetricsHistory } from "@/lib/history";
 import {
   HORIZONS,
   stanceSmoothness,
-  shortTermSummary,
   stanceForwardPairs,
   sampleNonOverlapping,
   informationCoefficient,
@@ -30,12 +29,10 @@ export default function TrackRecordClient({ predictions, metricsHistory }: Props
   const { mode, t, toggleTheme } = useTheme();
 
   const sorted = [...predictions].sort((a, b) => b.date.localeCompare(a.date));
-  const resolved = sorted.filter((p) => p.outcome !== null);
 
   // ── 長期検証（全資産・6M+）：即時に意味を持つのは「見立ての滑らかさ」。6M IC は蓄積中 ──
   const ascending = [...predictions].sort((a, b) => a.date.localeCompare(b.date));
   const smooth = stanceSmoothness(ascending.map((p) => p.stance));
-  const short = shortTermSummary(predictions);
 
   // 暫定 4週IC（重複窓・参考値）と非重複の有効N
   const spxSeries = metricsHistory["S&P 500"] ?? [];
@@ -124,29 +121,14 @@ export default function TrackRecordClient({ predictions, metricsHistory }: Props
           </div>
         </div>
 
-        {/* ── 短期サニティ層（日次±1%S&P・near-random・参考） ── */}
-        {resolved.length > 0 && (
-          <>
-            <div style={{ marginBottom: 12, display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: t.textSub, letterSpacing: "0.08em" }}>短期サニティ層（参考）</span>
-              <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.03em" }}>
-                日次±1%S&amp;P方向（locked）。短期方向は near-random で長期スキルではない。
-              </span>
-            </div>
-            <div style={{ display: "flex", gap: 1, background: t.border, border: `1px solid ${t.border}`, marginBottom: 32 }} className="hg-grid-4">
-              {[
-                { label: "評価済み予測", value: `${resolved.length} 件`, accent: false },
-                { label: "一致率", value: `${Math.round((short.hitRate ?? 0))}%`, accent: false },
-                { label: "素朴比（vs 常に中立）", value: `${(short.edge ?? 0) >= 0 ? "+" : ""}${fmt1(short.edge)} pt`, accent: true },
-                { label: "常に中立の的中率", value: `${Math.round((short.naiveHitRate ?? 0))}%`, accent: false },
-              ].map((item, i) => (
-                <div key={i} style={{ flex: 1, background: t.surface, padding: "16px 20px" }}>
-                  <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.05em", marginBottom: 6 }}>{item.label}</div>
-                  <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "monospace", color: item.accent ? ((short.edge ?? 0) >= 0 ? t.positive : t.negative) : t.text }}>{item.value}</div>
-                </div>
-              ))}
-            </div>
-          </>
+        {/* ── 予測記録（参考・短期方向は near-random のため事実の並置のみ） ── */}
+        {sorted.length > 0 && (
+          <div style={{ marginBottom: 12, display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: t.textSub, letterSpacing: "0.08em" }}>予測記録（参考）</span>
+            <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.03em" }}>
+              週次ベースシナリオと翌週S&amp;Pの事実並置。短期方向は near-random で評価対象外（本サイトの主軸は上段の長期検証）。
+            </span>
+          </div>
         )}
 
         {sorted.length === 0 ? (
@@ -259,7 +241,7 @@ export default function TrackRecordClient({ predictions, metricsHistory }: Props
           <strong style={{ color: t.textSub }}>主指標は長期（全資産・6M+）。</strong>
           中長期の見立て（stance・資産別の長期方向）を 6M 前方リターンで採点する。6M ホライズンは独立観測が年に数個しか得られないため、統計的に意味のある精度（IC）が出るには年単位の蓄積を要する。
           それまでの即時指標は「見立ての滑らかさ」（長期ゲージが日次ニュースで乱高下していないか）。暫定 4週IC は<strong>重複窓・有効N僅少の参考値</strong>で、過信しないこと。<br />
-          下段の<strong style={{ color: t.textSub }}>短期サニティ層は参考</strong>。「方向一致」はベースシナリオの方向（↑/→/↓）と S&amp;P 500 変動の方向が一致した場合（変化率 ±1.0% 未満は横ばい）。判定基準 ±1.0% は 2026-05-24 確定・遡及変更なし。短期方向は near-random で、現状は「常に中立」素朴ベースラインを下回る（＝素朴比マイナス）ことを正直に開示している。
+          下段の<strong style={{ color: t.textSub }}>予測記録は参考</strong>。週次ベースシナリオと翌週 S&amp;P 変動を事実として並置したもの（「方向一致」は方向が一致した場合・変化率 ±1.0% 未満は横ばい・判定基準 ±1.0% は 2026-05-24 確定）。短期方向は near-random のため<strong>評価対象外</strong>で、的中率の集計は表示しない。
           AI（翡翠眼）の参考記録であり、将来の運用成果を保証するものではありません。
         </p>
 
