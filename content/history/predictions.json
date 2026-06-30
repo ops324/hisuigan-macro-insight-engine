@@ -1868,24 +1868,24 @@
     "stance": 62,
     "stanceLabel": "やや守り",
     "baseScenario": {
-      "label": "AI実需（マイクロン）と割高調整・インフレ再加速・利上げバイアスが拮抗、原油急落＆金利低下が下支えし高値圏で神経質な往来",
+      "label": "日米ダブルタイトニング・4%台インフレ定着が上値を抑える一方、AI実需と原油安・金利低位安定が下支えし高値圏で選別色の強い神経質な往来",
       "probability": 45,
       "direction": "neutral"
     },
     "scenarios": [
       {
-        "label": "AI実需（マイクロン）と割高調整・インフレ再加速・利上げバイアスが拮抗、原油急落＆金利低下が下支えし高値圏で神経質な往来",
+        "label": "日米ダブルタイトニング・4%台インフレ定着が上値を抑える一方、AI実需と原油安・金利低位安定が下支えし高値圏で選別色の強い神経質な往来",
         "probability": 45,
         "direction": "neutral",
         "base": true
       },
       {
-        "label": "原油急落＆金利低下のディスインフレ期待＋AI実需継続でバリュエーション調整一巡、ローテーション主導でリスクオン回帰",
+        "label": "原油安・金利低位安定のディスインフレ的緩和とAI実需継続でQ2好決算が確認され、バリュエーション調整一巡・ローテーション主導でリスクオン回帰",
         "probability": 30,
         "direction": "up"
       },
       {
-        "label": "AIバリュエーション調整深化（OpenAI延期・$1.3兆消失）＋PCE再加速で利上げ織り込み深化＋日経高値圏の脆さ→世界株安",
+        "label": "7月CPI再加速・FOMC/日銀のタカ派化・関税期限（7/24）の不透明感とAIバリュエーション調整再燃が円安・介入リスクと重なり世界株安",
         "probability": 25,
         "direction": "down"
       }
@@ -1893,18 +1893,18 @@
     "keyMetrics": [
       {
         "label": "S&P 500",
-        "value": "7,354",
-        "numericValue": 7354
+        "value": "7,440",
+        "numericValue": 7440
       },
       {
         "label": "日経225",
-        "value": "69,360",
-        "numericValue": 69360
+        "value": "69,468",
+        "numericValue": 69468
       },
       {
         "label": "USD/JPY",
-        "value": "161.81",
-        "numericValue": 161.81
+        "value": "161.70",
+        "numericValue": 161.70
       },
       {
         "label": "米10年債",
@@ -1913,13 +1913,13 @@
       },
       {
         "label": "WTI原油",
-        "value": "11,142",
-        "numericValue": 11142
+        "value": "11,330",
+        "numericValue": 11330
       },
       {
         "label": "金",
-        "value": "653,712",
-        "numericValue": 653712
+        "value": "656,825",
+        "numericValue": 656825
       }
     ],
     "outcome": null
