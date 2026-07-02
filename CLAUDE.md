@@ -19,7 +19,8 @@
 
 ### CI（`.github/workflows/ci.yml`）
 - トリガー：`pull_request`（base `main`）**のみ**。`push: main` では発火させない。
-- ジョブ（並列・Node 20・`npm ci`）：`lint`（`npm run lint`・既存警告は許容）/ `test`（`npm run test`）/ `build`（`npm run build`・シークレット不要）。
+- ジョブ（並列・Node 20・`npm ci`）：`lint`（`npm run lint -- --max-warnings 0`・警告ゼロを強制）/ `type-check`（`npm run type-check`＝`tsc --noEmit`）/ `test`（`npm run test`）/ `build`（`npm run build`・シークレット不要）。
+- ESLint：`@next/next/no-page-custom-font` は `eslint.config.mjs` で off（App Router では `layout.tsx` の `<head>` フォント読込が正で、このルールは Pages Router 前提の誤検知）。
 - PR テンプレート：`.github/pull_request_template.md`。
 
 ### main 保護について
@@ -58,17 +59,20 @@
 - 取得関数：`getStocks()` / `getForex()` / `getUsTreasury()` / `getJpTreasury()` / `getCommodities()`。各々**内部で `Promise.allSettled`** を使い、1銘柄が失敗しても取れた銘柄だけ返す（全滅を回避）。失敗銘柄は null 値で返り UI は「---」表示
 - キャッシュは `fetch(url, { next: { revalidate: N } })`（為替60・株式300・コモディティ900・米国債/日本国債3600秒）
 - 純粋関数（`lib/__tests__/market-data.test.ts` でテスト）：`parseStooqCsv` / `commodityJpyValues` / `pickLatestTwoValidFred` / `parseJgbCsv`
-- 表示加工の純粋関数は `lib/metrics.ts`（`changeDisplay` / `metricGroup` / `directionColor` / `directionLabel`。`lib/__tests__/metrics.test.ts` でテスト）
+- 表示加工の純粋関数は `lib/metrics.ts`（`changeDisplay` / `metricGroup` / `directionColor` / `directionLabel`。`lib/__tests__/metrics.test.ts` でテスト）。方向の共通型 `Direction`（`up`/`down`/`neutral`）も **`lib/metrics.ts` に集約**（`lib/history.ts` は再エクスポート・`lib/reports.ts` の `ScenarioItem.direction` も参照）。`KeyMetricItem.direction` は frontmatter 語彙の `flat` を含むため別型 `MetricDirection`（`up`/`down`/`flat`）で統合しない
+- 日付表示など UI 純粋関数は `lib/format.ts`（`formatDate`＝`YYYY-MM-DD → YYYY年M月D日`。`lib/__tests__/format.test.ts` でテスト。`ReportCard` / `[slug]/ReportClient` が共用）
 
 ## テスト（Vitest）
 - `npm run test`（`vitest run`）。設定は `vitest.config.ts`（node 環境・`@` エイリアス）。テストは `lib/__tests__/*.test.ts`
-- 対象は純粋関数のみ（CSV パース・通貨換算・FRED 欠損スキップ・JGB 行抽出・指標表示加工）
+- 対象は純粋関数と `lib/reports.ts`（CSV パース・通貨換算・FRED 欠損スキップ・JGB 行抽出・指標表示加工・日付整形・レポート読込）
+- `lib/reports.ts` のテスト（`reports.test.ts`）は **フィクスチャ方式**（`lib/__tests__/fixtures/reports/` の .md）。`getAllReports` / `getReportBySlug` / `getReportsByType` / `getAllSlugs` は第2引数 `baseDir`（既定 `content/reports`）でテスト用ディレクトリを注入できる。実 content は bot が毎日書き換えるため内容非依存の不変条件のみ検証
 
 ## SEO
 - `lib/site.ts`：`SITE_URL`（`NEXT_PUBLIC_SITE_URL` → Vercel 本番URL → localhost の順でフォールバック）と `SITE_NAME`
-- `app/layout.tsx`：`metadataBase` ＋ 既定 OpenGraph
+- `app/layout.tsx`：`metadataBase` ＋ 既定 OpenGraph ＋ Twitter Card（`summary_large_image`。`og:image`/`twitter:image` は `opengraph-image.tsx` から自動注入されるため手書きしない）
+- `app/opengraph-image.tsx`：OG 画像（`ImageResponse`・1200×630・ダーク地＋翡翠バー＋明朝「翡翠眼」）。ビルド時に静的生成。日本語グリフは Google Fonts CSS API の `text=` パラメータで Shippori Mincho を必要分だけサブセット fetch。**fetch は try/catch で囲みシステムフォントにフォールバック**（外部依存でビルドを落とさない）
 - `app/reports/[slug]/page.tsx`：`generateMetadata`（per-report の title・description・OG・canonical・`article` type）
-- `app/sitemap.ts`：`/reports`・`/market`・`/reports/track-record` ＋ 全レポート slug を出力（`/sitemap.xml`）
+- `app/sitemap.ts`：`/reports`・`/market`・`/reports/track-record` ＋ 全レポート slug を出力（`/sitemap.xml`）。静的ルートの `lastModified` は**最新レポート日付**（`getAllReports()[0].date`・「常に今日」を避けクロール効率を維持）。日付欠損・不正時のみ `new Date()` フォールバック
 - `app/robots.ts`：全許可 ＋ sitemap 参照（`/robots.txt`）
 
 ## API仕様
@@ -162,9 +166,15 @@ export type Theme = typeof themeMap["dark"] | typeof themeMap["light"];
 ### 市場数値ページ（app/market/page.tsx・`/market`）
 - **`lib/theme.ts` の themeMap を使用（独自 theme は撤廃済み）**。罫線・配色は themeMap 値に統一
 - フッター DATA SOURCES：`["Stooq", "ExchangeRate-API", "FRED API (Federal Reserve)", "財務省 (MOF)"]`（現行 API と一致させること。Yahoo Finance・日本銀行 API は廃止済み）
+- 債券テーブル（`TreasuryTable`）は **semantic な `<table>`／`<thead>`／`<th scope="col">`／`<tbody>`／`<tr class="hg-treasury-row">`／`<td>`**（スクリーンリーダー対応・WCAG 1.3.1）。`th` はブラウザ既定が bold/center のため `fontWeight:400`・`textAlign` を inline で明示して見た目を維持する（div グリッドへ戻さない）
 
 ### レポートページ（app/reports/）
 - lib/theme.ts の themeMap を使用
+
+### アクセシビリティ（WCAG 2.1 AA 方針）
+- 数値テーブルは semantic `<table>`（上記 `TreasuryTable`）。div グリッドで擬似テーブルを作らない
+- 純粋な図表（`Sparkline` の SVG・`AllocationDonut` のバー）は `role="img"` ＋ 内訳を要約した `aria-label`（Sparkline は `<title>` も併記）
+- テーマトグルボタンは全ページ（`MarketClient` / `ReportsClient` / `TrackRecordClient` / `[slug]/ReportClient`）で `aria-label` ＋ `aria-pressed={mode === "dark"}` を付与
 
 ## レポート機能
 
@@ -511,12 +521,19 @@ sectors:
 | `/market` | `app/market/page.tsx` | サーバーコンポーネント（`lib/market-data.ts` で並列データ取得・SSR） |
 | `/market` | `app/market/MarketClient.tsx` | クライアントコンポーネント（テーマ・描画） |
 | `/reports` | `app/reports/page.tsx` | サーバーコンポーネント（データ取得のみ） |
-| `/reports` | `app/reports/ReportsClient.tsx` | クライアントコンポーネント（テーマ・描画） |
+| `/reports` | `app/reports/ReportsClient.tsx` | クライアントコンポーネント（ヘッダ・格言・一覧レイアウト。カレントビュー等は子コンポーネントに委譲） |
 | `/reports/[slug]` | `app/reports/[slug]/page.tsx` | サーバーコンポーネント（データ取得のみ） |
 | `/reports/[slug]` | `app/reports/[slug]/ReportClient.tsx` | クライアントコンポーネント（テーマ・描画） |
 | `/reports/track-record` | `app/reports/track-record/page.tsx` | サーバーコンポーネント（predictions.json 読込） |
 | `/reports/track-record` | `app/reports/track-record/TrackRecordClient.tsx` | クライアントコンポーネント（予測ログ描画） |
-| 共通 | `app/reports/ReportCard.tsx` | レポート一覧カード（t: Theme を受け取る） |
+| 共通 | `app/reports/ReportCard.tsx` | レポート一覧カード（t: Theme を受け取る。ホバーは `.hg-report-card` の CSS のみ） |
+| 共通 | `app/reports/CurrentView.tsx` | カレントビュー本体（スタンス・市況・シナリオ・配分・セクター。`ReportsClient` から分離） |
+| 共通 | `app/reports/KeyMetrics.tsx` | 主要指標ストリップ（`Sparkline` を利用） |
+| 共通 | `app/reports/RegimePanel.tsx` | 現在のレジームパネル |
+| 共通 | `app/reports/Sparkline.tsx` | スパークライン SVG（`SPARK_VW`） |
+| 共通 | `app/reports/AllocationDonut.tsx` | 水平積み上げバー（`ALLOC_COLORS` / `SECTOR_COLORS` を export） |
+
+> **注**：カレントビュー系（`AllocationDonut` / `Sparkline` / `KeyMetrics` / `RegimePanel` / `CurrentView`）は元々 `ReportsClient.tsx` 内の非 export 関数だったが、保守性のため個別ファイルへ分離済み（named export・props の `t` は `lib/theme.ts` の `Theme` 型）。JSX・スタイルは分離時に不変。
 
 ### 個別レポートページの機能
 - 格言エピグラフ（frontmatter の `quote`/`quoteAuthor` が存在する場合のみ表示）
@@ -534,9 +551,11 @@ sectors:
 - `react-markdown` + `remark-gfm` — Markdown → React レンダリング
 
 ### ユーティリティ（lib/reports.ts）
-- `getAllReports()` — 全レポートのメタデータ（日付降順）
-- `getReportsByType(type)` — タイプ別フィルタ
-- `getReportBySlug(slug)` — フルデータ（本文＋全 frontmatter フィールド）
+- `getAllReports(baseDir?)` — 全レポートのメタデータ（日付降順）
+- `getReportsByType(type, baseDir?)` — タイプ別フィルタ
+- `getReportBySlug(slug, baseDir?)` — フルデータ（本文＋全 frontmatter フィールド）
+- `getAllSlugs(baseDir?)` — 全 slug 一覧
+- frontmatter → `ReportMeta` のマッピングは private `toReportMeta()` に一本化（`getAllReports` / `getReportBySlug` で共用）。`baseDir` は既定 `content/reports`・テスト用の注入点
 
 ### ユーティリティ（lib/history.ts）
 - `getPredictions()` — `content/history/predictions.json` の全 PredictionRecord を取得
@@ -602,10 +621,11 @@ sectors:
 | クラス | 対象 | 効果 |
 |--------|------|------|
 | `.hg-data-card` | 市場数値ページ データグリッドセル | ホバーで減彩翡翠インナーボーダー（`inset 0 0 0 1px rgba(63,115,90,0.20)`） |
-| `.hg-treasury-row` | 債券テーブル行 | ホバーで薄い減彩翡翠背景（`rgba(63,115,90,0.05)`） |
+| `.hg-treasury-row` | 債券テーブル行（`<tr>`） | ホバーで薄い減彩翡翠背景（`rgba(63,115,90,0.05)`） |
 | `.hg-nav-link` | ヘッダーナビリンク | ホバーで翡翠色に変化 |
 | `.hg-metric-cell` | カレントビュー主要指標セル | ホバーで翡翠インナーボーダー＋ツールチップ出現 |
 | `.hg-metric-tip` | 主要指標セルのツールチップ | 既定 opacity:0、親セル hover で出現（精密値・レンジ表示） |
+| `.hg-report-card` | レポート一覧カード | `@media (hover: hover)` でのみホバー時に翡翠左ボーダー（`border-left-color: rgba(63,115,90,0.95)`）。タッチ端末では無効。旧 `useState` ホバーを CSS 化 |
 
 ## デザイン定数
 ```js
@@ -644,7 +664,8 @@ lang: "ja"
 ```
 
 ## 注意事項
-- APIキーは必ず.env.localに保存
+- APIキーは必ず.env.localに保存（テンプレートは `.env.example`。`.gitignore` は `.env*` を無視しつつ `!.env.example` で例のみ追跡）
+- 現在必須の環境変数は `FRED_API_KEY` のみ（未設定時は `getUsTreasury` が `console.warn` を出し throw → allSettled 吸収で「---」表示）
 - .env.localは.gitignoreに含まれていることを確認
 - チャットにAPIキーを貼らない
 - Gemini レポートの引用番号（` 1`, ` 6` 等）は必ず commit 前に削除すること（`/push-reports` が自動削除）
