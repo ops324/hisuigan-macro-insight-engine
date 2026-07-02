@@ -1,30 +1,22 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
 import { ReportMeta } from "@/lib/reports";
 import { Theme } from "@/lib/theme";
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
-}
+import { formatDate } from "@/lib/format";
 
 export function ReportCard({ report, t }: { report: ReportMeta; t: Theme }) {
-  const [hovered, setHovered] = useState(false);
+  // ホバーの翡翠左ボーダーは globals.css の .hg-report-card:hover（CSS のみ・状態管理不要）
   return (
     <Link
       href={`/reports/${report.slug}`}
+      className="hg-report-card"
       style={{
         display: "block",
         padding: "20px 24px",
         background: t.surface,
         textDecoration: "none",
-        borderLeft: `2px solid ${hovered ? t.positive : "transparent"}`,
-        transition: "border-color 0.15s",
+        borderLeft: "2px solid transparent",
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
       <div className="hg-card-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 16, marginBottom: report.description ? 8 : 0 }}>
         <span style={{ fontSize: 15, fontWeight: 600, color: t.text, letterSpacing: "0.02em" }}>{report.title}</span>

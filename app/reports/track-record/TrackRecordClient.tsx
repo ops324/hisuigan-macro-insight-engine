@@ -9,13 +9,10 @@ import {
   informationCoefficient,
 } from "@/lib/track-record";
 import { useTheme } from "@/lib/useTheme";
+import { directionColor } from "@/lib/metrics";
 
 function dirLabel(d: string) {
   return d === "up" ? "↑ 上昇" : d === "down" ? "↓ 下落" : "→ 横ばい";
-}
-// 彩度を落とした方向色（ネオン廃止・lib/metrics の directionColor と統一）
-function dirColor(d: string) {
-  return d === "up" ? "#4e8d6f" : d === "down" ? "#c25f52" : "#8c8576";
 }
 
 interface Props {
@@ -160,7 +157,7 @@ export default function TrackRecordClient({ predictions, metricsHistory }: Props
                   {/* 予測 */}
                   <div style={{ background: t.surface, padding: "16px 16px" }}>
                     <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: dirColor(p.baseScenario.direction) }}>{dirLabel(p.baseScenario.direction)}</span>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: directionColor(p.baseScenario.direction) }}>{dirLabel(p.baseScenario.direction)}</span>
                       <span style={{ fontSize: 10, color: t.textMuted, fontFamily: "monospace" }}>{p.baseScenario.probability}%</span>
                     </div>
                     <p style={{ fontSize: 12, color: t.textSub, margin: 0, lineHeight: 1.7 }}>{p.baseScenario.label}</p>
@@ -180,7 +177,7 @@ export default function TrackRecordClient({ predictions, metricsHistory }: Props
                     {oc ? (
                       <>
                         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: dirColor(oc.spxDirection ?? "neutral") }}>{dirLabel(oc.spxDirection ?? "neutral")}</span>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: directionColor(oc.spxDirection ?? "neutral") }}>{dirLabel(oc.spxDirection ?? "neutral")}</span>
                           {oc.spxActualChange && (
                             <span style={{ fontSize: 10, fontFamily: "monospace", color: t.textMuted }}>S&P {oc.spxActualChange}</span>
                           )}

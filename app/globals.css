@@ -101,6 +101,16 @@ body {
   color: rgba(63, 115, 90, 0.95) !important;
 }
 
+/* レポート一覧カード：ホバーで翡翠左ボーダー（タッチデバイスでは無効） */
+.hg-report-card {
+  transition: border-color 0.15s;
+}
+@media (hover: hover) {
+  .hg-report-card:hover {
+    border-left-color: rgba(63, 115, 90, 0.95) !important;
+  }
+}
+
 /* ===== モバイル対応 ===== */
 @media (max-width: 768px) {
   /* メインページのセクションナビタブを非表示 */
