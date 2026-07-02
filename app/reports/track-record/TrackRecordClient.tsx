@@ -70,7 +70,7 @@ export default function TrackRecordClient({ predictions, metricsHistory }: Props
           <span style={{ fontSize: 14, color: t.textSub, letterSpacing: "0.05em" }}>予測ログ</span>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
             <Link href="/market" className="hg-nav-link" style={{ fontSize: 13, color: t.positive, textDecoration: "none", letterSpacing: "0.05em" }}>マーケット</Link>
-            <button onClick={toggleTheme} aria-label={`テーマ切替（現在: ${mode === "dark" ? "ダーク" : "ライト"}）`} style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2 }}>
+            <button onClick={toggleTheme} aria-label={`テーマ切替（現在: ${mode === "dark" ? "ダーク" : "ライト"}）`} aria-pressed={mode === "dark"} style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2 }}>
               {mode === "dark" ? "LIGHT" : "DARK"}
             </button>
           </div>

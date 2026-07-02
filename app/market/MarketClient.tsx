@@ -51,6 +51,7 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
             <button
               onClick={toggleTheme}
               aria-label={`テーマ切替（現在: ${mode === "dark" ? "ダーク" : "ライト"}）`}
+              aria-pressed={mode === "dark"}
               style={{ marginLeft: 16, padding: "4px 11px", fontSize: 11, backgroundColor: "transparent", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", letterSpacing: "0.06em", borderRadius: 2, transition: "border-color 0.15s, color 0.15s" }}
             >
               {mode === "dark" ? "LIGHT" : "DARK"}
@@ -191,23 +192,35 @@ function ErrorBox({ message, t, pad = "32px 24px" }: { message: string; t: Theme
   );
 }
 
+// semantic な <table>（スクリーンリーダー対応）。見た目は旧 div グリッドと同一に保つ。
+// th はブラウザ既定が bold/center のため fontWeight / textAlign を明示。
 function TreasuryTable({ rows, t }: { rows: TreasuryItem[]; t: Theme }) {
+  const thBase = { fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", fontWeight: 400, padding: "10px 16px", width: "33.33%" } as const;
   return (
     <div style={{ backgroundColor: t.surface, border: `1px solid ${t.border}` }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "10px 16px", borderBottom: `1px solid ${t.border}`, backgroundColor: t.surfaceAlt }}>
-        <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em" }}>期間</span>
-        <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", textAlign: "right" }}>利回り</span>
-        <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.1em", textAlign: "right" }}>前日比</span>
-      </div>
-      {rows.map((b, i) => (
-        <div key={i} className="hg-treasury-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "14px 16px", borderBottom: i < rows.length - 1 ? `1px solid ${t.border}` : "none" }}>
-          <span style={{ fontSize: 13, color: t.textSub }}>{b.term}</span>
-          <span style={{ fontSize: 15, fontFamily: "monospace", fontWeight: 600, color: t.text, textAlign: "right" }}>{b.value ?? "---"}</span>
-          <span style={{ fontSize: 13, fontFamily: "monospace", color: b.change && b.change.startsWith("-") ? t.negative : t.positive, textAlign: "right" }}>
-            {b.trend === "up" ? "▲" : b.trend === "down" ? "▼" : ""} {b.change ?? "---"}
-          </span>
-        </div>
-      ))}
+      <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+        <thead>
+          <tr style={{ backgroundColor: t.surfaceAlt }}>
+            <th scope="col" style={{ ...thBase, textAlign: "left", borderBottom: `1px solid ${t.border}` }}>期間</th>
+            <th scope="col" style={{ ...thBase, textAlign: "right", borderBottom: `1px solid ${t.border}` }}>利回り</th>
+            <th scope="col" style={{ ...thBase, textAlign: "right", borderBottom: `1px solid ${t.border}` }}>前日比</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((b, i) => {
+            const tdBorder = i < rows.length - 1 ? `1px solid ${t.border}` : "none";
+            return (
+              <tr key={i} className="hg-treasury-row">
+                <td style={{ fontSize: 13, color: t.textSub, padding: "14px 16px", borderBottom: tdBorder }}>{b.term}</td>
+                <td style={{ fontSize: 15, fontFamily: "monospace", fontWeight: 600, color: t.text, textAlign: "right", padding: "14px 16px", borderBottom: tdBorder }}>{b.value ?? "---"}</td>
+                <td style={{ fontSize: 13, fontFamily: "monospace", color: b.change && b.change.startsWith("-") ? t.negative : t.positive, textAlign: "right", padding: "14px 16px", borderBottom: tdBorder }}>
+                  {b.trend === "up" ? "▲" : b.trend === "down" ? "▼" : ""} {b.change ?? "---"}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
