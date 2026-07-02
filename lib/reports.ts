@@ -64,11 +64,12 @@ export interface Report extends ReportMeta {
 
 const TYPE_DIRS: ReportType[] = ["monthly", "weekly", "daily"];
 
-export function getAllReports(): ReportMeta[] {
+// baseDir はテスト用の注入点（既定は content/reports）。
+export function getAllReports(baseDir: string = REPORTS_DIR): ReportMeta[] {
   const reports: ReportMeta[] = [];
 
   for (const type of TYPE_DIRS) {
-    const dir = path.join(REPORTS_DIR, type);
+    const dir = path.join(baseDir, type);
     if (!fs.existsSync(dir)) continue;
 
     const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
@@ -105,13 +106,13 @@ export function getAllReports(): ReportMeta[] {
   return reports.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-export function getReportsByType(type: ReportType): ReportMeta[] {
-  return getAllReports().filter((r) => r.type === type);
+export function getReportsByType(type: ReportType, baseDir: string = REPORTS_DIR): ReportMeta[] {
+  return getAllReports(baseDir).filter((r) => r.type === type);
 }
 
-export function getReportBySlug(slug: string): Report | null {
+export function getReportBySlug(slug: string, baseDir: string = REPORTS_DIR): Report | null {
   for (const type of TYPE_DIRS) {
-    const filePath = path.join(REPORTS_DIR, type, `${slug}.md`);
+    const filePath = path.join(baseDir, type, `${slug}.md`);
     if (!fs.existsSync(filePath)) continue;
 
     const raw = fs.readFileSync(filePath, "utf-8");
@@ -143,6 +144,6 @@ export function getReportBySlug(slug: string): Report | null {
   return null;
 }
 
-export function getAllSlugs(): string[] {
-  return getAllReports().map((r) => r.slug);
+export function getAllSlugs(baseDir: string = REPORTS_DIR): string[] {
+  return getAllReports(baseDir).map((r) => r.slug);
 }
