@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import type { Direction } from "./metrics";
 
 const REPORTS_DIR = path.join(process.cwd(), "content/reports");
 
@@ -9,7 +10,7 @@ export type ReportType = "monthly" | "weekly" | "daily";
 export interface ScenarioItem {
   label: string;
   probability: number;
-  direction: "up" | "neutral" | "down";
+  direction: Direction;
   base?: boolean;
   rationale?: string;
 }
@@ -28,11 +29,14 @@ export interface AllocationItem {
 
 export type SectorItem = AllocationItem;
 
+// frontmatter 語彙（"flat"）のため Direction（up/down/neutral）とは統合しない
+export type MetricDirection = "up" | "down" | "flat";
+
 export interface KeyMetricItem {
   label: string;
   value: string;
   change?: string;
-  direction?: "up" | "down" | "flat";
+  direction?: MetricDirection;
 }
 
 export interface ReportMeta {
@@ -64,6 +68,33 @@ export interface Report extends ReportMeta {
 
 const TYPE_DIRS: ReportType[] = ["monthly", "weekly", "daily"];
 
+// gray-matter の frontmatter → ReportMeta へのマッピングを一本化
+// （getAllReports / getReportBySlug の二重手書きを解消）。
+function toReportMeta(slug: string, fallbackType: ReportType, data: matter.GrayMatterFile<string>["data"]): ReportMeta {
+  return {
+    slug,
+    title: data.title ?? slug,
+    date: data.date ?? "",
+    type: (data.type as ReportType) ?? fallbackType,
+    description: data.description,
+    stance: data.stance,
+    stancePrev: data.stancePrev,
+    stanceLabel: data.stanceLabel,
+    stanceRationale: data.stanceRationale,
+    themes: data.themes,
+    scenarios: data.scenarios,
+    quote: data.quote,
+    quoteAuthor: data.quoteAuthor,
+    marketOverview: data.marketOverview,
+    regime: data.regime,
+    keyMetrics: data.keyMetrics,
+    allocation: data.allocation,
+    allocationNote: data.allocationNote,
+    sectors: data.sectors,
+    sectorsNote: data.sectorsNote,
+  };
+}
+
 // baseDir はテスト用の注入点（既定は content/reports）。
 export function getAllReports(baseDir: string = REPORTS_DIR): ReportMeta[] {
   const reports: ReportMeta[] = [];
@@ -77,28 +108,7 @@ export function getAllReports(baseDir: string = REPORTS_DIR): ReportMeta[] {
       const slug = file.replace(/\.md$/, "");
       const raw = fs.readFileSync(path.join(dir, file), "utf-8");
       const { data } = matter(raw);
-      reports.push({
-        slug,
-        title: data.title ?? slug,
-        date: data.date ?? "",
-        type: (data.type as ReportType) ?? type,
-        description: data.description,
-        stance: data.stance,
-        stancePrev: data.stancePrev,
-        stanceLabel: data.stanceLabel,
-        stanceRationale: data.stanceRationale,
-        themes: data.themes,
-        scenarios: data.scenarios,
-        quote: data.quote,
-        quoteAuthor: data.quoteAuthor,
-        marketOverview: data.marketOverview,
-        regime: data.regime,
-        keyMetrics: data.keyMetrics,
-        allocation: data.allocation,
-        allocationNote: data.allocationNote,
-        sectors: data.sectors,
-        sectorsNote: data.sectorsNote,
-      });
+      reports.push(toReportMeta(slug, type, data));
     }
   }
 
@@ -117,29 +127,7 @@ export function getReportBySlug(slug: string, baseDir: string = REPORTS_DIR): Re
 
     const raw = fs.readFileSync(filePath, "utf-8");
     const { data, content } = matter(raw);
-    return {
-      slug,
-      title: data.title ?? slug,
-      date: data.date ?? "",
-      type: (data.type as ReportType) ?? type,
-      description: data.description,
-      stance: data.stance,
-      stancePrev: data.stancePrev,
-      stanceLabel: data.stanceLabel,
-      stanceRationale: data.stanceRationale,
-      themes: data.themes,
-      scenarios: data.scenarios,
-      quote: data.quote,
-      quoteAuthor: data.quoteAuthor,
-      marketOverview: data.marketOverview,
-      regime: data.regime,
-      keyMetrics: data.keyMetrics,
-      allocation: data.allocation,
-      allocationNote: data.allocationNote,
-      sectors: data.sectors,
-      sectorsNote: data.sectorsNote,
-      content,
-    };
+    return { ...toReportMeta(slug, type, data), content };
   }
   return null;
 }

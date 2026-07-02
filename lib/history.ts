@@ -1,13 +1,17 @@
 import fs from "fs";
 import path from "path";
+import type { Direction } from "./metrics";
+
+// 共通型は lib/metrics.ts に集約（既存 import 互換のため再エクスポート）
+export type { Direction };
 
 const HISTORY_DIR = path.join(process.cwd(), "content/history");
 
 export interface PredictionOutcome {
   assessedDate: string;
   spxActualChange?: string;
-  spxDirection?: "up" | "down" | "neutral";
-  baseScenarioDirection: "up" | "down" | "neutral";
+  spxDirection?: Direction;
+  baseScenarioDirection: Direction;
   match: boolean;
   note: string;
 }
@@ -15,11 +19,9 @@ export interface PredictionOutcome {
 export interface PredictionScenario {
   label: string;
   probability: number;
-  direction: "up" | "down" | "neutral";
+  direction: Direction;
   base?: boolean;
 }
-
-export type Direction = "up" | "down" | "neutral";
 
 // 資産別の長期方向バイアス（月次・週次の longTermViews frontmatter から harvest）
 export interface LongTermView {
@@ -42,7 +44,7 @@ export interface PredictionRecord {
   baseScenario: {
     label: string;
     probability: number;
-    direction: "up" | "down" | "neutral";
+    direction: Direction;
   };
   scenarios: PredictionScenario[];
   keyMetrics: PredictionMetric[];

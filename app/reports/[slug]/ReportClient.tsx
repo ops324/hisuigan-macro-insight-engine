@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Report, ReportType } from "@/lib/reports";
 import { useTheme } from "@/lib/useTheme";
+import { formatDate } from "@/lib/format";
 
 const TYPE_LABELS: Record<ReportType, string> = {
   monthly: "月次",
@@ -17,12 +18,6 @@ const TYPE_SUBTITLES: Record<ReportType, string> = {
   weekly:  "市場環境の記録",
   daily:   "日々の動向",
 };
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
-}
 
 function slugify(text: string): string {
   return text.trim().replace(/\s+/g, "-");

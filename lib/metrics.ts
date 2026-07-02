@@ -1,5 +1,9 @@
 // カレントビュー主要指標の表示ヘルパー。ReportsClient から利用。純粋関数はテスト対象。
 
+// 予測・シナリオの方向（up/down/neutral）の共通型。
+// ※ KeyMetricItem の direction（up/down/flat）は frontmatter 語彙のため別型（lib/reports.ts の MetricDirection）
+export type Direction = "up" | "down" | "neutral";
+
 // 彩度を落とした方向色（ネオン廃止・紙面に馴染む。両テーマで判読可）
 export function directionColor(d: string): string {
   return d === "up" ? "#4e8d6f" : d === "down" ? "#c25f52" : "#8c8576";

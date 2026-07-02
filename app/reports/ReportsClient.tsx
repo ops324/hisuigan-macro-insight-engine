@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ReportMeta, ReportType, ScenarioItem, AllocationItem, KeyMetricItem, RegimeInfo } from "@/lib/reports";
+import { ReportMeta, ReportType, AllocationItem, KeyMetricItem, RegimeInfo } from "@/lib/reports";
 import { MetricsHistory, MetricPoint } from "@/lib/history";
 import { themeMap } from "@/lib/theme";
 import { useTheme } from "@/lib/useTheme";
@@ -270,7 +270,7 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
       </div>
 
       {keyMetrics && keyMetrics.length > 0 && (
-        <KeyMetrics items={keyMetrics as KeyMetricItem[]} asOf={report.date} metricsHistory={metricsHistory} t={t} />
+        <KeyMetrics items={keyMetrics} asOf={report.date} metricsHistory={metricsHistory} t={t} />
       )}
 
       {regime && <RegimePanel regime={regime} t={t} />}
@@ -342,8 +342,8 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
           <div style={{ background: t.surface, padding: "20px" }}>
             <div style={{ fontSize: 10, color: t.positive, letterSpacing: "0.1em", marginBottom: 14, opacity: 0.85 }}>予測シナリオ（AI推定・参考値）</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {(scenarios as ScenarioItem[]).map((s, i) => (
-                <div key={i} style={{ paddingBottom: 12, borderBottom: i < (scenarios as ScenarioItem[]).length - 1 ? `1px solid ${t.border}` : "none" }}>
+              {scenarios.map((s, i) => (
+                <div key={i} style={{ paddingBottom: 12, borderBottom: i < scenarios.length - 1 ? `1px solid ${t.border}` : "none" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <span style={{ fontSize: 13, color: directionColor(s.direction), fontWeight: 700 }}>{directionLabel(s.direction)}</span>
@@ -381,7 +381,7 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
               {report.allocationNote}
             </p>
           )}
-          <AllocationDonut items={allocation as AllocationItem[]} t={t} />
+          <AllocationDonut items={allocation} t={t} />
         </div>
       )}
 
@@ -397,7 +397,7 @@ function CurrentView({ report, metricsHistory, t }: { report: ReportMeta; metric
               {report.sectorsNote}
             </p>
           )}
-          <AllocationDonut items={report.sectors as AllocationItem[]} t={t} colors={SECTOR_COLORS} />
+          <AllocationDonut items={report.sectors} t={t} colors={SECTOR_COLORS} />
         </div>
       )}
     </div>
