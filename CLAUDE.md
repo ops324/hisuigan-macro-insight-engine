@@ -90,7 +90,7 @@
 - 備考：Stooq は日経225（^N225）非対応のため EWJ.US（iShares MSCI Japan ETF）で代替
 - 備考：米国3指数は ETF プロキシから実指数データに変更（Alpha Vantage 移行時の制約が解消）
 - 変動：Stooqから前日終値を取得できないため当日始値比（日中変動）で代用
-- ALPHA_VANTAGE_API_KEY は .env.local に残存しているが現在未使用
+- ALPHA_VANTAGE_API_KEY は廃止済み（.env.local からも削除済み。必要な環境変数は .env.example 参照）
 
 ### 米国債（完了）
 - API：FRED API（無料・APIキー必要）
