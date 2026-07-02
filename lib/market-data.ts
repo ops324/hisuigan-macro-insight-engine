@@ -244,7 +244,11 @@ export async function getForex(): Promise<{ forex: ForexItem[]; updatedAt: strin
 // 米国債。FRED。系列ごと allSettled。
 export async function getUsTreasury(): Promise<{ ustreasury: TreasuryItem[]; updatedAt: string }> {
   const apiKey = process.env.FRED_API_KEY;
-  if (!apiKey) throw new Error("FRED_API_KEY not configured");
+  if (!apiKey) {
+    // throw は呼び出し側の allSettled で吸収され UI は「---」表示になる。原因が無言にならないよう警告を残す
+    console.warn("[market-data] FRED_API_KEY 未設定のため米国債利回りは取得できません（.env.example 参照）");
+    throw new Error("FRED_API_KEY not configured");
+  }
 
   const results = await Promise.allSettled(
     FRED_SERIES.map(async ({ id }) => {

@@ -22,8 +22,19 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      # 既存のフォント警告は許容（--max-warnings 0 は付けない）
-      - run: npm run lint
+      # no-page-custom-font は eslint.config.mjs で off（App Router では誤検知）。警告ゼロを強制する
+      - run: npm run lint -- --max-warnings 0
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run type-check
 
   test:
     runs-on: ubuntu-latest
