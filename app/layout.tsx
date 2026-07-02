@@ -28,6 +28,12 @@ export const metadata: Metadata = {
     description: "為替・株式指数・米国債・日本国債・コモディティのリアルタイムデータと、月次・週次・日次のマクロ市場分析レポート。",
     url: "/",
   },
+  // og:image / twitter:image は app/opengraph-image.tsx から自動注入される
+  twitter: {
+    card: "summary_large_image",
+    title: "翡翠眼 | マクロ市場分析",
+    description: "為替・株式指数・米国債・日本国債・コモディティのリアルタイムデータと、月次・週次・日次のマクロ市場分析レポート。",
+  },
 };
 
 export default function RootLayout({

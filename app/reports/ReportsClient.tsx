@@ -48,6 +48,7 @@ export default function ReportsClient({ latestWeekly, latestDaily, reportsByType
             <button
               onClick={toggleTheme}
               aria-label={`テーマ切替（現在: ${mode === "dark" ? "ダーク" : "ライト"}）`}
+              aria-pressed={mode === "dark"}
               style={{ background: "none", border: `1px solid ${t.border}`, color: t.textSub, cursor: "pointer", padding: "4px 10px", fontSize: 11, letterSpacing: "0.06em", borderRadius: 2, transition: "border-color 0.15s, color 0.15s" }}
             >
               {mode === "dark" ? "LIGHT" : "DARK"}
