@@ -12,8 +12,12 @@ export function AllocationDonut({ items, t, colors = ALLOC_COLORS }: { items: Al
   const total = items.reduce((sum, it) => sum + it.percent, 0) || 100;
   return (
     <div>
-      {/* 比率バー（角丸無し・グロー無し・トーナル） */}
-      <div style={{ display: "flex", width: "100%", height: 10, border: `1px solid ${t.border}`, overflow: "hidden", marginBottom: 18 }}>
+      {/* 比率バー（角丸無し・グロー無し・トーナル）。スクリーンリーダー向けに内訳をテキスト化 */}
+      <div
+        role="img"
+        aria-label={`配分比率: ${items.map((it) => `${it.label} ${it.percent}%`).join("、")}`}
+        style={{ display: "flex", width: "100%", height: 10, border: `1px solid ${t.border}`, overflow: "hidden", marginBottom: 18 }}
+      >
         {items.map((item, i) => (
           <div key={i} style={{
             width: `${(item.percent / total) * 100}%`,

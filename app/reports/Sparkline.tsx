@@ -35,6 +35,7 @@ export function Sparkline({ points, color, downColor, height = 40 }: {
       aria-label={`直近${points.length}期間の推移（${vals[lastIdx] >= vals[vals.length - 2] ? "上昇" : "下落"}傾向）`}
       style={{ display: "block" }}
     >
+      <title>{`直近${points.length}期間の推移（${vals[lastIdx] >= vals[vals.length - 2] ? "上昇" : "下落"}傾向）`}</title>
       <polyline
         points={linePts.join(" ")} fill="none"
         stroke={trend} strokeWidth={1.25}
