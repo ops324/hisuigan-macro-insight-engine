@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 import {
   parseGoldApiPrice,
+  parseSwissquotePrice,
+  parseYahooChartPrice,
+  usdPerTonneToLb,
+  firstOk,
   commodityJpyValues,
   pickLatestTwoValidFred,
   parseJgbCsv,
@@ -27,6 +31,93 @@ describe("parseGoldApiPrice", () => {
   it("throws on null / non-object responses", () => {
     expect(() => parseGoldApiPrice(null)).toThrow(/missing or non-numeric/);
     expect(() => parseGoldApiPrice("error")).toThrow(/missing or non-numeric/);
+  });
+});
+
+describe("parseSwissquotePrice", () => {
+  const feed = [
+    {
+      topo: { platform: "SwissquoteLtd", server: "Live5" },
+      spreadProfilePrices: [
+        { spreadProfile: "premium", bid: 4164.469, ask: 4165.131 },
+        { spreadProfile: "prime", bid: 4164.483, ask: 4165.117 },
+      ],
+      ts: 1783095563355,
+    },
+  ];
+
+  it("returns the mid price of the first numeric bid/ask profile", () => {
+    expect(parseSwissquotePrice(feed)).toBeCloseTo(4164.8, 1);
+  });
+
+  it("skips profiles with non-numeric bid/ask and falls through to the next", () => {
+    const partial = [
+      { spreadProfilePrices: [{ spreadProfile: "x", bid: "n/a", ask: null }] },
+      { spreadProfilePrices: [{ spreadProfile: "y", bid: 62.2, ask: 62.6 }] },
+    ];
+    expect(parseSwissquotePrice(partial)).toBeCloseTo(62.4, 1);
+  });
+
+  it("throws on empty array (Swissquote returns [] for unsupported symbols like copper)", () => {
+    expect(() => parseSwissquotePrice([])).toThrow(/no numeric bid\/ask/);
+  });
+
+  it("throws on non-array responses", () => {
+    expect(() => parseSwissquotePrice(null)).toThrow(/no numeric bid\/ask/);
+  });
+});
+
+describe("parseYahooChartPrice", () => {
+  it("extracts regularMarketPrice from the chart meta", () => {
+    const json = { chart: { result: [{ meta: { regularMarketPrice: 6.215, currency: "USD" } }] } };
+    expect(parseYahooChartPrice(json)).toBe(6.215);
+  });
+
+  it("throws when chart.error is present", () => {
+    const json = { chart: { error: { code: "Not Found" }, result: null } };
+    expect(() => parseYahooChartPrice(json)).toThrow(/Yahoo chart error/);
+  });
+
+  it("throws when regularMarketPrice is missing or non-numeric", () => {
+    expect(() => parseYahooChartPrice({ chart: { result: [{ meta: {} }] } })).toThrow(/non-numeric/);
+    expect(() => parseYahooChartPrice(null)).toThrow(/non-numeric/);
+  });
+});
+
+describe("usdPerTonneToLb", () => {
+  it("converts USD/metric-ton to USD/lb", () => {
+    // FRED PCOPPUSDM ≈ 13483.75 USD/tonne → ≈ 6.12 USD/lb（gold-api の HG ≈ 6.0 に整合）
+    expect(usdPerTonneToLb(13483.75)).toBeCloseTo(6.116, 2);
+  });
+});
+
+describe("firstOk (fallback chain)", () => {
+  const ok = (v: number) => () => Promise.resolve(v);
+  const fail = (msg: string) => () => Promise.reject(new Error(msg));
+
+  it("returns the first source's value when it succeeds (no fallback hit)", async () => {
+    let secondCalled = false;
+    const v = await firstOk([
+      ok(100),
+      () => {
+        secondCalled = true;
+        return Promise.resolve(200);
+      },
+    ]);
+    expect(v).toBe(100);
+    expect(secondCalled).toBe(false);
+  });
+
+  it("skips failing sources and returns the first success", async () => {
+    expect(await firstOk([fail("gold-api down"), fail("swissquote down"), ok(6.2)])).toBe(6.2);
+  });
+
+  it("throws the last error when every source fails", async () => {
+    await expect(firstOk([fail("a"), fail("b"), fail("last")])).rejects.toThrow(/last/);
+  });
+
+  it("throws when given no sources", async () => {
+    await expect(firstOk([])).rejects.toThrow(/all sources failed/);
   });
 });
 

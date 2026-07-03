@@ -49,6 +49,45 @@ export function parseGoldApiPrice(json: unknown): number {
   return price;
 }
 
+// Swissquote 公開フィード（配列・各要素に spreadProfilePrices[].bid/ask）から
+// mid 価格（(bid+ask)/2）を取り出す。数値の bid/ask を持つ最初のプロファイルを採用。
+export function parseSwissquotePrice(json: unknown): number {
+  const entries = Array.isArray(json) ? json : [];
+  for (const entry of entries) {
+    const profiles = (entry as { spreadProfilePrices?: unknown })?.spreadProfilePrices;
+    if (!Array.isArray(profiles)) continue;
+    for (const p of profiles) {
+      const bid = (p as { bid?: unknown })?.bid;
+      const ask = (p as { ask?: unknown })?.ask;
+      if (typeof bid === "number" && typeof ask === "number" && !isNaN(bid) && !isNaN(ask)) {
+        return (bid + ask) / 2;
+      }
+    }
+  }
+  throw new Error("Invalid Swissquote response: no numeric bid/ask");
+}
+
+// Yahoo Finance chart API（{ chart: { result: [{ meta: { regularMarketPrice } }] } }）から
+// 直近価格を取り出す。chart.error や欠損・非数値は throw する。
+export function parseYahooChartPrice(json: unknown): number {
+  const chart = (json as { chart?: { error?: unknown; result?: unknown } } | null)?.chart;
+  if (chart?.error) throw new Error(`Yahoo chart error: ${JSON.stringify(chart.error)}`);
+  const meta = (Array.isArray(chart?.result) ? chart!.result[0] : undefined) as
+    | { meta?: { regularMarketPrice?: unknown } }
+    | undefined;
+  const price = meta?.meta?.regularMarketPrice;
+  if (typeof price !== "number" || isNaN(price)) {
+    throw new Error("Invalid Yahoo response: missing or non-numeric regularMarketPrice");
+  }
+  return price;
+}
+
+// FRED の銅系列（PCOPPUSDM＝USD/メトリックトン）を USD/lb へ換算する。
+// 1 メトリックトン = 2204.6226 lb。gold-api の銅（USD/lb）と単位を揃えるための最終手段。
+export function usdPerTonneToLb(usdPerTonne: number): number {
+  return usdPerTonne / 2204.6226;
+}
+
 // コモディティの USD（または cents）建て価格を JPY 換算した数値群を返す。
 // 銅は cents/lb なので rate を 1/100 する。
 export function commodityJpyValues(
@@ -119,12 +158,39 @@ const STOCK_SYMBOLS = [
   { seriesId: "NIKKEI225", name: "日経225", label: "N225", note: null as string | null },
 ];
 
-// 金・銀・銅は gold-api.com（USD 建てスポット・リアルタイム・前日比なし）。
-// gold-api の銅は USD/lb（Stooq の cents/lb と異なる）。
+// 金・銀・銅は USD 建てスポット（リアルタイム・前日比なし）を JPY 換算して表示。
+// 単一ソース障害で「---」になるのを避けるため、無料・キー不要のソースを多段フォールバック
+// （主 gold-api.com → 予備 Swissquote 公開フィード → Yahoo Finance）。
+// 銅は Swissquote 非対応のため gold-api → Yahoo → FRED 月次（最終手段・単位換算あり）。
+// 単位：金銀＝USD/oz、銅＝USD/lb で各ソースを揃える。
 const METAL_SYMBOLS = [
-  { symbol: "XAU", name: "金", unit: "円/oz" },
-  { symbol: "XAG", name: "銀", unit: "円/oz" },
-  { symbol: "HG", name: "銅", unit: "円/lb" },
+  {
+    name: "金",
+    unit: "円/oz",
+    sources: (rev: number): (() => Promise<number>)[] => [
+      () => fetchGoldApiPrice("XAU", rev),
+      () => fetchSwissquotePrice("XAU", rev),
+      () => fetchYahooPrice("GC=F", rev),
+    ],
+  },
+  {
+    name: "銀",
+    unit: "円/oz",
+    sources: (rev: number): (() => Promise<number>)[] => [
+      () => fetchGoldApiPrice("XAG", rev),
+      () => fetchSwissquotePrice("XAG", rev),
+      () => fetchYahooPrice("SI=F", rev),
+    ],
+  },
+  {
+    name: "銅",
+    unit: "円/lb",
+    sources: (rev: number): (() => Promise<number>)[] => [
+      () => fetchGoldApiPrice("HG", rev),
+      () => fetchYahooPrice("HG=F", rev),
+      () => fetchFredCopperPerLb(rev),
+    ],
+  },
 ];
 
 // WTI 原油は FRED のスポット系列（EIA 由来・数営業日遅れ・前日比あり）。
@@ -181,6 +247,44 @@ async function fetchGoldApiPrice(symbol: string, revalidate: number): Promise<nu
   return parseGoldApiPrice(await res.json());
 }
 
+// Swissquote 公開フィードから USD 建てスポット価格（mid）を取得する（金銀のみ・キー不要）。
+async function fetchSwissquotePrice(base: string, revalidate: number): Promise<number> {
+  const url = `https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/${encodeURIComponent(base)}/USD`;
+  const res = await fetch(url, { next: { revalidate } });
+  if (!res.ok) throw new Error(`Swissquote fetch failed for ${base}: ${res.status}`);
+  return parseSwissquotePrice(await res.json());
+}
+
+// Yahoo Finance chart API から直近価格を取得する（レート制限あり・フォールバック専用）。
+async function fetchYahooPrice(ticker: string, revalidate: number): Promise<number> {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=5d`;
+  const res = await fetch(url, {
+    next: { revalidate },
+    headers: { "User-Agent": "Mozilla/5.0" },
+  });
+  if (!res.ok) throw new Error(`Yahoo fetch failed for ${ticker}: ${res.status}`);
+  return parseYahooChartPrice(await res.json());
+}
+
+// FRED の銅系列（PCOPPUSDM＝USD/トン・月次）を USD/lb に換算して取得する（銅の最終手段）。
+async function fetchFredCopperPerLb(revalidate: number): Promise<number> {
+  const { current } = await fetchFredLatestTwo("PCOPPUSDM", requireFredApiKey(), revalidate);
+  return usdPerTonneToLb(current);
+}
+
+// フォールバックチェーン。先頭から順に試し、最初に成功した値を返す。全滅時は最後の例外を投げる。
+export async function firstOk<T>(sources: (() => Promise<T>)[]): Promise<T> {
+  let lastErr: unknown;
+  for (const source of sources) {
+    try {
+      return await source();
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("all sources failed");
+}
+
 async function fetchUsdJpy(revalidate: number): Promise<number> {
   const res = await fetch("https://open.er-api.com/v6/latest/USD", { next: { revalidate } });
   if (!res.ok) throw new Error("Failed to fetch USD/JPY rate");
@@ -216,13 +320,13 @@ export async function getStocks(): Promise<{ stocks: StockItem[]; updatedAt: str
   return { stocks, updatedAt: new Date().toISOString() };
 }
 
-// コモディティ。JPY 換算。金・銀・銅は gold-api（リアルタイム・前日比なし）、
+// コモディティ。JPY 換算。金・銀・銅は多段フォールバック（リアルタイム・前日比なし）、
 // WTI は FRED（数営業日遅れ・前日比あり）。1銘柄失敗しても他は表示。USD/JPY 取得失敗時は全 null。
 export async function getCommodities(): Promise<{ commodities: CommodityItem[]; updatedAt: string }> {
   // WTI はキー未設定でも金・銀・銅を巻き込まないよう async ラッパで throw を吸収する
   const [wtiResult, metalResults, usdJpyResult] = await Promise.all([
     Promise.allSettled([(async () => fetchFredLatestTwo(WTI.seriesId, requireFredApiKey(), 3600))()]),
-    Promise.allSettled(METAL_SYMBOLS.map(({ symbol }) => fetchGoldApiPrice(symbol, 900))),
+    Promise.allSettled(METAL_SYMBOLS.map(({ sources }) => firstOk(sources(900)))),
     Promise.allSettled([fetchUsdJpy(900)]),
   ]);
   const usdJpy = usdJpyResult[0].status === "fulfilled" ? usdJpyResult[0].value : null;

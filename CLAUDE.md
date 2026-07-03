@@ -52,14 +52,15 @@
 | 株式指数 | FRED API（Stooqから移行） | 完了 |
 | 米国債 | FRED API | 完了 |
 | 日本国債 | 財務省CSV | 完了 |
-| コモディティ | gold-api.com（金銀銅）＋ FRED（WTI） | 完了 |
+| コモディティ | 金銀銅＝多段フォールバック（gold-api.com→Swissquote→Yahoo→FRED月次）＋ WTI＝FRED | 完了 |
 
 ## データ取得アーキテクチャ（lib/market-data.ts）
 - **取得/パースの実体は `lib/market-data.ts` に集約**。各 Route Handler（`app/api/*/route.js`）と市場ページ Server Component（`app/market/page.tsx`）の両方がこの lib を呼ぶ薄いラッパ
 - 取得関数：`getStocks()` / `getForex()` / `getUsTreasury()` / `getJpTreasury()` / `getCommodities()`。各々**内部で `Promise.allSettled`** を使い、1銘柄が失敗しても取れた銘柄だけ返す（全滅を回避）。失敗銘柄は null 値で返り UI は「---」表示
 - キャッシュは `fetch(url, { next: { revalidate: N } })`（為替60・株式3600・金銀銅900・WTI/米国債/日本国債3600秒）
-- 純粋関数（`lib/__tests__/market-data.test.ts` でテスト）：`parseGoldApiPrice` / `commodityJpyValues` / `pickLatestTwoValidFred` / `parseJgbCsv`
+- 純粋関数（`lib/__tests__/market-data.test.ts` でテスト）：`parseGoldApiPrice` / `parseSwissquotePrice` / `parseYahooChartPrice` / `usdPerTonneToLb` / `commodityJpyValues` / `pickLatestTwoValidFred` / `parseJgbCsv`
 - FRED 取得の共通ヘルパー：`requireFredApiKey()`（未設定は `console.warn`＋throw）と `fetchFredLatestTwo(seriesId, apiKey, revalidate)`（直近有効値2件）。株式指数・WTI・米国債の3箇所で共用
+- 金銀銅の多段フォールバック：`firstOk(sources)` が先頭ソースから順に試し最初の成功値を返す。各金属は `METAL_SYMBOLS[].sources(rev)` にフォールバックチェーンを定義（金銀＝gold-api→Swissquote→Yahoo、銅＝gold-api→Yahoo→FRED月次）。単位は金銀 USD/oz・銅 USD/lb で各ソースを揃える（Swissquote は銅非対応・`[]` を返すため銅チェーンから除外。FRED 銅は USD/トン→`usdPerTonneToLb` で /lb 換算する最終手段）
 - 表示加工の純粋関数は `lib/metrics.ts`（`changeDisplay` / `metricGroup` / `directionColor` / `directionLabel`。`lib/__tests__/metrics.test.ts` でテスト）。方向の共通型 `Direction`（`up`/`down`/`neutral`）も **`lib/metrics.ts` に集約**（`lib/history.ts` は再エクスポート・`lib/reports.ts` の `ScenarioItem.direction` も参照）。`KeyMetricItem.direction` は frontmatter 語彙の `flat` を含むため別型 `MetricDirection`（`up`/`down`/`flat`）で統合しない
 - 日付表示など UI 純粋関数は `lib/format.ts`（`formatDate`＝`YYYY-MM-DD → YYYY年M月D日`／`splitPanelLines`＝散文パネル本文を「。」句点の直後・丸数字①..⑳の直前で改行する行配列に分割。複合語の「・」は割らない・空行はトリム除去。`lib/__tests__/format.test.ts` でテスト。`ReportCard` / `[slug]/ReportClient` / `PanelText` が共用）
 
@@ -122,16 +123,20 @@
 - 備考：月初は前日データが1行のみのため前日比は N/A 扱い
 
 ### コモディティ（完了）
-- API：金・銀・銅＝gold-api.com（無料・キー不要）／WTI原油＝FRED API ※Stooq から移行（2026-07-04・移行理由は株式指数と同じ）
-- 備考：Yahoo Finance は2024年頃から認証必須化＋429 レート制限のため不使用
-- エンドポイント：金銀銅＝https://api.gold-api.com/price/{XAU|XAG|HG}（JSON の `price`＝USD建てスポット）／WTI＝FRED Series `DCOILWTICO`
-- 取得銘柄：WTI原油(DCOILWTICO), 金(XAU), 銀(XAG), 銅(HG)
+- API：金・銀・銅＝多段フォールバック（無料・キー不要のソースを順に試行）／WTI原油＝FRED API ※Stooq から移行（2026-07-04・移行理由は株式指数と同じ）
+- 金銀銅のフォールバックチェーン（単一ソース障害で「---」にしないための冗長化。SLA は買わず冗長化で耐障害性を確保）：
+  - 金：gold-api.com（XAU）→ Swissquote 公開フィード（XAU/USD の mid）→ Yahoo Finance（GC=F）
+  - 銀：gold-api.com（XAG）→ Swissquote（XAG/USD）→ Yahoo Finance（SI=F）
+  - 銅：gold-api.com（HG）→ Yahoo Finance（HG=F）→ FRED 月次（PCOPPUSDM を USD/lb 換算・最終手段）
+  - Swissquote は銅（XCU/HG）非対応（`[]` を返す）ため銅チェーンから除外。Yahoo はレート制限リスクがあるためフォールバック専用（主経路では叩かない）
+- エンドポイント：gold-api＝https://api.gold-api.com/price/{XAU|XAG|HG} ／ Swissquote＝https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/{XAU|XAG}/USD ／ Yahoo＝https://query1.finance.yahoo.com/v8/finance/chart/{GC=F|SI=F|HG=F} ／ WTI＝FRED Series `DCOILWTICO`
+- 取得銘柄：WTI原油(DCOILWTICO), 金(XAU/GC=F), 銀(XAG/SI=F), 銅(HG/HG=F/PCOPPUSDM)
 - 更新：ISR 金銀銅900秒（15分）・WTI 3600秒（1時間）
 - Route Handler：app/api/commodities/route.js
-- データ鮮度：金銀銅＝準リアルタイムスポット／WTI＝EIA 由来のため数営業日遅れ
-- 変動：WTIのみ前日比あり（FRED 直近有効値2件の差分）。金銀銅は gold-api が前日終値を提供しないため前日比なし（UI は「前日比データなし」表示）
+- データ鮮度：金銀銅＝準リアルタイムスポット（フォールバック時も日次以上の鮮度。銅の FRED 最終手段のみ月次）／WTI＝EIA 由来のため数営業日遅れ
+- 変動：WTIのみ前日比あり（FRED 直近有効値2件の差分）。金銀銅はスポット値のみで前日終値を提供しないため前日比なし（UI は「前日比データなし」表示）
 - 価格表示：日本円（JPY）換算。USD/JPY レートを ExchangeRate-API からリアルタイム取得して乗算
-- 単位：WTI原油=円/bbl、金・銀=円/oz、銅=円/lb（gold-api の銅は USD/lb。旧 Stooq の cents/lb と異なり 1/100 換算は不要）
+- 単位：WTI原油=円/bbl、金・銀=円/oz、銅=円/lb（各ソースを USD/oz・USD/lb に揃える。gold-api・Yahoo の銅は USD/lb、FRED は USD/トンなので `usdPerTonneToLb` で換算）
 - 表示形式：¥プレフィックス付き整数円（小数なし）
 
 ## テーマシステム
