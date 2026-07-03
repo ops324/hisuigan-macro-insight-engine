@@ -1,6 +1,7 @@
 "use client";
 import { RegimeInfo } from "@/lib/reports";
 import { Theme } from "@/lib/theme";
+import { PanelText } from "./PanelText";
 
 export function RegimePanel({ regime, t }: { regime: RegimeInfo; t: Theme }) {
   const cells = [
@@ -25,9 +26,7 @@ export function RegimePanel({ regime, t }: { regime: RegimeInfo; t: Theme }) {
         ))}
       </div>
       {regime.summary && (
-        <p style={{ fontSize: 12, color: t.textSub, margin: "10px 0 0", lineHeight: 1.8, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }}>
-          {regime.summary}
-        </p>
+        <PanelText text={regime.summary} style={{ fontSize: 12, color: t.textSub, margin: "10px 0 0", lineHeight: 1.8, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }} />
       )}
     </div>
   );

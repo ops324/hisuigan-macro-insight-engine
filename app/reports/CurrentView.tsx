@@ -7,6 +7,7 @@ import { directionColor, directionLabel } from "@/lib/metrics";
 import { AllocationDonut, SECTOR_COLORS } from "./AllocationDonut";
 import { KeyMetrics } from "./KeyMetrics";
 import { RegimePanel } from "./RegimePanel";
+import { PanelText } from "./PanelText";
 
 // テーマ文字列先頭の信号絵文字を無発光スウォッチへ変換（frontmatter は不変・表示層のみ）
 const THEME_SWATCH: Record<string, string> = {
@@ -81,9 +82,7 @@ export function CurrentView({ report, metricsHistory, t }: { report: ReportMeta;
             {stanceRationale && (
               <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 12, marginBottom: 14 }}>
                 <div style={{ fontSize: 9, color: t.positive, letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7, opacity: 0.85 }}>判断根拠</div>
-                <p style={{ fontSize: 11, color: t.textSub, lineHeight: 1.8, margin: 0, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 10 }}>
-                  {stanceRationale}
-                </p>
+                <PanelText text={stanceRationale} style={{ fontSize: 11, color: t.textSub, lineHeight: 1.8, margin: 0, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 10 }} />
               </div>
             )}
             <div style={{ fontSize: 11, color: t.textSub, lineHeight: 1.7, borderTop: `1px solid ${t.border}`, paddingTop: 12 }}>
@@ -97,9 +96,7 @@ export function CurrentView({ report, metricsHistory, t }: { report: ReportMeta;
           <div style={{ background: t.surface, padding: "20px" }}>
             <div style={{ fontSize: 10, color: t.positive, letterSpacing: "0.12em", marginBottom: 14, opacity: 0.85 }}>市況概要</div>
             {report.marketOverview && (
-              <p style={{ fontSize: 13, color: t.textSub, lineHeight: 1.85, margin: "0 0 16px", borderBottom: `1px solid ${t.border}`, paddingBottom: 14 }}>
-                {report.marketOverview}
-              </p>
+              <PanelText text={report.marketOverview} style={{ fontSize: 13, color: t.textSub, lineHeight: 1.85, margin: "0 0 16px", borderBottom: `1px solid ${t.border}`, paddingBottom: 14 }} />
             )}
             <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
               {themes.map((theme, i) => {
@@ -136,9 +133,7 @@ export function CurrentView({ report, metricsHistory, t }: { report: ReportMeta;
                     <div style={{ height: "100%", width: `${s.probability}%`, background: directionColor(s.direction), opacity: s.base ? 1 : 0.55 }} />
                   </div>
                   {s.rationale && (
-                    <p style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.75, margin: "8px 0 0", letterSpacing: "0.02em" }}>
-                      {s.rationale}
-                    </p>
+                    <PanelText text={s.rationale} style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.75, margin: "8px 0 0", letterSpacing: "0.02em" }} />
                   )}
                 </div>
               ))}
@@ -155,9 +150,7 @@ export function CurrentView({ report, metricsHistory, t }: { report: ReportMeta;
             <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap", flexShrink: 0 }}>投資助言ではありません</span>
           </div>
           {report.allocationNote && (
-            <p style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }}>
-              {report.allocationNote}
-            </p>
+            <PanelText text={report.allocationNote} style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }} />
           )}
           <AllocationDonut items={allocation} t={t} />
         </div>
@@ -171,9 +164,7 @@ export function CurrentView({ report, metricsHistory, t }: { report: ReportMeta;
             <span style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap", flexShrink: 0 }}>投資助言ではありません</span>
           </div>
           {report.sectorsNote && (
-            <p style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }}>
-              {report.sectorsNote}
-            </p>
+            <PanelText text={report.sectorsNote} style={{ fontSize: 12, color: t.textSub, margin: "0 0 20px", lineHeight: 1.85, letterSpacing: "0.02em", borderLeft: `2px solid ${t.positive}66`, paddingLeft: 12 }} />
           )}
           <AllocationDonut items={report.sectors} t={t} colors={SECTOR_COLORS} />
         </div>

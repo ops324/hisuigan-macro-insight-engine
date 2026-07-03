@@ -60,7 +60,7 @@
 - キャッシュは `fetch(url, { next: { revalidate: N } })`（為替60・株式300・コモディティ900・米国債/日本国債3600秒）
 - 純粋関数（`lib/__tests__/market-data.test.ts` でテスト）：`parseStooqCsv` / `commodityJpyValues` / `pickLatestTwoValidFred` / `parseJgbCsv`
 - 表示加工の純粋関数は `lib/metrics.ts`（`changeDisplay` / `metricGroup` / `directionColor` / `directionLabel`。`lib/__tests__/metrics.test.ts` でテスト）。方向の共通型 `Direction`（`up`/`down`/`neutral`）も **`lib/metrics.ts` に集約**（`lib/history.ts` は再エクスポート・`lib/reports.ts` の `ScenarioItem.direction` も参照）。`KeyMetricItem.direction` は frontmatter 語彙の `flat` を含むため別型 `MetricDirection`（`up`/`down`/`flat`）で統合しない
-- 日付表示など UI 純粋関数は `lib/format.ts`（`formatDate`＝`YYYY-MM-DD → YYYY年M月D日`。`lib/__tests__/format.test.ts` でテスト。`ReportCard` / `[slug]/ReportClient` が共用）
+- 日付表示など UI 純粋関数は `lib/format.ts`（`formatDate`＝`YYYY-MM-DD → YYYY年M月D日`／`splitPanelLines`＝散文パネル本文を「。」句点の直後・丸数字①..⑳の直前で改行する行配列に分割。複合語の「・」は割らない・空行はトリム除去。`lib/__tests__/format.test.ts` でテスト。`ReportCard` / `[slug]/ReportClient` / `PanelText` が共用）
 
 ## テスト（Vitest）
 - `npm run test`（`vitest run`）。設定は `vitest.config.ts`（node 環境・`@` エイリアス）。テストは `lib/__tests__/*.test.ts`
@@ -496,6 +496,7 @@ sectors:
 - スタンスゲージには「中長期目線」の注記と「AI（翡翠眼）による参考値。投資助言ではありません。」を表示
 - スタンスゲージ：墨の細トラック（`t.border`）＋ 現在値までを `t.textSub` 単色で塗る（旧 翡翠→赤グラデは廃止）。現在値は実線ドット（`t.text`）、前回値は中空リング（ゴーストマーカー・`t.textMuted` ボーダー）で描画
 - スタンス前回比（stancePrev）：RISK-ON/OFF行の下に「前回比 ↑+4 前回 68」を表示。デルタ配色は増加（リスクオフ寄り）=減彩琥珀 `#b08a4a`・減少=`t.positive`・横ばい=`t.textMuted`。`stancePrev` がない場合は非表示
+- **散文パネル本文の改行方針**：カレントビュー各パネルの散文本文（判断根拠 `stanceRationale`・市況概要 `marketOverview`・シナリオ根拠 `scenario.rationale`・配分解説 `allocationNote`・セクター解説 `sectorsNote`・レジーム総括 `regime.summary`）は **`PanelText` コンポーネント経由で描画**し、「。」句点の直後・丸数字①..⑳の直前で一文一行に改行する（`splitPanelLines`）。各行はブロック span＋文間 4px 余白で、狭いカラム（判断根拠200px・シナリオ260px）での折り返しと文の切れ目を区別。**複合語の「・」（例 `実質金利・割引率`・`半導体・AI・テクノロジー`）は割らない**。外側 `<p>` のスタイル（色・fontSize・borderLeft 等）はパネルごとに `style` prop で注入し従来どおり
 - スタンス判断根拠（stanceRationale）：スタンス欄の前回比行と免責注記の間に「判断根拠」ラベル＋本文を翡翠グリーンの左ボーダー付きで表示。`stanceRationale` がない場合は非表示
 - シナリオ判断根拠（scenario.rationale）：各予測シナリオの確率バー直下に根拠テキスト（11px・textMuted）を表示。各シナリオの `rationale` がない場合はその行のみ非表示
 - 予測シナリオのラベル：「予測シナリオ（AI推定・参考値）」（翡翠眼を省略した短縮形）
@@ -532,8 +533,9 @@ sectors:
 | 共通 | `app/reports/RegimePanel.tsx` | 現在のレジームパネル |
 | 共通 | `app/reports/Sparkline.tsx` | スパークライン SVG（`SPARK_VW`） |
 | 共通 | `app/reports/AllocationDonut.tsx` | 水平積み上げバー（`ALLOC_COLORS` / `SECTOR_COLORS` を export） |
+| 共通 | `app/reports/PanelText.tsx` | 散文パネル本文を一文一行で描画（`splitPanelLines` を利用。外側 `<p>` のスタイルは `style` prop で注入） |
 
-> **注**：カレントビュー系（`AllocationDonut` / `Sparkline` / `KeyMetrics` / `RegimePanel` / `CurrentView`）は元々 `ReportsClient.tsx` 内の非 export 関数だったが、保守性のため個別ファイルへ分離済み（named export・props の `t` は `lib/theme.ts` の `Theme` 型）。JSX・スタイルは分離時に不変。
+> **注**：カレントビュー系（`AllocationDonut` / `Sparkline` / `KeyMetrics` / `RegimePanel` / `CurrentView` / `PanelText`）は元々 `ReportsClient.tsx` 内の非 export 関数だったが、保守性のため個別ファイルへ分離済み（named export・props の `t` は `lib/theme.ts` の `Theme` 型）。JSX・スタイルは分離時に不変。
 
 ### 個別レポートページの機能
 - 格言エピグラフ（frontmatter の `quote`/`quoteAuthor` が存在する場合のみ表示）
