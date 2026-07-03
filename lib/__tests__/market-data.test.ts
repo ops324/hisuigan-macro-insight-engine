@@ -1,32 +1,32 @@
 import { describe, it, expect } from "vitest";
 import {
-  parseStooqCsv,
+  parseGoldApiPrice,
   commodityJpyValues,
   pickLatestTwoValidFred,
   parseJgbCsv,
 } from "@/lib/market-data";
 
-describe("parseStooqCsv", () => {
-  const header = "Symbol,Date,Time,Open,High,Low,Close,Volume";
-
-  it("parses open and close from a valid row", () => {
-    const csv = `${header}\nCL.F,2026-06-01,21:00:00,97.00,98.50,96.10,97.80,12345`;
-    expect(parseStooqCsv(csv)).toEqual({ open: 97.0, close: 97.8 });
+describe("parseGoldApiPrice", () => {
+  it("extracts the numeric price from a valid response", () => {
+    const json = { currency: "USD", name: "Gold", price: 4168.799805, symbol: "XAU" };
+    expect(parseGoldApiPrice(json)).toBe(4168.799805);
   });
 
-  it("trims surrounding whitespace", () => {
-    const csv = `\n${header}\n^SPX,2026-06-01,21:00:00,7400,7450,7380,7408,0\n`;
-    expect(parseStooqCsv(csv)).toEqual({ open: 7400, close: 7408 });
+  it("throws when price is missing", () => {
+    expect(() => parseGoldApiPrice({ currency: "USD" })).toThrow(/missing or non-numeric/);
   });
 
-  it("throws when the data row has too few columns", () => {
-    const csv = `${header}\nCL.F,2026-06-01,21:00:00,97.00`;
-    expect(() => parseStooqCsv(csv)).toThrow(/insufficient columns/);
+  it("throws when price is a string", () => {
+    expect(() => parseGoldApiPrice({ price: "4168.8" })).toThrow(/missing or non-numeric/);
   });
 
-  it("throws when OHLC is non-numeric (e.g. N/D from Stooq)", () => {
-    const csv = `${header}\nCL.F,2026-06-01,N/D,N/D,N/D,N/D,N/D,N/D`;
-    expect(() => parseStooqCsv(csv)).toThrow(/non-numeric/);
+  it("throws when price is NaN", () => {
+    expect(() => parseGoldApiPrice({ price: NaN })).toThrow(/missing or non-numeric/);
+  });
+
+  it("throws on null / non-object responses", () => {
+    expect(() => parseGoldApiPrice(null)).toThrow(/missing or non-numeric/);
+    expect(() => parseGoldApiPrice("error")).toThrow(/missing or non-numeric/);
   });
 });
 

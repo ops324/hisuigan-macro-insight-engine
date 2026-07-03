@@ -1,6 +1,6 @@
 import { getStocks } from "@/lib/market-data";
 
-export const revalidate = 300; // 5分キャッシュ
+export const revalidate = 3600; // 1時間キャッシュ（FRED は日次更新）
 
 export async function GET() {
   try {
