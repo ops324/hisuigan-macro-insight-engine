@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-03",
+  "sourceCounts": {
+    "predictions": 28,
+    "dedupedRows": 26,
+    "resolvedOutcomes": 27,
+    "metricsSeries": 7
+  },
+  "maturity": {
+    "sixMonthWindowsMatured": false,
+    "firstMaturityEstimate": "2026-11"
+  },
+  "northStar": {
+    "primary": "asset6mViewsForwardPnl",
+    "disciplineOnly": "stanceIc6m_vs_zero",
+    "note": "長期スキルは経済的P&Lで判定。6M IC は年単位で有意化せず【規律指標】扱い。短期±1%は評価対象外。"
+  },
+  "stance": {
+    "discipline": {
+      "meanStep": 3.28,
+      "maxStep": 7,
+      "responsiveness": null,
+      "collapsedFlag": false
+    },
+    "suggestedStanceDelta": 0,
+    "confidence": 0.05,
+    "flags": [
+      "INSUFFICIENT_SAMPLE"
+    ],
+    "advice": "サンプル不足。stance を結果ベースで動かさない。"
+  },
+  "directionBias": {
+    "horizon": "short",
+    "n": 27,
+    "bias": "none",
+    "pApprox": 0.2482131868670756,
+    "flags": [
+      "DESCRIPTIVE_ONLY"
+    ],
+    "advice": "記述専用（多重検定）。系統的な方向バイアスは認められない。"
+  },
+  "scenarioCalibration": {
+    "horizon": "short",
+    "resolvedScenarios": 27,
+    "brier": {
+      "brier": 0.19669753086419753,
+      "reliability": 0.018677471362656545,
+      "resolution": 0.030484741595852703,
+      "uncertainty": 0.2085048010973937,
+      "n": 81
+    },
+    "reliability": [
+      {
+        "pLow": 0,
+        "pHigh": 0.2,
+        "n": 16,
+        "predMean": 0.171875,
+        "obsFreq": 0.25
+      },
+      {
+        "pLow": 0.2,
+        "pHigh": 0.4,
+        "n": 39,
+        "predMean": 0.31538461538461543,
+        "obsFreq": 0.20512820512820512
+      },
+      {
+        "pLow": 0.4,
+        "pHigh": 0.6,
+        "n": 26,
+        "predMean": 0.4576923076923075,
+        "obsFreq": 0.46153846153846156
+      },
+      {
+        "pLow": 0.6,
+        "pHigh": 0.8,
+        "n": 0,
+        "predMean": null,
+        "obsFreq": null
+      },
+      {
+        "pLow": 0.8,
+        "pHigh": 1,
+        "n": 0,
+        "predMean": null,
+        "obsFreq": null
+      }
+    ],
+    "ece": 0.06975308641975317,
+    "mce": 0.11025641025641031,
+    "flags": [
+      "SHORT_HORIZON_ONLY"
+    ],
+    "advice": "参考：短期は near-random のため確率は動かさない（Brier/reliability は品質モニタのみ）。"
+  },
+  "assetSixMonth": {
+    "active": false,
+    "perAsset": {},
+    "viewsForwardPnl": null,
+    "stanceVsForwardVol": null,
+    "stanceIc6m": null,
+    "effN": 0,
+    "advice": "6M窓未成熟。長期評価は蓄積待ち。"
+  },
+  "recommendations": {
+    "stanceDelta": 0,
+    "probabilityAdjustment": "none",
+    "directionalBias": "none",
+    "overallConfidence": "low"
+  }
+}

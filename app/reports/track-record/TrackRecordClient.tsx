@@ -10,6 +10,7 @@ import {
 } from "@/lib/track-record";
 import { useTheme } from "@/lib/useTheme";
 import { directionColor } from "@/lib/metrics";
+import type { LearningSignal } from "@/lib/learning";
 
 function dirLabel(d: string) {
   return d === "up" ? "↑ 上昇" : d === "down" ? "↓ 下落" : "→ 横ばい";
@@ -18,11 +19,12 @@ function dirLabel(d: string) {
 interface Props {
   predictions: PredictionRecord[];
   metricsHistory: MetricsHistory;
+  learning: LearningSignal | null;
 }
 
 const fmt1 = (n: number | null) => (n == null ? "—" : n.toFixed(1));
 
-export default function TrackRecordClient({ predictions, metricsHistory }: Props) {
+export default function TrackRecordClient({ predictions, metricsHistory, learning }: Props) {
   const { mode, t, toggleTheme } = useTheme();
 
   const sorted = [...predictions].sort((a, b) => b.date.localeCompare(a.date));
@@ -117,6 +119,57 @@ export default function TrackRecordClient({ predictions, metricsHistory }: Props
             <span style={{ color: t.textMuted }}> 蓄積中。各資産の長期方向（frontmatter <code>longTermViews</code>）と前方リターンの一致を約2026-11以降に資産別表示。</span>
           </div>
         </div>
+
+        {/* ── キャリブレーション（参考・学習シグナル） ── */}
+        {learning && (() => {
+          const l = learning;
+          const collapsed = l.stance.discipline.collapsedFlag;
+          const cells = [
+            {
+              label: "北極星：資産別6M P&L（符号×リターン）",
+              value: l.assetSixMonth.active ? fmt1(l.assetSixMonth.viewsForwardPnl) : "蓄積中",
+              note: l.assetSixMonth.active ? "経済的スコア" : `6M成熟 ≈ ${l.maturity.firstMaturityEstimate}`,
+            },
+            {
+              label: "スタンス規律（滑らかさ / 応答性）",
+              value: `${fmt1(l.stance.discipline.meanStep)} / ${l.stance.discipline.responsiveness == null ? "—" : fmt1(l.stance.discipline.responsiveness)}`,
+              note: collapsed ? "⚠ 無反応化の疑い" : "条件付き滑らかさ",
+            },
+            {
+              label: "方向バイアス（記述専用）",
+              value: l.directionBias.bias === "none" ? "なし" : l.directionBias.bias === "bearish" ? "弱気寄り" : "強気寄り",
+              note: `n=${l.directionBias.n}・補正根拠に非採用`,
+            },
+            {
+              label: "シナリオ Brier（短期）",
+              value: l.scenarioCalibration.brier.brier == null ? "—" : l.scenarioCalibration.brier.brier.toFixed(3),
+              note: `ECE ${l.scenarioCalibration.ece == null ? "—" : l.scenarioCalibration.ece.toFixed(3)}・品質モニタ`,
+            },
+          ];
+          return (
+            <>
+              <div style={{ marginBottom: 12, display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: t.positive, letterSpacing: "0.08em" }}>キャリブレーション（参考）</span>
+                <span style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.03em" }}>
+                  学習シグナル（<code>learning-signal.json</code>・{l.generatedAt} 時点）の自己点検。助言であり最終判断は執筆者。短期指標は品質モニタのみ。
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: 1, background: t.border, border: `1px solid ${t.border}`, marginBottom: 8 }} className="hg-grid-4">
+                {cells.map((item, i) => (
+                  <div key={i} style={{ flex: 1, background: t.surface, padding: "16px 20px" }}>
+                    <div style={{ fontSize: 10, color: t.textMuted, letterSpacing: "0.05em", marginBottom: 6 }}>{item.label}</div>
+                    <div style={{ fontSize: 20, fontWeight: 700, fontFamily: "monospace", color: item.note.startsWith("⚠") ? t.negative : t.text }}>{item.value}</div>
+                    <div style={{ fontSize: 10, color: item.note.startsWith("⚠") ? t.negative : t.textMuted, marginTop: 4 }}>{item.note}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.03em", marginBottom: 32, paddingLeft: 2 }}>
+                6M窓成熟：{l.maturity.sixMonthWindowsMatured ? "済" : `未（≈ ${l.maturity.firstMaturityEstimate}）`}・
+                stance 推奨増減：{l.recommendations.stanceDelta}（結果ベースでは動かさない）・確信度：{l.recommendations.overallConfidence}
+              </div>
+            </>
+          );
+        })()}
 
         {/* ── 予測記録（参考・短期方向は near-random のため事実の並置のみ） ── */}
         {sorted.length > 0 && (
