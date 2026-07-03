@@ -63,14 +63,14 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
       {/* Status Bar */}
       <div style={{ backgroundColor: t.surfaceAlt, borderBottom: `1px solid ${t.border}` }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "5px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span className="hg-status-text" style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.06em" }}>LIVE DATA — 15〜20分遅延 | 投資判断の根拠とする場合は一次情報をご確認ください</span>
+          <span className="hg-status-text" style={{ fontSize: 11, color: t.textMuted, letterSpacing: "0.06em" }}>MARKET DATA — 株式指数・債券・WTIは日次値／為替・金銀銅は準リアルタイム | 投資判断の根拠とする場合は一次情報をご確認ください</span>
           <span style={{ fontSize: 11, color: t.textSub, fontFamily: "monospace" }}>最終更新：{lastUpdated}</span>
         </div>
       </div>
 
       <main style={{ maxWidth: 1280, margin: "0 auto", padding: "32px 24px" }}>
         {/* Section: 株式 */}
-        <Section id="株式" title="株式指数" subtitle="EQUITY INDICES" note="始値比（日中変動）" t={t}>
+        <Section id="株式" title="株式指数" subtitle="EQUITY INDICES" note="前日終値比（約1営業日遅延）" t={t}>
           {stocks.error ? (
             <ErrorBox message={stocks.error} t={t} />
           ) : (
@@ -133,7 +133,7 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
         </div>
 
         {/* Section: コモディティ */}
-        <Section id="コモディティ" title="コモディティ" subtitle="COMMODITIES" note="始値比（日中変動）" t={t}>
+        <Section id="コモディティ" title="コモディティ" subtitle="COMMODITIES" note="金・銀・銅はスポット／WTIは前日比（数営業日遅延）" t={t}>
           {commodities.error ? (
             <ErrorBox message={commodities.error} t={t} />
           ) : (
@@ -144,8 +144,16 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
                   <div style={{ fontSize: 14, color: t.textSub, marginBottom: 12 }}>{c.name}</div>
                   <div style={{ fontSize: 26, fontWeight: 700, fontFamily: "monospace", letterSpacing: "-0.02em", color: t.text, marginBottom: 8 }}>{c.value ?? "---"}</div>
                   <div style={{ display: "flex", gap: 8 }}>
-                    <span style={{ fontSize: 13, fontFamily: "monospace", color: changeColor(c.change ?? "") }}>{c.change ?? "---"}</span>
-                    <span style={{ fontSize: 12, fontFamily: "monospace", color: changeColor(c.change ?? ""), opacity: 0.8 }}>{c.pct ? `(${c.pct})` : ""}</span>
+                    {c.change ? (
+                      <>
+                        <span style={{ fontSize: 13, fontFamily: "monospace", color: changeColor(c.change) }}>{c.change}</span>
+                        <span style={{ fontSize: 12, fontFamily: "monospace", color: changeColor(c.change), opacity: 0.8 }}>{c.pct ? `(${c.pct})` : ""}</span>
+                      </>
+                    ) : c.value ? (
+                      <span className="hg-data-note" style={{ fontSize: 11, color: t.textMuted }}>前日比データなし</span>
+                    ) : (
+                      <span style={{ fontSize: 13, fontFamily: "monospace", color: t.textMuted }}>---</span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -165,18 +173,18 @@ export default function MarketClient({ stocks, forex, ustreasury, jptreasury, co
               </div>
               <p style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.8, maxWidth: 480 }}>
                 本サイトに掲載されている情報は、投資判断の参考を目的としたものであり、投資を勧誘するものではありません。
-                掲載データは15〜20分遅延しており、情報の正確性・完全性を保証するものではありません。
+                掲載データは終値ベースまたは遅延データであり、情報の正確性・完全性を保証するものではありません。
               </p>
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{ fontSize: 11, color: t.textMuted, marginBottom: 6, letterSpacing: "0.05em" }}>DATA SOURCES</div>
-              {["Stooq", "ExchangeRate-API", "FRED API (Federal Reserve)", "財務省 (MOF)"].map((src, i) => (
+              {["FRED API (Federal Reserve)", "gold-api.com", "ExchangeRate-API", "財務省 (MOF)"].map((src, i) => (
                 <div key={i} style={{ fontSize: 11, color: t.textMuted, marginBottom: 3 }}>{src}</div>
               ))}
             </div>
           </div>
           <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${t.border}`, fontSize: 11, color: t.textMuted }}>
-            © 2026 翡翠眼 — All data delayed 15–20 minutes.
+            © 2026 翡翠眼 — Data is end-of-day or delayed.
           </div>
         </div>
       </footer>

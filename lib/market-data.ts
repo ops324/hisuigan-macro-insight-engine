@@ -39,16 +39,53 @@ export interface FredObservation {
 
 // ───────────────────────── 純粋関数（テスト対象） ─────────────────────────
 
-// Stooq CSV（s,d,t,o,h,l,c,v）の data 行から始値・終値を取り出す。
-// 列順崩れ・欠損は throw する（無言で誤値を返さない）。
-export function parseStooqCsv(csv: string): { open: number; close: number } {
-  const lines = csv.trim().split("\n");
-  const row = lines[1]?.split(",");
-  if (!row || row.length < 7) throw new Error("Invalid Stooq CSV: insufficient columns");
-  const open = parseFloat(row[3]);
-  const close = parseFloat(row[6]);
-  if (isNaN(open) || isNaN(close)) throw new Error("Invalid Stooq CSV: non-numeric OHLC");
-  return { open, close };
+// gold-api.com のレスポンス（{ price: number, ... }）から USD 建て価格を取り出す。
+// 欠損・非数値は throw する（無言で誤値を返さない）。
+export function parseGoldApiPrice(json: unknown): number {
+  const price = (json as { price?: unknown } | null)?.price;
+  if (typeof price !== "number" || isNaN(price)) {
+    throw new Error("Invalid gold-api response: missing or non-numeric price");
+  }
+  return price;
+}
+
+// Swissquote 公開フィード（配列・各要素に spreadProfilePrices[].bid/ask）から
+// mid 価格（(bid+ask)/2）を取り出す。数値の bid/ask を持つ最初のプロファイルを採用。
+export function parseSwissquotePrice(json: unknown): number {
+  const entries = Array.isArray(json) ? json : [];
+  for (const entry of entries) {
+    const profiles = (entry as { spreadProfilePrices?: unknown })?.spreadProfilePrices;
+    if (!Array.isArray(profiles)) continue;
+    for (const p of profiles) {
+      const bid = (p as { bid?: unknown })?.bid;
+      const ask = (p as { ask?: unknown })?.ask;
+      if (typeof bid === "number" && typeof ask === "number" && !isNaN(bid) && !isNaN(ask)) {
+        return (bid + ask) / 2;
+      }
+    }
+  }
+  throw new Error("Invalid Swissquote response: no numeric bid/ask");
+}
+
+// Yahoo Finance chart API（{ chart: { result: [{ meta: { regularMarketPrice } }] } }）から
+// 直近価格を取り出す。chart.error や欠損・非数値は throw する。
+export function parseYahooChartPrice(json: unknown): number {
+  const chart = (json as { chart?: { error?: unknown; result?: unknown } } | null)?.chart;
+  if (chart?.error) throw new Error(`Yahoo chart error: ${JSON.stringify(chart.error)}`);
+  const meta = (Array.isArray(chart?.result) ? chart!.result[0] : undefined) as
+    | { meta?: { regularMarketPrice?: unknown } }
+    | undefined;
+  const price = meta?.meta?.regularMarketPrice;
+  if (typeof price !== "number" || isNaN(price)) {
+    throw new Error("Invalid Yahoo response: missing or non-numeric regularMarketPrice");
+  }
+  return price;
+}
+
+// FRED の銅系列（PCOPPUSDM＝USD/メトリックトン）を USD/lb へ換算する。
+// 1 メトリックトン = 2204.6226 lb。gold-api の銅（USD/lb）と単位を揃えるための最終手段。
+export function usdPerTonneToLb(usdPerTonne: number): number {
+  return usdPerTonne / 2204.6226;
 }
 
 // コモディティの USD（または cents）建て価格を JPY 換算した数値群を返す。
@@ -113,19 +150,51 @@ function signed(n: number, decimals: number): string {
 
 // ───────────────────────── 取得関数（Server / route 共用） ─────────────────────────
 
+// FRED の株価指数系列（Stooq API 廃止に伴い 2026-07-04 移行）。日次終値・約1営業日遅れ。
 const STOCK_SYMBOLS = [
-  { symbol: "^SPX", name: "S&P 500", label: "SPX", note: null as string | null },
-  { symbol: "^NDX", name: "NASDAQ", label: "NDX", note: null as string | null },
-  { symbol: "^DJI", name: "DOW", label: "DJI", note: null as string | null },
-  { symbol: "EWJ.US", name: "日経225", label: "N225", note: "EWJ" as string | null },
+  { seriesId: "SP500", name: "S&P 500", label: "SPX", note: null as string | null },
+  { seriesId: "NASDAQ100", name: "NASDAQ", label: "NDX", note: null as string | null },
+  { seriesId: "DJIA", name: "DOW", label: "DJI", note: null as string | null },
+  { seriesId: "NIKKEI225", name: "日経225", label: "N225", note: null as string | null },
 ];
 
-const COMMODITY_SYMBOLS = [
-  { symbol: "cl.f", name: "WTI原油", unit: "円/bbl", isCents: false },
-  { symbol: "gc.f", name: "金", unit: "円/oz", isCents: false },
-  { symbol: "si.f", name: "銀", unit: "円/oz", isCents: false },
-  { symbol: "hg.f", name: "銅", unit: "円/lb", isCents: true },
+// 金・銀・銅は USD 建てスポット（リアルタイム・前日比なし）を JPY 換算して表示。
+// 単一ソース障害で「---」になるのを避けるため、無料・キー不要のソースを多段フォールバック
+// （主 gold-api.com → 予備 Swissquote 公開フィード → Yahoo Finance）。
+// 銅は Swissquote 非対応のため gold-api → Yahoo → FRED 月次（最終手段・単位換算あり）。
+// 単位：金銀＝USD/oz、銅＝USD/lb で各ソースを揃える。
+const METAL_SYMBOLS = [
+  {
+    name: "金",
+    unit: "円/oz",
+    sources: (rev: number): (() => Promise<number>)[] => [
+      () => fetchGoldApiPrice("XAU", rev),
+      () => fetchSwissquotePrice("XAU", rev),
+      () => fetchYahooPrice("GC=F", rev),
+    ],
+  },
+  {
+    name: "銀",
+    unit: "円/oz",
+    sources: (rev: number): (() => Promise<number>)[] => [
+      () => fetchGoldApiPrice("XAG", rev),
+      () => fetchSwissquotePrice("XAG", rev),
+      () => fetchYahooPrice("SI=F", rev),
+    ],
+  },
+  {
+    name: "銅",
+    unit: "円/lb",
+    sources: (rev: number): (() => Promise<number>)[] => [
+      () => fetchGoldApiPrice("HG", rev),
+      () => fetchYahooPrice("HG=F", rev),
+      () => fetchFredCopperPerLb(rev),
+    ],
+  },
 ];
+
+// WTI 原油は FRED のスポット系列（EIA 由来・数営業日遅れ・前日比あり）。
+const WTI = { seriesId: "DCOILWTICO", name: "WTI原油", unit: "円/bbl" };
 
 const FRED_SERIES = [
   { id: "DGS2", term: "2年債" },
@@ -143,11 +212,77 @@ const JGB_TARGETS = [
 
 const JGB_CSV_URL = "https://www.mof.go.jp/jgbs/reference/interest_rate/jgbcm.csv";
 
-async function fetchStooq(symbol: string, revalidate: number): Promise<{ open: number; close: number }> {
-  const url = `https://stooq.com/q/l/?s=${encodeURIComponent(symbol)}&f=sd2t2ohlcv&h&e=csv`;
+// FRED_API_KEY を取得する。未設定は throw（呼び出し側の allSettled で吸収され UI は「---」表示。
+// 原因が無言にならないよう警告を残す）。
+function requireFredApiKey(): string {
+  const apiKey = process.env.FRED_API_KEY;
+  if (!apiKey) {
+    console.warn("[market-data] FRED_API_KEY 未設定のため FRED 系列は取得できません（.env.example 参照）");
+    throw new Error("FRED_API_KEY not configured");
+  }
+  return apiKey;
+}
+
+// FRED 系列の直近有効値2件（"." 欠損スキップ）を返す。株式指数・WTI・米国債で共用。
+async function fetchFredLatestTwo(
+  seriesId: string,
+  apiKey: string,
+  revalidate: number
+): Promise<{ current: number; previous: number | null }> {
+  const url =
+    `https://api.stlouisfed.org/fred/series/observations` +
+    `?series_id=${seriesId}&api_key=${apiKey}&sort_order=desc&limit=10&file_type=json`;
   const res = await fetch(url, { next: { revalidate } });
-  if (!res.ok) throw new Error(`Stooq fetch failed for ${symbol}: ${res.status}`);
-  return parseStooqCsv(await res.text());
+  if (!res.ok) throw new Error(`FRED fetch failed for ${seriesId}: ${res.status}`);
+  const data = await res.json();
+  if (data.error_message) throw new Error(data.error_message);
+  return pickLatestTwoValidFred(data.observations);
+}
+
+// gold-api.com から USD 建てスポット価格を取得する。
+async function fetchGoldApiPrice(symbol: string, revalidate: number): Promise<number> {
+  const url = `https://api.gold-api.com/price/${encodeURIComponent(symbol)}`;
+  const res = await fetch(url, { next: { revalidate } });
+  if (!res.ok) throw new Error(`gold-api fetch failed for ${symbol}: ${res.status}`);
+  return parseGoldApiPrice(await res.json());
+}
+
+// Swissquote 公開フィードから USD 建てスポット価格（mid）を取得する（金銀のみ・キー不要）。
+async function fetchSwissquotePrice(base: string, revalidate: number): Promise<number> {
+  const url = `https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/${encodeURIComponent(base)}/USD`;
+  const res = await fetch(url, { next: { revalidate } });
+  if (!res.ok) throw new Error(`Swissquote fetch failed for ${base}: ${res.status}`);
+  return parseSwissquotePrice(await res.json());
+}
+
+// Yahoo Finance chart API から直近価格を取得する（レート制限あり・フォールバック専用）。
+async function fetchYahooPrice(ticker: string, revalidate: number): Promise<number> {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=5d`;
+  const res = await fetch(url, {
+    next: { revalidate },
+    headers: { "User-Agent": "Mozilla/5.0" },
+  });
+  if (!res.ok) throw new Error(`Yahoo fetch failed for ${ticker}: ${res.status}`);
+  return parseYahooChartPrice(await res.json());
+}
+
+// FRED の銅系列（PCOPPUSDM＝USD/トン・月次）を USD/lb に換算して取得する（銅の最終手段）。
+async function fetchFredCopperPerLb(revalidate: number): Promise<number> {
+  const { current } = await fetchFredLatestTwo("PCOPPUSDM", requireFredApiKey(), revalidate);
+  return usdPerTonneToLb(current);
+}
+
+// フォールバックチェーン。先頭から順に試し、最初に成功した値を返す。全滅時は最後の例外を投げる。
+export async function firstOk<T>(sources: (() => Promise<T>)[]): Promise<T> {
+  let lastErr: unknown;
+  for (const source of sources) {
+    try {
+      return await source();
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("all sources failed");
 }
 
 async function fetchUsdJpy(revalidate: number): Promise<number> {
@@ -161,48 +296,64 @@ function fmt(num: number, decimals: number): string {
   return num.toLocaleString("ja-JP", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
-// 株式指数。1銘柄失敗しても他は表示（allSettled）。change は当日始値比（日中変動）。
+// 株式指数。FRED の日次終値。1銘柄失敗しても他は表示（allSettled）。change は前日終値比。
 export async function getStocks(): Promise<{ stocks: StockItem[]; updatedAt: string }> {
-  const results = await Promise.allSettled(STOCK_SYMBOLS.map(({ symbol }) => fetchStooq(symbol, 300)));
+  const apiKey = requireFredApiKey();
+  const results = await Promise.allSettled(
+    STOCK_SYMBOLS.map(({ seriesId }) => fetchFredLatestTwo(seriesId, apiKey, 3600))
+  );
   const stocks = STOCK_SYMBOLS.map(({ name, label, note }, i): StockItem => {
     const r = results[i];
     if (r.status !== "fulfilled") return { name, symbol: label, note, value: null, change: null, pct: null };
-    const { open, close } = r.value;
-    const change = close - open;
-    const pct = (change / open) * 100;
+    const { current, previous } = r.value;
+    const change = previous !== null ? current - previous : null;
+    const pct = change !== null && previous !== 0 ? (change / previous!) * 100 : null;
     return {
       name,
       symbol: label,
       note,
-      value: close.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-      change: signed(change, 2),
-      pct: `${signed(pct, 2)}%`,
+      value: current.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      change: change !== null ? signed(change, 2) : null,
+      pct: pct !== null ? `${signed(pct, 2)}%` : null,
     };
   });
   return { stocks, updatedAt: new Date().toISOString() };
 }
 
-// コモディティ。JPY 換算。1銘柄失敗しても他は表示。USD/JPY 取得失敗時は全 null。
+// コモディティ。JPY 換算。金・銀・銅は多段フォールバック（リアルタイム・前日比なし）、
+// WTI は FRED（数営業日遅れ・前日比あり）。1銘柄失敗しても他は表示。USD/JPY 取得失敗時は全 null。
 export async function getCommodities(): Promise<{ commodities: CommodityItem[]; updatedAt: string }> {
-  const [quoteResults, usdJpyResult] = await Promise.all([
-    Promise.allSettled(COMMODITY_SYMBOLS.map(({ symbol }) => fetchStooq(symbol, 900))),
+  // WTI はキー未設定でも金・銀・銅を巻き込まないよう async ラッパで throw を吸収する
+  const [wtiResult, metalResults, usdJpyResult] = await Promise.all([
+    Promise.allSettled([(async () => fetchFredLatestTwo(WTI.seriesId, requireFredApiKey(), 3600))()]),
+    Promise.allSettled(METAL_SYMBOLS.map(({ sources }) => firstOk(sources(900)))),
     Promise.allSettled([fetchUsdJpy(900)]),
   ]);
   const usdJpy = usdJpyResult[0].status === "fulfilled" ? usdJpyResult[0].value : null;
-  const commodities = COMMODITY_SYMBOLS.map(({ name, unit, isCents }, i): CommodityItem => {
-    const r = quoteResults[i];
-    if (usdJpy == null || r.status !== "fulfilled") return { name, unit, value: null, change: null, pct: null };
-    const { open, close } = r.value;
-    const { closeJpy, change, pct } = commodityJpyValues(open, close, usdJpy, isCents);
+
+  const wti = ((): CommodityItem => {
+    const r = wtiResult[0];
+    if (usdJpy == null || r.status !== "fulfilled") {
+      return { name: WTI.name, unit: WTI.unit, value: null, change: null, pct: null };
+    }
+    const { current, previous } = r.value;
+    const { closeJpy, change, pct } = commodityJpyValues(previous ?? current, current, usdJpy, false);
     return {
-      name,
-      unit,
+      name: WTI.name,
+      unit: WTI.unit,
       value: `¥${fmt(closeJpy, 0)}`,
-      change: `${change >= 0 ? "+" : "-"}¥${fmt(Math.abs(change), 0)}`,
-      pct: `${signed(pct, 2)}%`,
+      change: previous !== null ? `${change >= 0 ? "+" : "-"}¥${fmt(Math.abs(change), 0)}` : null,
+      pct: previous !== null ? `${signed(pct, 2)}%` : null,
     };
+  })();
+
+  const metals = METAL_SYMBOLS.map(({ name, unit }, i): CommodityItem => {
+    const r = metalResults[i];
+    if (usdJpy == null || r.status !== "fulfilled") return { name, unit, value: null, change: null, pct: null };
+    return { name, unit, value: `¥${fmt(r.value * usdJpy, 0)}`, change: null, pct: null };
   });
-  return { commodities, updatedAt: new Date().toISOString() };
+
+  return { commodities: [wti, ...metals], updatedAt: new Date().toISOString() };
 }
 
 // 為替。USD・EUR の2エンドポイント。取得できたペアだけ表示。前日比は無料版で取得不可。
@@ -243,24 +394,9 @@ export async function getForex(): Promise<{ forex: ForexItem[]; updatedAt: strin
 
 // 米国債。FRED。系列ごと allSettled。
 export async function getUsTreasury(): Promise<{ ustreasury: TreasuryItem[]; updatedAt: string }> {
-  const apiKey = process.env.FRED_API_KEY;
-  if (!apiKey) {
-    // throw は呼び出し側の allSettled で吸収され UI は「---」表示になる。原因が無言にならないよう警告を残す
-    console.warn("[market-data] FRED_API_KEY 未設定のため米国債利回りは取得できません（.env.example 参照）");
-    throw new Error("FRED_API_KEY not configured");
-  }
-
+  const apiKey = requireFredApiKey();
   const results = await Promise.allSettled(
-    FRED_SERIES.map(async ({ id }) => {
-      const url =
-        `https://api.stlouisfed.org/fred/series/observations` +
-        `?series_id=${id}&api_key=${apiKey}&sort_order=desc&limit=10&file_type=json`;
-      const res = await fetch(url, { next: { revalidate: 3600 } });
-      if (!res.ok) throw new Error(`FRED fetch failed for ${id}: ${res.status}`);
-      const data = await res.json();
-      if (data.error_message) throw new Error(data.error_message);
-      return pickLatestTwoValidFred(data.observations);
-    })
+    FRED_SERIES.map(({ id }) => fetchFredLatestTwo(id, apiKey, 3600))
   );
 
   const ustreasury = FRED_SERIES.map(({ term }, i): TreasuryItem => {

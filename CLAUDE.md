@@ -39,7 +39,7 @@
 - デザイン基調：**金融エディトリアル**（FT・Monocle・日経の紙面感）。暖かい紙＋墨＋減彩翡翠。グロー（放射背景・box-shadow 光彩・drop-shadow）は全廃
 - 角丸：全て直角
 - 数値：monospaceフォント
-- データは15〜20分遅延表示
+- データ鮮度：株式指数・債券・WTIは日次値（終値ベース・株式指数は約1営業日遅れ・WTIは数営業日遅れ）／為替・金銀銅は準リアルタイム（旧「15〜20分遅延」表記は 2026-07-04 の Stooq 廃止対応で実態に合わせて変更）
 - 市場数値ページ（`/market`）ナビの「レポート」タブ：カタカナ表記（`レポート`）
 - `/reports` ヘッダー：ブレッドクラムなし（ロゴ「翡翠眼」のみ。右側に「マーケット」リンクとテーマトグル）。「マーケット」リンクは `color: t.positive`（減彩翡翠・ダーク `#6aa589`・ライト `#2f6f55`）でリンクであることを視覚的に明示
 - `/reports/[slug]`・`/reports/track-record` のヘッダーブレッドクラム・`/reports` の h1 タイトル：カタカナ表記（`レポート`）
@@ -49,16 +49,18 @@
 | セクション | API | 状況 |
 |-----------|-----|------|
 | 為替 | ExchangeRate-API無料版 | 完了 |
-| 株式指数 | Stooq（Alpha Vantageから移行） | 完了 |
+| 株式指数 | FRED API（Stooqから移行） | 完了 |
 | 米国債 | FRED API | 完了 |
 | 日本国債 | 財務省CSV | 完了 |
-| コモディティ | Stooq | 完了 |
+| コモディティ | 金銀銅＝多段フォールバック（gold-api.com→Swissquote→Yahoo→FRED月次）＋ WTI＝FRED | 完了 |
 
 ## データ取得アーキテクチャ（lib/market-data.ts）
 - **取得/パースの実体は `lib/market-data.ts` に集約**。各 Route Handler（`app/api/*/route.js`）と市場ページ Server Component（`app/market/page.tsx`）の両方がこの lib を呼ぶ薄いラッパ
 - 取得関数：`getStocks()` / `getForex()` / `getUsTreasury()` / `getJpTreasury()` / `getCommodities()`。各々**内部で `Promise.allSettled`** を使い、1銘柄が失敗しても取れた銘柄だけ返す（全滅を回避）。失敗銘柄は null 値で返り UI は「---」表示
-- キャッシュは `fetch(url, { next: { revalidate: N } })`（為替60・株式300・コモディティ900・米国債/日本国債3600秒）
-- 純粋関数（`lib/__tests__/market-data.test.ts` でテスト）：`parseStooqCsv` / `commodityJpyValues` / `pickLatestTwoValidFred` / `parseJgbCsv`
+- キャッシュは `fetch(url, { next: { revalidate: N } })`（為替60・株式3600・金銀銅900・WTI/米国債/日本国債3600秒）
+- 純粋関数（`lib/__tests__/market-data.test.ts` でテスト）：`parseGoldApiPrice` / `parseSwissquotePrice` / `parseYahooChartPrice` / `usdPerTonneToLb` / `commodityJpyValues` / `pickLatestTwoValidFred` / `parseJgbCsv`
+- FRED 取得の共通ヘルパー：`requireFredApiKey()`（未設定は `console.warn`＋throw）と `fetchFredLatestTwo(seriesId, apiKey, revalidate)`（直近有効値2件）。株式指数・WTI・米国債の3箇所で共用
+- 金銀銅の多段フォールバック：`firstOk(sources)` が先頭ソースから順に試し最初の成功値を返す。各金属は `METAL_SYMBOLS[].sources(rev)` にフォールバックチェーンを定義（金銀＝gold-api→Swissquote→Yahoo、銅＝gold-api→Yahoo→FRED月次）。単位は金銀 USD/oz・銅 USD/lb で各ソースを揃える（Swissquote は銅非対応・`[]` を返すため銅チェーンから除外。FRED 銅は USD/トン→`usdPerTonneToLb` で /lb 換算する最終手段）
 - 表示加工の純粋関数は `lib/metrics.ts`（`changeDisplay` / `metricGroup` / `directionColor` / `directionLabel`。`lib/__tests__/metrics.test.ts` でテスト）。方向の共通型 `Direction`（`up`/`down`/`neutral`）も **`lib/metrics.ts` に集約**（`lib/history.ts` は再エクスポート・`lib/reports.ts` の `ScenarioItem.direction` も参照）。`KeyMetricItem.direction` は frontmatter 語彙の `flat` を含むため別型 `MetricDirection`（`up`/`down`/`flat`）で統合しない
 - 日付表示など UI 純粋関数は `lib/format.ts`（`formatDate`＝`YYYY-MM-DD → YYYY年M月D日`／`splitPanelLines`＝散文パネル本文を「。」句点の直後・丸数字①..⑳の直前で改行する行配列に分割。複合語の「・」は割らない・空行はトリム除去。`lib/__tests__/format.test.ts` でテスト。`ReportCard` / `[slug]/ReportClient` / `PanelText` が共用）
 
@@ -86,15 +88,16 @@
 - Route Handler：app/api/forex/route.js
 
 ### 株式指数（完了）
-- API：Stooq（無料・キー不要）※Alpha Vantage から移行（2026-03-03）
-- 移行理由：Alpha Vantage 無料版は25リクエスト/日の制限があり、テスト中に上限に達したため
-- エンドポイント：https://stooq.com/q/l/?s={symbol}&f=sd2t2ohlcv&h&e=csv
-- 取得銘柄：S&P500(^SPX), NASDAQ100(^NDX), DOW(^DJI), 日経225代替(EWJ.US)
-- 更新：ISR 300秒（5分キャッシュ）
+- API：FRED API（無料・APIキー必要。米国債と同じ `FRED_API_KEY` を使用）※Stooq から移行（2026-07-04）
+- 移行理由：Stooq が API 提供を事実上終了（クオート CSV `/q/l/` は HTTP 404・日足 CSV は JavaScript 必須の proof-of-work ボット認証が導入されプログラム取得不可）。Yahoo Finance chart API も 429 レート制限で不安定なため FRED を採用
+- エンドポイント：https://api.stlouisfed.org/fred/series/observations（米国債と同一・`fetchFredLatestTwo` を共用）
+- Series ID：SP500, NASDAQ100, DJIA, NIKKEI225
+- 取得銘柄：S&P500(SPX), NASDAQ100(NDX), DOW(DJI), 日経225(N225)
+- 備考：日経225 は本物の指数系列（旧 EWJ.US ETF 代替は解消・EWJ 注記も撤去済み）
+- 更新：ISR 3600秒（1時間キャッシュ。FRED は日次更新のため）
 - Route Handler：app/api/stocks/route.js
-- 備考：Stooq は日経225（^N225）非対応のため EWJ.US（iShares MSCI Japan ETF）で代替
-- 備考：米国3指数は ETF プロキシから実指数データに変更（Alpha Vantage 移行時の制約が解消）
-- 変動：Stooqから前日終値を取得できないため当日始値比（日中変動）で代用
+- データ鮮度：日次終値・約1営業日遅れ
+- 変動：直近有効値2件の差分＝**本物の前日終値比**（旧 Stooq 時代の当日始値比代用は解消）。祝日 "." 欠損は `pickLatestTwoValidFred` がスキップ
 - ALPHA_VANTAGE_API_KEY は廃止済み（.env.local からも削除済み。必要な環境変数は .env.example 参照）
 
 ### 米国債（完了）
@@ -120,15 +123,20 @@
 - 備考：月初は前日データが1行のみのため前日比は N/A 扱い
 
 ### コモディティ（完了）
-- API：Stooq（無料・キー不要）
-- 備考：Yahoo Finance は2024年頃から認証必須化（401）のため Stooq を使用
-- エンドポイント：https://stooq.com/q/l/?s={symbol}&f=sd2t2ohlcv&h&e=csv
-- 取得銘柄：WTI原油(cl.f), 金(gc.f), 銀(si.f), 銅(hg.f)
-- 更新：ISR 900秒（15分キャッシュ）
+- API：金・銀・銅＝多段フォールバック（無料・キー不要のソースを順に試行）／WTI原油＝FRED API ※Stooq から移行（2026-07-04・移行理由は株式指数と同じ）
+- 金銀銅のフォールバックチェーン（単一ソース障害で「---」にしないための冗長化。SLA は買わず冗長化で耐障害性を確保）：
+  - 金：gold-api.com（XAU）→ Swissquote 公開フィード（XAU/USD の mid）→ Yahoo Finance（GC=F）
+  - 銀：gold-api.com（XAG）→ Swissquote（XAG/USD）→ Yahoo Finance（SI=F）
+  - 銅：gold-api.com（HG）→ Yahoo Finance（HG=F）→ FRED 月次（PCOPPUSDM を USD/lb 換算・最終手段）
+  - Swissquote は銅（XCU/HG）非対応（`[]` を返す）ため銅チェーンから除外。Yahoo はレート制限リスクがあるためフォールバック専用（主経路では叩かない）
+- エンドポイント：gold-api＝https://api.gold-api.com/price/{XAU|XAG|HG} ／ Swissquote＝https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/{XAU|XAG}/USD ／ Yahoo＝https://query1.finance.yahoo.com/v8/finance/chart/{GC=F|SI=F|HG=F} ／ WTI＝FRED Series `DCOILWTICO`
+- 取得銘柄：WTI原油(DCOILWTICO), 金(XAU/GC=F), 銀(XAG/SI=F), 銅(HG/HG=F/PCOPPUSDM)
+- 更新：ISR 金銀銅900秒（15分）・WTI 3600秒（1時間）
 - Route Handler：app/api/commodities/route.js
-- 変動：Stooqから前日終値を取得できないため当日始値比（日中変動）で代用
+- データ鮮度：金銀銅＝準リアルタイムスポット（フォールバック時も日次以上の鮮度。銅の FRED 最終手段のみ月次）／WTI＝EIA 由来のため数営業日遅れ
+- 変動：WTIのみ前日比あり（FRED 直近有効値2件の差分）。金銀銅はスポット値のみで前日終値を提供しないため前日比なし（UI は「前日比データなし」表示）
 - 価格表示：日本円（JPY）換算。USD/JPY レートを ExchangeRate-API からリアルタイム取得して乗算
-- 単位：WTI原油=円/bbl、金・銀=円/oz、銅=円/lb（銅は cents/lb → USD/lb → JPY/lb 変換）
+- 単位：WTI原油=円/bbl、金・銀=円/oz、銅=円/lb（各ソースを USD/oz・USD/lb に揃える。gold-api・Yahoo の銅は USD/lb、FRED は USD/トンなので `usdPerTonneToLb` で換算）
 - 表示形式：¥プレフィックス付き整数円（小数なし）
 
 ## テーマシステム
@@ -166,7 +174,7 @@ export type Theme = typeof themeMap["dark"] | typeof themeMap["light"];
 
 ### 市場数値ページ（app/market/page.tsx・`/market`）
 - **`lib/theme.ts` の themeMap を使用（独自 theme は撤廃済み）**。罫線・配色は themeMap 値に統一
-- フッター DATA SOURCES：`["Stooq", "ExchangeRate-API", "FRED API (Federal Reserve)", "財務省 (MOF)"]`（現行 API と一致させること。Yahoo Finance・日本銀行 API は廃止済み）
+- フッター DATA SOURCES：`["FRED API (Federal Reserve)", "gold-api.com", "ExchangeRate-API", "財務省 (MOF)"]`（現行 API と一致させること。Stooq・Yahoo Finance・日本銀行 API は廃止済み）
 - 債券テーブル（`TreasuryTable`）は **semantic な `<table>`／`<thead>`／`<th scope="col">`／`<tbody>`／`<tr class="hg-treasury-row">`／`<td>`**（スクリーンリーダー対応・WCAG 1.3.1）。`th` はブラウザ既定が bold/center のため `fontWeight:400`・`textAlign` を inline で明示して見た目を維持する（div グリッドへ戻さない）
 
 ### レポートページ（app/reports/）
@@ -689,7 +697,7 @@ lang: "ja"
 
 ## 注意事項
 - APIキーは必ず.env.localに保存（テンプレートは `.env.example`。`.gitignore` は `.env*` を無視しつつ `!.env.example` で例のみ追跡）
-- 現在必須の環境変数は `FRED_API_KEY` のみ（未設定時は `getUsTreasury` が `console.warn` を出し throw → allSettled 吸収で「---」表示）
+- 現在必須の環境変数は `FRED_API_KEY` のみ（株式指数・WTI・米国債の3箇所で使用。未設定時は `requireFredApiKey` が `console.warn` を出し throw → allSettled 吸収で「---」表示。金銀銅・為替・日本国債はキー不要のため影響なし）
 - .env.localは.gitignoreに含まれていることを確認
 - チャットにAPIキーを貼らない
 - Gemini レポートの引用番号（` 1`, ` 6` 等）は必ず commit 前に削除すること（`/push-reports` が自動削除）
