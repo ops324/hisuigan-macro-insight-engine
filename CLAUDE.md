@@ -66,6 +66,7 @@
 - `npm run test`（`vitest run`）。設定は `vitest.config.ts`（node 環境・`@` エイリアス）。テストは `lib/__tests__/*.test.ts`
 - 対象は純粋関数と `lib/reports.ts`（CSV パース・通貨換算・FRED 欠損スキップ・JGB 行抽出・指標表示加工・日付整形・レポート読込）
 - `lib/reports.ts` のテスト（`reports.test.ts`）は **フィクスチャ方式**（`lib/__tests__/fixtures/reports/` の .md）。`getAllReports` / `getReportBySlug` / `getReportsByType` / `getAllSlugs` は第2引数 `baseDir`（既定 `content/reports`）でテスト用ディレクトリを注入できる。実 content は bot が毎日書き換えるため内容非依存の不変条件のみ検証
+- ML学習ループの純粋関数もテスト対象：`features.test.ts`（`buildFeatureMatrix`・trailing リークなし・date dedup・数値 structuralInputs）／`learning.test.ts`（`directionBias`・Brier 恒等式・`stanceDiscipline` collapsedFlag・`longTermScorecard`・`computeLearningSignal` 決定論）／`learning-signal.test.ts`（**実 `learning-signal.json`/`predictions.json` の形状不変条件**＝bot 書換え・CI 非経由の main 直 push に対する安全網）
 
 ## SEO
 - `lib/site.ts`：`SITE_URL`（`NEXT_PUBLIC_SITE_URL` → Vercel 本番URL → localhost の順でフォールバック）と `SITE_NAME`
@@ -210,7 +211,7 @@ DB 不要、Vercel 自動デプロイで反映。
 | `stancePrev` | 旧 `stance` 値の退避（前回比表示用。stance 上書き前に保存） |
 | `stanceRationale` | なぜこの stance 値か。**遅い構造変数を最低3つ引用**（バリュエーション/ERP・政策サイクル/実質金利・業績・信用スプレッド・カーブ・長期トレンド）。日次イベントだけを根拠にしない |
 | `longTermViews` | **全資産の長期(6M+)方向**。資産別 `{asset, bias(up/neutral/down), rationale}`（S&P 500・日経225・米10年債・日本10年債・USD/JPY・WTI原油・金）。rationale はその資産固有の構造ドライバーを最低2つ引用。track-record の資産別6M採点に使用 |
-| `structuralInputs` | （任意）stance/見立ての根拠となった構造変数スナップショット（valuation/policy/earnings/credit/curve/trend） |
+| `structuralInputs` | stance/見立ての根拠となった構造変数の**数値スナップショット**（`valuation_erp`・`real_rate_10y`・`credit_spread_hy`・`curve_2s10s`・`policy_rate`・`earnings_rev` 等・取れるものだけ数値で）。ML学習ループの特徴量に供給される（自由文所見は `structuralNotes` へ退避）。[ML学習ループ](#ml学習ループlearning-signalphase-1計測基盤校正層) 参照 |
 | `marketOverview` | 月次中長期観・週次テーマ・日次動向を統合した市況概要 |
 | `regime` | 現在のマクロ局面（景気 cycle・インフレ inflation・金融政策 policy・総括 summary） |
 | `keyMetrics` | 主要指標スナップショット 4〜6 件（label・value・change・direction）。**為替の長期採点のため `USD/JPY` を必ず含める**（metrics.json に系列蓄積） |
@@ -313,6 +314,11 @@ content/reports/weekly/YYYY-WXX.md
 content/reports/daily/YYYY-MM-DD.md
 content/history/predictions.json        # 予測精度ログ（永続蓄積・1-file-rule 対象外）
 content/history/metrics.json            # 指標時系列ログ（永続蓄積・1-file-rule 対象外）
+content/history/learning-signal.json    # 学習シグナル成果物（gen:learning で自動生成・永続蓄積・1-file-rule 対象外）
+lib/features.ts                         # 特徴量ストア（ML学習ループ Phase 1）
+lib/learning.ts                         # 推定器・computeLearningSignal（ML学習ループ Phase 1）
+lib/learning-signal.ts                  # learning-signal.json の fs ラッパ
+scripts/gen-learning-signal.ts          # learning-signal.json 生成器（npm run gen:learning）
 .claude/commands/push-reports.md     # /push-reports スラッシュコマンド定義
 ```
 
@@ -581,6 +587,21 @@ sectors:
 - 採点インフラ純粋関数は `lib/track-record.ts`（`forwardReturn`/`sampleNonOverlapping`/`assetLongViewScore`/`informationCoefficient`/`bucketedForwardReturns`/`stanceSmoothness`/`shortTermSummary`・`lib/__tests__/history.test.ts` でテスト）。fs 非依存でクライアントからも利用。型は `lib/history.ts`。
 - **生成規律**：stance/見立ては**月次レポートを長期の一次アンカー**とし、週次・日次はバンド内微修正のみ。stance 週次変化は原則 ±5pt 以内（超えるのは文書化されたレジーム/構造シフト時）。根拠は遅い構造変数（バリュエーション・政策・信用・カーブ等）に置き、日次イベントだけで動かさない。
 
+### ML学習ループ（learning-signal・Phase 1＝計測基盤＋校正層）
+予測ログを機械可読の学習シグナルへ集計し、`/push-reports` がそれを**決定論的に読んで自己補正**する仕組み（散文の目視補正を置換）。小標本レジーム（N≈28・実質6週・主ラベルの6M前方リターンは約2026-11成熟）に正直な設計として、重いモデルは使わず**計測基盤＋校正層のみ**を実装。重い推定器（Platt/isotonic 校正マップ・purge/embargo 付き汎用 walk-forward・OOSゲート付き確率調整・資産別6M scorecard の active 化）は `FeatureMatrix`/成果物スキーマの背後に差し込む形で **Phase 2 に延期**（約2026-11 のデータ成熟後）。**実行環境は純粋 TypeScript**（この N では Python の精度向上ゼロ）。成果物は**助言**であり最終判断は執筆者（「AI参考値・投資助言ではない」）。
+
+- **特徴量ストア `lib/features.ts`**（純粋・`lib/__tests__/features.test.ts`）：`buildFeatureMatrix(predictions, metrics)` が「行＝予測・列＝数値特徴／ラベル」の `FeatureMatrix` を生成。特徴は**後方参照のみ**（`trailingReturn`/`trailingVol`＝`date` 以前の点のみ使用）で forward ラベルへのリークを防ぐ（forward 用の `forwardReturn` とは別）。**dedup は date 単位**（predictions.json は日次ログ＝1 weekSlug に4〜6日エントリ。weekSlug でなく date の真の重複＝週境界日のみ落とす・同一 date 後勝ち）。6M窓の重複独立性は別途 `sampleNonOverlapping(step=126)` が担保。数値 `structuralInputs` を防御的にマッピング（number/数字文字列可・自由文は null）。
+- **推定器 `lib/learning.ts`**（純粋・`lib/__tests__/learning.test.ts`）：
+  - `stanceDiscipline`＝滑らかさ（`stanceSmoothness` 再利用）＋**応答性カウンタ**（レジームシフト週での平均 |Δstance|）＋`collapsedFlag`。**滑らかさ単独を報酬にすると stance を定数化して最大化できる逆インセンティブ**を、応答性で condition して封じる。
+  - `directionBias`＝ベース方向 vs 実績方向の系統ズレ。ただし多重検定のため常に **`DESCRIPTIVE_ONLY`（記述専用）**＝方向補正の根拠にしない。
+  - `brierDecomposition`＝**Brier ＋ Murphy 分解**（reliability/resolution/uncertainty。`brier = reliability − resolution + uncertainty` の恒等式が成立）。hit-rate/ECE でなく**適正スコアリング則**を主指標に。`reliabilityCurve`/`calibrationError` は補助。
+  - `longTermScorecard`＝資産別6M方向的中・**無条件上昇頻度ベースレート**・**views 前方P&L（符号×リターン＝経済的評価）**・stance 対前方ボラ・stance IC。6M窓成熟まで `active:false`。
+  - `computeLearningSignal`＝上記を束ねた成果物オブジェクト（純粋・`generatedAt` を持たない＝決定論的）。`validateLearningSignal`＝形状検証。
+- **fs ラッパ `lib/learning-signal.ts`**：`generateLearningSignal(asOf?)`（`generatedAt` を注入）/ `getLearningSignal()` / `serializeLearningSignal()`（安定キー順＋末尾改行）。
+- **生成器 `scripts/gen-learning-signal.ts`**：`npm run gen:learning -- --date=YYYY-MM-DD`（**tsx** で実行・devDependency）。**書込み前に predictions 形状と成果物スキーマを検証し、失敗なら書かず非0終了**（CI は PR 限定で bot の main 直 push は無検証のため、生成器が最後の砦）。確定済み `outcome` は再採点しない。
+- **成果物 `content/history/learning-signal.json`**：`schemaVersion`・`maturity`・`northStar`・`stance{discipline,…}`・`directionBias`・`scenarioCalibration{brier,reliability,…}`・`assetSixMonth`・`recommendations`。全定量値に `n`/`effN` 併記・`null`（0でなく）＝推定不能・`flags[]` は列挙型でコマンドが分岐・`horizon`/`active` で短期/長期と点灯可否を機械判定。
+- **UI**：track-record の「キャリブレーション（参考）」パネル（`getLearningSignal()` を読む・`learning===null` ガード）。北極星（views P&L・6M成熟バッジ）・スタンス規律（`collapsedFlag` 警告）・方向バイアス（記述専用ラベル）・シナリオ Brier（短期ラベル明示）。
+
 ### スパークライン（KeyMetrics コンポーネント内）
 - 各指標セル下部にセル全幅のインライン SVG（既定 高さ40px・`viewBox` 論理幅200・`preserveAspectRatio="none"`）
 - `metrics.json` の当該指標データを直近12〜16件読み込んで折れ線を描画
@@ -591,9 +612,10 @@ sectors:
 - スパークライン用データは `/push-reports` の Step 3.5 で毎週自動蓄積
 
 ### content/history/ 運用ルール
-- `predictions.json`・`metrics.json` は **1-file-rule 対象外**（削除せず永続蓄積）
-- `/push-reports` の Step 3.5 で自動更新（前週 outcome 記入 → 今週予測追記）
-- `git add content/history/` を `content/reports/` と同時に staging する
+- `predictions.json`・`metrics.json`・`learning-signal.json` は **1-file-rule 対象外**（削除せず永続蓄積）
+- `/push-reports` の Step 3.5 で自動更新（前週 outcome 記入 → 今週予測追記。予測レコードには `longTermViews`・数値 `structuralInputs`・補正時の `adjustments` も含める）
+- Step 3.5.3 で `npm run gen:learning` を実行し `learning-signal.json` を再生成（**データ更新の後**・順序厳守）
+- `git add content/history/` を `content/reports/` と同時に staging する（`learning-signal.json` も含む）
 
 ## モバイル対応
 - ブレークポイント：`max-width: 768px`
