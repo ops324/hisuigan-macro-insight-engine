@@ -1,0 +1,8 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="翡翠眼">
+  <!-- 金融エディトリアルのタブアイコン。ダーク地＋減彩翡翠バー＋マストヘッド見出し罫（OGP 意匠の踏襲・全て直角） -->
+  <rect width="32" height="32" fill="#15140f"/>
+  <rect x="6" y="6" width="4.5" height="20" fill="#6aa589"/>
+  <rect x="14" y="8" width="12" height="2.2" fill="#a39c8c"/>
+  <rect x="14" y="15" width="12" height="2.2" fill="#a39c8c"/>
+  <rect x="14" y="22" width="8" height="2.2" fill="#a39c8c"/>
+</svg>
