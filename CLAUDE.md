@@ -74,6 +74,7 @@
 - `lib/site.ts`：`SITE_URL`（`NEXT_PUBLIC_SITE_URL` → Vercel 本番URL → localhost の順でフォールバック）と `SITE_NAME`
 - `app/layout.tsx`：`metadataBase` ＋ 既定 OpenGraph ＋ Twitter Card（`summary_large_image`。`og:image`/`twitter:image` は `opengraph-image.tsx` から自動注入されるため手書きしない）
 - `app/opengraph-image.tsx`：OG 画像（`ImageResponse`・1200×630・ダーク地＋翡翠バー＋明朝「翡翠眼」）。ビルド時に静的生成。日本語グリフは Google Fonts CSS API の `text=` パラメータで Shippori Mincho を必要分だけサブセット fetch。**fetch は try/catch で囲みシステムフォントにフォールバック**（外部依存でビルドを落とさない）
+- `app/icon.svg`：タブアイコン（ファビコン）。App Router が自動検出し `<link rel="icon" type="image/svg+xml">` を生成（layout への手書き不要）。デザインは OG 画像と統一＝ダーク地 `#15140f` ＋ 減彩翡翠バー `#6aa589` ＋ マストヘッド見出し罫 `#a39c8c`・全て直角（案「翡翠バー抽象マーク」）。**Next.js デフォルトの `app/favicon.ico` は削除し SVG に一本化**（変換 CLI 未導入のためブランド版 `.ico` は作らず・SVG favicon は全モダンブラウザ対応）。`public/` の Next 雛形 SVG（file/globe/next/vercel/window）も未参照のため撤去済み
 - `app/reports/[slug]/page.tsx`：`generateMetadata`（per-report の title・description・OG・canonical・`article` type）
 - `app/sitemap.ts`：`/reports`・`/market`・`/reports/track-record` ＋ 全レポート slug を出力（`/sitemap.xml`）。静的ルートの `lastModified` は**最新レポート日付**（`getAllReports()[0].date`・「常に今日」を避けクロール効率を維持）。日付欠損・不正時のみ `new Date()` フォールバック
 - `app/robots.ts`：全許可 ＋ sitemap 参照（`/robots.txt`）
@@ -694,6 +695,7 @@ title: "翡翠眼 | マクロ市場分析"
 description: "為替・株式指数・米国債・日本国債・コモディティのリアルタイムデータと..."
 lang: "ja"
 ```
+- `viewport.themeColor`：モバイルブラウザの chrome 色をページ背景に揃える。テーマは localStorage 制御のため `prefers-color-scheme` で静的近似（light `#f4f1ea` / dark `#15140f`）。**色源は `lib/theme.ts` の `themeMap` に一本化**（`themeMap.light.bg` / `themeMap.dark.bg` を参照・ハードコードしない）
 
 ## 注意事項
 - APIキーは必ず.env.localに保存（テンプレートは `.env.example`。`.gitignore` は `.env*` を無視しつつ `!.env.example` で例のみ追跡）
