@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { themeMap } from "@/lib/theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,6 +35,15 @@ export const metadata: Metadata = {
     title: "翡翠眼 | マクロ市場分析",
     description: "為替・株式指数・米国債・日本国債・コモディティのリアルタイムデータと、月次・週次・日次のマクロ市場分析レポート。",
   },
+};
+
+// モバイルブラウザの chrome 色をページ背景に揃える。テーマは localStorage 制御のため
+// prefers-color-scheme で静的近似（色源は lib/theme.ts の themeMap に一本化）。
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: themeMap.light.bg },
+    { media: "(prefers-color-scheme: dark)", color: themeMap.dark.bg },
+  ],
 };
 
 export default function RootLayout({
