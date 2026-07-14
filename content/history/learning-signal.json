@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-13",
+  "generatedAt": "2026-07-15",
   "sourceCounts": {
-    "predictions": 30,
-    "dedupedRows": 28,
-    "resolvedOutcomes": 29,
+    "predictions": 31,
+    "dedupedRows": 29,
+    "resolvedOutcomes": 30,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,7 +18,7 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 3.185185185185185,
+      "meanStep": 3.1785714285714284,
       "maxStep": 7,
       "responsiveness": null,
       "collapsedFlag": false
@@ -32,7 +32,7 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 29,
+    "n": 30,
     "bias": "none",
     "pApprox": 0.40538044296492504,
     "flags": [
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 29,
+    "resolvedScenarios": 30,
     "brier": {
-      "brier": 0.19775057471264368,
-      "reliability": 0.026143093959735637,
-      "resolution": 0.03793142795365822,
-      "uncertainty": 0.20953890870656625,
-      "n": 87
+      "brier": 0.19532777777777777,
+      "reliability": 0.026107213049966674,
+      "resolution": 0.0407794352721889,
+      "uncertainty": 0.21,
+      "n": 90
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 43,
-        "predMean": 0.31046511627906986,
-        "obsFreq": 0.20930232558139536
+        "n": 45,
+        "predMean": 0.3077777777777779,
+        "obsFreq": 0.2
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 28,
-        "predMean": 0.45892857142857124,
-        "obsFreq": 0.4642857142857143
+        "n": 29,
+        "predMean": 0.4603448275862067,
+        "obsFreq": 0.4827586206896552
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.0660919540229886,
-    "mce": 0.1011627906976745,
+    "ece": 0.07500000000000012,
+    "mce": 0.10777777777777786,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],
