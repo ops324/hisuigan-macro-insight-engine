@@ -2387,6 +2387,115 @@
       "policy_rate": 3.75,
       "earnings_rev": 23
     },
+    "outcome": {
+      "assessedDate": "2026-07-21",
+      "spxActualChange": "-1.2%",
+      "spxDirection": "down",
+      "baseScenarioDirection": "neutral",
+      "match": false,
+      "note": "S&P 500 は 7,534→7,443（-1.2%）と下落。週末の米イラン激化（米兵3名死亡・トランプ報復宣言・CENTCOM新空爆）でWTIが一時$90接近しインフレ再燃・9月利上げ観測が約53%へ復活、米10年債4.60%の『悪い金利上昇』で下押し。±1%を超える下落となりベースシナリオの中立方向とは不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W27",
+    "date": "2026-07-21",
+    "stance": 61,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "エネルギー主導のインフレ再燃・9月利上げ観測復活の逆風と、SOXベア相場後の自律反発・停戦仲介期待が拮抗し、高値圏で選別的・神経質な往来",
+      "probability": 48,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "エネルギー主導のインフレ再燃・9月利上げ観測復活の逆風と、SOXベア相場後の自律反発・停戦仲介期待が拮抗し、高値圏で選別的・神経質な往来",
+        "probability": 48,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "イラン停戦仲介の進展で原油が反落しインフレ再燃観測が後退、SOXの自律反発と円安の輸出株追い風でリスクオンが再開",
+        "probability": 24,
+        "direction": "up",
+        "base": false
+      },
+      {
+        "label": "米イランの報復連鎖でWTIが$88超へ再騰、インフレ再燃・長期金利上昇とAI資本効率懐疑・円キャリー巻き戻しが重なり世界株安",
+        "probability": 28,
+        "direction": "down",
+        "base": false
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,443",
+        "numericValue": 7443
+      },
+      {
+        "label": "日経225",
+        "value": "64,141",
+        "numericValue": 64141
+      },
+      {
+        "label": "USD/JPY",
+        "value": "162.39",
+        "numericValue": 162.39
+      },
+      {
+        "label": "米10年債",
+        "value": "4.60%",
+        "numericValue": 4.6
+      },
+      {
+        "label": "WTI原油",
+        "value": "13,397",
+        "numericValue": 13397
+      },
+      {
+        "label": "金",
+        "value": "647,936",
+        "numericValue": 647936
+      }
+    ],
+    "longTermViews": [
+      {
+        "asset": "S&P 500",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日経225",
+        "bias": "neutral"
+      },
+      {
+        "asset": "米10年債",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日本10年債",
+        "bias": "up"
+      },
+      {
+        "asset": "USD/JPY",
+        "bias": "neutral"
+      },
+      {
+        "asset": "WTI原油",
+        "bias": "neutral"
+      },
+      {
+        "asset": "金",
+        "bias": "up"
+      }
+    ],
+    "structuralInputs": {
+      "valuation_erp": 1.5,
+      "real_rate_10y": 2.2,
+      "credit_spread_hy": 3.2,
+      "curve_2s10s": 0.42,
+      "policy_rate": 3.75,
+      "earnings_rev": 23
+    },
     "outcome": null
   }
 ]
