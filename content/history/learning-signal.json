@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-21",
+  "generatedAt": "2026-07-22",
   "sourceCounts": {
-    "predictions": 33,
-    "dedupedRows": 31,
-    "resolvedOutcomes": 32,
+    "predictions": 34,
+    "dedupedRows": 32,
+    "resolvedOutcomes": 33,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,7 +18,7 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 3.033333333333333,
+      "meanStep": 2.967741935483871,
       "maxStep": 7,
       "responsiveness": null,
       "collapsedFlag": false
@@ -32,7 +32,7 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 32,
+    "n": 33,
     "bias": "none",
     "pApprox": 0.28504946898056827,
     "flags": [
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 32,
+    "resolvedScenarios": 33,
     "brier": {
-      "brier": 0.196584375,
-      "reliability": 0.027523428901010418,
-      "resolution": 0.04176804695656597,
-      "uncertainty": 0.21082899305555555,
-      "n": 96
+      "brier": 0.19473232323232323,
+      "reliability": 0.02911093442252862,
+      "resolution": 0.04558154966587115,
+      "uncertainty": 0.21120293847566576,
+      "n": 99
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 49,
-        "predMean": 0.303061224489796,
-        "obsFreq": 0.20408163265306123
+        "n": 51,
+        "predMean": 0.3013725490196079,
+        "obsFreq": 0.19607843137254902
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 31,
-        "predMean": 0.46290322580645143,
-        "obsFreq": 0.4838709677419355
+        "n": 32,
+        "predMean": 0.46343749999999984,
+        "obsFreq": 0.5
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.0703125000000001,
-    "mce": 0.09897959183673477,
+    "ece": 0.07868686868686878,
+    "mce": 0.1052941176470589,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],
