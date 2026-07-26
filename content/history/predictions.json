@@ -2605,6 +2605,115 @@
       "policy_rate": 3.75,
       "earnings_rev": 23
     },
+    "outcome": {
+      "assessedDate": "2026-07-27",
+      "spxActualChange": "-1.3%",
+      "spxDirection": "down",
+      "baseScenarioDirection": "neutral",
+      "match": false,
+      "note": "S&P 500 -1.3%（7,509→7,412）。Alphabet・Tesla決算でAI資本効率への懐疑が発火し半導体主導で2週続落。ベースシナリオの中立方向と不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W29",
+    "date": "2026-07-27",
+    "stance": 62,
+    "stanceLabel": "やや守り",
+    "baseScenario": {
+      "label": "AIマネタイズの証明待ちと『悪い金利上昇』・地政学が拮抗し、高値圏で選別的・ローテーション主導の神経質な往来",
+      "probability": 50,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "AIマネタイズの証明待ちと『悪い金利上昇』・地政学が拮抗し、高値圏で選別的・ローテーション主導の神経質な往来",
+        "probability": 50,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "AI収益化の証明＋地政学プレミアム剥落＋インフレ鈍化継続でリスク選好が回復",
+        "probability": 25,
+        "direction": "up",
+        "base": false
+      },
+      {
+        "label": "AI ROI失望の連鎖＋『悪い金利上昇』加速＋地政学再燃で圧縮ERPの高値圏が調整",
+        "probability": 25,
+        "direction": "down",
+        "base": false
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,412",
+        "numericValue": 7412
+      },
+      {
+        "label": "日経225",
+        "value": "64,611",
+        "numericValue": 64611
+      },
+      {
+        "label": "USD/JPY",
+        "value": "163.78",
+        "numericValue": 163.78
+      },
+      {
+        "label": "米10年債",
+        "value": "4.69%",
+        "numericValue": 4.69
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,817",
+        "numericValue": 14817
+      },
+      {
+        "label": "金",
+        "value": "664,262",
+        "numericValue": 664262
+      }
+    ],
+    "longTermViews": [
+      {
+        "asset": "S&P 500",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日経225",
+        "bias": "neutral"
+      },
+      {
+        "asset": "米10年債",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日本10年債",
+        "bias": "up"
+      },
+      {
+        "asset": "USD/JPY",
+        "bias": "neutral"
+      },
+      {
+        "asset": "WTI原油",
+        "bias": "neutral"
+      },
+      {
+        "asset": "金",
+        "bias": "up"
+      }
+    ],
+    "structuralInputs": {
+      "valuation_erp": 1.4,
+      "real_rate_10y": 2.3,
+      "credit_spread_hy": 3.2,
+      "curve_2s10s": 0.35,
+      "policy_rate": 3.75,
+      "earnings_rev": 22
+    },
     "outcome": null
   }
 ]
