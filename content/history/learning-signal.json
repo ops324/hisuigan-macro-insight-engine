@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-27",
+  "generatedAt": "2026-07-28",
   "sourceCounts": {
-    "predictions": 35,
-    "dedupedRows": 33,
-    "resolvedOutcomes": 34,
+    "predictions": 36,
+    "dedupedRows": 34,
+    "resolvedOutcomes": 35,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,7 +18,7 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 2.9375,
+      "meanStep": 2.8484848484848486,
       "maxStep": 7,
       "responsiveness": 2,
       "collapsedFlag": false
@@ -32,7 +32,7 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 34,
+    "n": 35,
     "bias": "none",
     "pApprox": 0.19670573286952697,
     "flags": [
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 34,
+    "resolvedScenarios": 35,
     "brier": {
-      "brier": 0.19729509803921566,
-      "reliability": 0.025107018050624187,
-      "resolution": 0.03936516876188909,
-      "uncertainty": 0.21155324875048057,
-      "n": 102
+      "brier": 0.19522952380952383,
+      "reliability": 0.025453980742055272,
+      "resolution": 0.04210654310033192,
+      "uncertainty": 0.21188208616780047,
+      "n": 105
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 53,
-        "predMean": 0.299811320754717,
-        "obsFreq": 0.20754716981132076
+        "n": 55,
+        "predMean": 0.298,
+        "obsFreq": 0.2
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 33,
-        "predMean": 0.4639393939393938,
-        "obsFreq": 0.48484848484848486
+        "n": 34,
+        "predMean": 0.46499999999999986,
+        "obsFreq": 0.5
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.06696078431372554,
-    "mce": 0.09226415094339624,
+    "ece": 0.07457142857142861,
+    "mce": 0.09799999999999998,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],
