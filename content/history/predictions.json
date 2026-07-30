@@ -3041,6 +3041,115 @@
       "policy_rate": 3.75,
       "earnings_rev": 22
     },
+    "outcome": {
+      "assessedDate": "2026-07-31",
+      "spxActualChange": "+1.7%",
+      "spxDirection": "up",
+      "baseScenarioDirection": "neutral",
+      "match": false,
+      "note": "S&P 500 7,316→7,438（+1.7%）。7/29の全面安から一転、Microsoftが+15.5%・時価総額+約4,500億ドルと史上最大の増加を記録して牽引しNASDAQ+2.78%と6連敗を止め全面高に反発。ベースシナリオの中立方向に対し上昇し不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W29",
+    "date": "2026-07-31",
+    "stance": 65,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "メガキャップ決算の選別が一巡し分子への信認が一部回復する一方、タカ派Fed・30年債5%超の分母と介入後の為替不安定が重石となり、高値圏の選別・ローテーション主導の神経質な往来",
+      "probability": 50,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "メガキャップ決算の選別が一巡し分子への信認が一部回復する一方、タカ派Fed・30年債5%超の分母と介入後の為替不安定が重石となり、高値圏の選別・ローテーション主導の神経質な往来",
+        "probability": 50,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "決算好感の持続とAI収益化への安心感＋月末リバランスの買い＋長期金利の一服でリスク選好が回復",
+        "probability": 26,
+        "direction": "up",
+        "base": false
+      },
+      {
+        "label": "Amazonのcapex膨張警戒とApple軟化がハイテクに波及＋タカ派Fed・原油高止まりで30年債主導の金利上昇継続＋圧縮ERPの高値圏が調整",
+        "probability": 24,
+        "direction": "down",
+        "base": false
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,438",
+        "numericValue": 7438
+      },
+      {
+        "label": "日経225",
+        "value": "62,218",
+        "numericValue": 62218
+      },
+      {
+        "label": "USD/JPY",
+        "value": "161.00",
+        "numericValue": 161.0
+      },
+      {
+        "label": "米10年債",
+        "value": "4.64%",
+        "numericValue": 4.64
+      },
+      {
+        "label": "WTI原油",
+        "value": "13,503",
+        "numericValue": 13503
+      },
+      {
+        "label": "金",
+        "value": "657,002",
+        "numericValue": 657002
+      }
+    ],
+    "longTermViews": [
+      {
+        "asset": "S&P 500",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日経225",
+        "bias": "neutral"
+      },
+      {
+        "asset": "米10年債",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日本10年債",
+        "bias": "up"
+      },
+      {
+        "asset": "USD/JPY",
+        "bias": "neutral"
+      },
+      {
+        "asset": "WTI原油",
+        "bias": "neutral"
+      },
+      {
+        "asset": "金",
+        "bias": "up"
+      }
+    ],
+    "structuralInputs": {
+      "valuation_erp": 1.35,
+      "real_rate_10y": 2.33,
+      "credit_spread_hy": 3.3,
+      "curve_2s10s": 0.42,
+      "policy_rate": 3.75,
+      "earnings_rev": 23
+    },
     "outcome": null
   }
 ]
