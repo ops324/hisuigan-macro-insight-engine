@@ -3498,6 +3498,115 @@
       "policy_rate": 3.75,
       "earnings_rev": 22
     },
+    "outcome": {
+      "assessedDate": "2026-08-17",
+      "spxActualChange": "+0.4%",
+      "spxDirection": "neutral",
+      "baseScenarioDirection": "neutral",
+      "match": true,
+      "note": "S&P 500は週+0.4%の7,785.76（8/13に一時約7,804と史上最高値）。CPI・PPIの二重ディスインフレで記録更新後、8/14の小売▲0.6%・信頼感51で反落。±1%未満のためneutral判定でベースシナリオのneutral方向と一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W33",
+    "date": "2026-08-17",
+    "stance": 62,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "物価二重鈍化で9月利上げの近接リスクは後退したが、金曜の消費失速・期待インフレ上昇・記録的高値の圧縮ERPが上値を抑え、ジャクソンホール（8/27-29 Warsh議長）と9/16-17 FOMCを睨む高値圏の選別・ローテーション主導レンジ",
+      "probability": 50,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "物価二重鈍化で9月利上げの近接リスクは後退したが、金曜の消費失速・期待インフレ上昇・記録的高値の圧縮ERPが上値を抑え、ジャクソンホール（8/27-29 Warsh議長）と9/16-17 FOMCを睨む高値圏の選別・ローテーション主導レンジ",
+        "probability": 50,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "消費失速は一時的でディスインフレが継続、ジャクソンホールでWarsh議長がハト傾斜し利上げ休止観測が定着＋AI回収への安心感でリスク選好が一段回復",
+        "probability": 27,
+        "direction": "up",
+        "base": false
+      },
+      {
+        "label": "期待インフレ4.3%上昇×サービス粘着でジャクソンホールがタカ派据え置きを再確認、あるいは消費の亀裂が景気減速へ深化し記録的高値の圧縮ERPが調整",
+        "probability": 23,
+        "direction": "down",
+        "base": false
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,786",
+        "numericValue": 7786
+      },
+      {
+        "label": "日経225",
+        "value": "68,714",
+        "numericValue": 68714
+      },
+      {
+        "label": "USD/JPY",
+        "value": "159.43",
+        "numericValue": 159.43
+      },
+      {
+        "label": "米10年債",
+        "value": "4.68%",
+        "numericValue": 4.68
+      },
+      {
+        "label": "WTI原油",
+        "value": "13,137",
+        "numericValue": 13137
+      },
+      {
+        "label": "金",
+        "value": "701,500",
+        "numericValue": 701500
+      }
+    ],
+    "longTermViews": [
+      {
+        "asset": "S&P 500",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日経225",
+        "bias": "neutral"
+      },
+      {
+        "asset": "米10年債",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日本10年債",
+        "bias": "up"
+      },
+      {
+        "asset": "USD/JPY",
+        "bias": "neutral"
+      },
+      {
+        "asset": "WTI原油",
+        "bias": "neutral"
+      },
+      {
+        "asset": "金",
+        "bias": "up"
+      }
+    ],
+    "structuralInputs": {
+      "valuation_erp": 1.1,
+      "real_rate_10y": 2.2,
+      "credit_spread_hy": 3.2,
+      "curve_2s10s": 0.51,
+      "policy_rate": 3.75,
+      "earnings_rev": 22
+    },
     "outcome": null
   }
 ]
