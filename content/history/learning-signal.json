@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-17",
+  "generatedAt": "2026-09-04",
   "sourceCounts": {
-    "predictions": 43,
-    "dedupedRows": 41,
-    "resolvedOutcomes": 42,
+    "predictions": 44,
+    "dedupedRows": 42,
+    "resolvedOutcomes": 43,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,7 +18,7 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 2.5,
+      "meanStep": 2.5121951219512195,
       "maxStep": 7,
       "responsiveness": 1.3333333333333333,
       "collapsedFlag": false
@@ -32,9 +32,9 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 42,
+    "n": 43,
     "bias": "none",
-    "pApprox": 0.3457785518508991,
+    "pApprox": 0.2513492134915438,
     "flags": [
       "DESCRIPTIVE_ONLY"
     ],
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 42,
+    "resolvedScenarios": 43,
     "brier": {
-      "brier": 0.19547063492063493,
-      "reliability": 0.017330703424687104,
-      "resolution": 0.035578889365730185,
-      "uncertainty": 0.213718820861678,
-      "n": 126
+      "brier": 0.19802403100775195,
+      "reliability": 0.01913442775604793,
+      "resolution": 0.03503984810338282,
+      "uncertainty": 0.21392945135508684,
+      "n": 129
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 69,
-        "predMean": 0.2882608695652174,
-        "obsFreq": 0.2028985507246377
+        "n": 71,
+        "predMean": 0.2871830985915493,
+        "obsFreq": 0.2112676056338028
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 41,
-        "predMean": 0.4709756097560974,
-        "obsFreq": 0.5121951219512195
+        "n": 42,
+        "predMean": 0.47166666666666657,
+        "obsFreq": 0.5
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.07007936507936513,
-    "mce": 0.08536231884057971,
+    "ece": 0.06069767441860467,
+    "mce": 0.078125,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],

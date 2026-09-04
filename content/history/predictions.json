@@ -3607,6 +3607,115 @@
       "policy_rate": 3.75,
       "earnings_rev": 22
     },
+    "outcome": {
+      "assessedDate": "2026-09-04",
+      "spxActualChange": "-1.5%",
+      "spxDirection": "down",
+      "baseScenarioDirection": "neutral",
+      "match": false,
+      "note": "S&P 500 7,786→7,666.60（-1.5%）。8/28ジャクソンホールでウォーシュ議長が利上げ可能性を示唆し9月利上げ確率が約42%→63.2%へ上昇、10年債は4.818%と2023年10月以来の高水準を付けて圧縮ERPを直撃した。9/3のウォラー理事の据え置き示唆（確率50.4%へ半減）で反発したが▲1%を超え、ベースシナリオの中立方向に対し下落し不一致。"
+    }
+  },
+  {
+    "weekSlug": "2026-W33",
+    "date": "2026-09-04",
+    "stance": 65,
+    "stanceLabel": "守り重視",
+    "baseScenario": {
+      "label": "反応関数を示さないFedの下で9月利上げ観測が50%前後の二分を続け、需要の亀裂（下値支え）と圧縮ERP・原油高の割引率圧力（上値抑制）が拮抗——9/4雇用統計・9/11 CPI・9/15-16 FOMC・9/18日銀を睨む高値圏の選別・ローテーション主導レンジ",
+      "probability": 50,
+      "direction": "neutral"
+    },
+    "scenarios": [
+      {
+        "label": "反応関数を示さないFedの下で9月利上げ観測が50%前後の二分を続け、需要の亀裂（下値支え）と圧縮ERP・原油高の割引率圧力（上値抑制）が拮抗——9/4雇用統計・9/11 CPI・9/15-16 FOMC・9/18日銀を睨む高値圏の選別・ローテーション主導レンジ",
+        "probability": 50,
+        "direction": "neutral",
+        "base": true
+      },
+      {
+        "label": "雇用・CPIが揃って軟化してウォラー路線が優勢化し据え置きが確定、イラン情勢も短期収束して原油が反落——割引率の一服でリスク選好が回復",
+        "probability": 26,
+        "direction": "up",
+        "base": false
+      },
+      {
+        "label": "雇用・CPIの上振れかイラン情勢の再燃でウォーシュ議長の警告が現実味を帯び9/16 FOMCで利上げ、あるいは需要の亀裂が景気後退懸念へ深化して圧縮ERPが調整",
+        "probability": 24,
+        "direction": "down",
+        "base": false
+      }
+    ],
+    "keyMetrics": [
+      {
+        "label": "S&P 500",
+        "value": "7,667",
+        "numericValue": 7667
+      },
+      {
+        "label": "日経225",
+        "value": "65,021",
+        "numericValue": 65021
+      },
+      {
+        "label": "USD/JPY",
+        "value": "156.30",
+        "numericValue": 156.3
+      },
+      {
+        "label": "米10年債",
+        "value": "4.78%",
+        "numericValue": 4.78
+      },
+      {
+        "label": "WTI原油",
+        "value": "14,286",
+        "numericValue": 14286
+      },
+      {
+        "label": "金",
+        "value": "699,858",
+        "numericValue": 699858
+      }
+    ],
+    "longTermViews": [
+      {
+        "asset": "S&P 500",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日経225",
+        "bias": "neutral"
+      },
+      {
+        "asset": "米10年債",
+        "bias": "neutral"
+      },
+      {
+        "asset": "日本10年債",
+        "bias": "up"
+      },
+      {
+        "asset": "USD/JPY",
+        "bias": "down"
+      },
+      {
+        "asset": "WTI原油",
+        "bias": "neutral"
+      },
+      {
+        "asset": "金",
+        "bias": "up"
+      }
+    ],
+    "structuralInputs": {
+      "valuation_erp": 1.1,
+      "real_rate_10y": 2.2,
+      "credit_spread_hy": 3.2,
+      "curve_2s10s": 0.4,
+      "policy_rate": 3.75,
+      "earnings_rev": 22
+    },
     "outcome": null
   }
 ]
