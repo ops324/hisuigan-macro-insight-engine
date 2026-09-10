@@ -291,8 +291,14 @@
     {
       "date": "2026-09-10",
       "weekSlug": "2026-W36",
-      "numericValue": 7636.0,
+      "numericValue": 7636,
       "displayValue": "7,636"
+    },
+    {
+      "date": "2026-09-11",
+      "weekSlug": "2026-W36",
+      "numericValue": 7592,
+      "displayValue": "7,592"
     }
   ],
   "日経225": [
@@ -587,8 +593,14 @@
     {
       "date": "2026-09-10",
       "weekSlug": "2026-W36",
-      "numericValue": 65143.0,
+      "numericValue": 65143,
       "displayValue": "65,143"
+    },
+    {
+      "date": "2026-09-11",
+      "weekSlug": "2026-W36",
+      "numericValue": 65271,
+      "displayValue": "65,271"
     }
   ],
   "米10年債": [
@@ -885,6 +897,12 @@
       "weekSlug": "2026-W36",
       "numericValue": 4.86,
       "displayValue": "4.86%"
+    },
+    {
+      "date": "2026-09-11",
+      "weekSlug": "2026-W36",
+      "numericValue": 4.94,
+      "displayValue": "4.94%"
     }
   ],
   "日本10年債": [
@@ -1067,6 +1085,12 @@
       "weekSlug": "2026-W36",
       "numericValue": 2.87,
       "displayValue": "2.87%"
+    },
+    {
+      "date": "2026-09-11",
+      "weekSlug": "2026-W36",
+      "numericValue": 2.89,
+      "displayValue": "2.89%"
     }
   ],
   "WTI原油": [
@@ -1361,8 +1385,14 @@
     {
       "date": "2026-09-10",
       "weekSlug": "2026-W36",
-      "numericValue": 14772.0,
+      "numericValue": 14772,
       "displayValue": "14,772"
+    },
+    {
+      "date": "2026-09-11",
+      "weekSlug": "2026-W36",
+      "numericValue": 15767,
+      "displayValue": "15,767"
     }
   ],
   "金": [
@@ -1657,8 +1687,14 @@
     {
       "date": "2026-09-10",
       "weekSlug": "2026-W36",
-      "numericValue": 676660.0,
+      "numericValue": 676660,
       "displayValue": "676,660"
+    },
+    {
+      "date": "2026-09-11",
+      "weekSlug": "2026-W36",
+      "numericValue": 670586,
+      "displayValue": "670,586"
     }
   ],
   "USD/JPY": [
@@ -1793,6 +1829,12 @@
       "weekSlug": "2026-W36",
       "numericValue": 153.8,
       "displayValue": "153.80"
+    },
+    {
+      "date": "2026-09-11",
+      "weekSlug": "2026-W36",
+      "numericValue": 153.85,
+      "displayValue": "153.85"
     }
   ]
 }
