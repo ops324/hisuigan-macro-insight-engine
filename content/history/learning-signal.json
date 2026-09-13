@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-11",
+  "generatedAt": "2026-09-14",
   "sourceCounts": {
-    "predictions": 49,
-    "dedupedRows": 47,
-    "resolvedOutcomes": 48,
+    "predictions": 50,
+    "dedupedRows": 48,
+    "resolvedOutcomes": 49,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,7 +18,7 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 2.4130434782608696,
+      "meanStep": 2.404255319148936,
       "maxStep": 7,
       "responsiveness": 1.75,
       "collapsedFlag": false
@@ -32,7 +32,7 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 48,
+    "n": 49,
     "bias": "none",
     "pApprox": 0.2513492134915438,
     "flags": [
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 48,
+    "resolvedScenarios": 49,
     "brier": {
-      "brier": 0.19234513888888888,
-      "reliability": 0.0250890697945845,
-      "resolution": 0.04758768090569561,
-      "uncertainty": 0.21484375,
-      "n": 144
+      "brier": 0.1920482993197279,
+      "reliability": 0.028205619390613387,
+      "resolution": 0.05116032807680894,
+      "uncertainty": 0.21500300800592345,
+      "n": 147
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 81,
-        "predMean": 0.28469135802469137,
-        "obsFreq": 0.18518518518518517
+        "n": 83,
+        "predMean": 0.28493975903614455,
+        "obsFreq": 0.18072289156626506
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 47,
-        "predMean": 0.4710638297872339,
-        "obsFreq": 0.5531914893617021
+        "n": 48,
+        "predMean": 0.46979166666666655,
+        "obsFreq": 0.5625
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.09145833333333339,
-    "mce": 0.09950617283950619,
+    "ece": 0.09761904761904763,
+    "mce": 0.10421686746987949,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],
