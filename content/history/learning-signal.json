@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-18",
+  "generatedAt": "2026-09-22",
   "sourceCounts": {
-    "predictions": 54,
-    "dedupedRows": 52,
-    "resolvedOutcomes": 53,
+    "predictions": 55,
+    "dedupedRows": 53,
+    "resolvedOutcomes": 54,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,9 +18,9 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 2.2745098039215685,
+      "meanStep": 2.25,
       "maxStep": 7,
-      "responsiveness": 1.75,
+      "responsiveness": 1.6,
       "collapsedFlag": false
     },
     "suggestedStanceDelta": 0,
@@ -32,9 +32,9 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 53,
+    "n": 54,
     "bias": "none",
-    "pApprox": 0.3710932976579071,
+    "pApprox": 0.512690623427779,
     "flags": [
       "DESCRIPTIVE_ONLY"
     ],
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 53,
+    "resolvedScenarios": 54,
     "brier": {
-      "brier": 0.19335408805031445,
-      "reliability": 0.033678330955023525,
-      "resolution": 0.05590115837482497,
-      "uncertainty": 0.2155769154701159,
-      "n": 159
+      "brier": 0.19501913580246916,
+      "reliability": 0.03126007250636881,
+      "resolution": 0.05194738389182832,
+      "uncertainty": 0.21570644718792867,
+      "n": 162
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 93,
-        "predMean": 0.2883870967741935,
-        "obsFreq": 0.1935483870967742
+        "n": 95,
+        "predMean": 0.2883157894736842,
+        "obsFreq": 0.2
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 50,
-        "predMean": 0.4675999999999999,
-        "obsFreq": 0.56
+        "n": 51,
+        "predMean": 0.4668627450980391,
+        "obsFreq": 0.5490196078431373
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.09238993710691826,
-    "mce": 0.09483870967741931,
+    "ece": 0.08537037037037042,
+    "mce": 0.08831578947368418,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],
