@@ -18,9 +18,9 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 2.1724137931034484,
+      "meanStep": 2.189655172413793,
       "maxStep": 7,
-      "responsiveness": 1.5,
+      "responsiveness": 1.6666666666666667,
       "collapsedFlag": false
     },
     "suggestedStanceDelta": 0,
