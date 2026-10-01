@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-01",
+  "generatedAt": "2026-10-02",
   "sourceCounts": {
-    "predictions": 61,
-    "dedupedRows": 59,
-    "resolvedOutcomes": 60,
+    "predictions": 62,
+    "dedupedRows": 60,
+    "resolvedOutcomes": 61,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,7 +18,7 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 2.189655172413793,
+      "meanStep": 2.169491525423729,
       "maxStep": 7,
       "responsiveness": 1.6666666666666667,
       "collapsedFlag": false
@@ -32,7 +32,7 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 60,
+    "n": 61,
     "bias": "none",
     "pApprox": 0.512690623427779,
     "flags": [
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 60,
+    "resolvedScenarios": 61,
     "brier": {
-      "brier": 0.18941166666666667,
-      "reliability": 0.035924940592221295,
-      "resolution": 0.06290216281444351,
-      "uncertainty": 0.21638888888888888,
-      "n": 180
+      "brier": 0.18871420765027322,
+      "reliability": 0.03719720932568214,
+      "resolution": 0.06497199806228222,
+      "uncertainty": 0.2164889963868733,
+      "n": 183
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 106,
-        "predMean": 0.28622641509433955,
-        "obsFreq": 0.1792452830188679
+        "n": 108,
+        "predMean": 0.28592592592592586,
+        "obsFreq": 0.17592592592592593
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 57,
-        "predMean": 0.467719298245614,
-        "obsFreq": 0.5964912280701754
+        "n": 58,
+        "predMean": 0.46758620689655167,
+        "obsFreq": 0.603448275862069
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.10961111111111108,
-    "mce": 0.12877192982456143,
+    "ece": 0.11371584699453549,
+    "mce": 0.13586206896551728,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],
