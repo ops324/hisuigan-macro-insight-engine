@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-06",
+  "generatedAt": "2026-11-09",
   "sourceCounts": {
-    "predictions": 63,
-    "dedupedRows": 61,
-    "resolvedOutcomes": 62,
+    "predictions": 64,
+    "dedupedRows": 62,
+    "resolvedOutcomes": 63,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,7 +18,7 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 2.2,
+      "meanStep": 2.19672131147541,
       "maxStep": 7,
       "responsiveness": 2,
       "collapsedFlag": false
@@ -32,7 +32,7 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 62,
+    "n": 63,
     "bias": "none",
     "pApprox": 0.3937685337726866,
     "flags": [
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 62,
+    "resolvedScenarios": 63,
     "brier": {
-      "brier": 0.18967795698924733,
-      "reliability": 0.03388435111075179,
-      "resolution": 0.06079212657612349,
-      "uncertainty": 0.21658573245461904,
-      "n": 186
+      "brier": 0.18898253968253967,
+      "reliability": 0.035441389629276024,
+      "resolution": 0.06313811424504827,
+      "uncertainty": 0.2166792642983119,
+      "n": 189
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 110,
-        "predMean": 0.28554545454545444,
-        "obsFreq": 0.18181818181818182
+        "n": 112,
+        "predMean": 0.2852678571428571,
+        "obsFreq": 0.17857142857142858
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 59,
-        "predMean": 0.46762711864406775,
-        "obsFreq": 0.5932203389830508
+        "n": 60,
+        "predMean": 0.46749999999999997,
+        "obsFreq": 0.6
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.10682795698924724,
-    "mce": 0.12559322033898307,
+    "ece": 0.11084656084656079,
+    "mce": 0.1325,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],
