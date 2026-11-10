@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-10",
+  "generatedAt": "2026-11-11",
   "sourceCounts": {
-    "predictions": 65,
-    "dedupedRows": 63,
-    "resolvedOutcomes": 64,
+    "predictions": 66,
+    "dedupedRows": 64,
+    "resolvedOutcomes": 65,
     "metricsSeries": 7
   },
   "maturity": {
@@ -18,7 +18,7 @@
   },
   "stance": {
     "discipline": {
-      "meanStep": 2.161290322580645,
+      "meanStep": 2.1587301587301586,
       "maxStep": 7,
       "responsiveness": 1.7777777777777777,
       "collapsedFlag": false
@@ -32,7 +32,7 @@
   },
   "directionBias": {
     "horizon": "short",
-    "n": 64,
+    "n": 65,
     "bias": "none",
     "pApprox": 0.5316144540633672,
     "flags": [
@@ -42,13 +42,13 @@
   },
   "scenarioCalibration": {
     "horizon": "short",
-    "resolvedScenarios": 64,
+    "resolvedScenarios": 65,
     "brier": {
-      "brier": 0.1904828125,
-      "reliability": 0.035105850128794205,
-      "resolution": 0.06139278589268311,
-      "uncertainty": 0.2167697482638889,
-      "n": 192
+      "brier": 0.18979641025641025,
+      "reliability": 0.03664706252811516,
+      "resolution": 0.06370798297518944,
+      "uncertainty": 0.21685733070348454,
+      "n": 195
     },
     "reliability": [
       {
@@ -61,16 +61,16 @@
       {
         "pLow": 0.2,
         "pHigh": 0.4,
-        "n": 114,
-        "predMean": 0.2850877192982455,
-        "obsFreq": 0.18421052631578946
+        "n": 116,
+        "predMean": 0.2848275862068964,
+        "obsFreq": 0.1810344827586207
       },
       {
         "pLow": 0.4,
         "pHigh": 0.6,
-        "n": 61,
-        "predMean": 0.4672131147540983,
-        "obsFreq": 0.5901639344262295
+        "n": 62,
+        "predMean": 0.46709677419354834,
+        "obsFreq": 0.5967741935483871
       },
       {
         "pLow": 0.6,
@@ -87,8 +87,8 @@
         "obsFreq": null
       }
     ],
-    "ece": 0.10442708333333328,
-    "mce": 0.12295081967213117,
+    "ece": 0.10835897435897429,
+    "mce": 0.12967741935483879,
     "flags": [
       "SHORT_HORIZON_ONLY"
     ],
